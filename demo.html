@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+<body>
+<head>
+    <title>FabricJS</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script src="/js/qsoft/productdesign/fabric.js"></script>
+</head>
+<body>
+
+<div class="wrapper">
+    <canvas id="c" width="200" height="425"></canvas>
+    <input type="text" id="fieldSsn" name="ssn" placeholder="555-55-5555" pattern="\d{3}-?\d{2}-?\d{4}">
+    <input id="ssn"/>
+</div>
+<script type="text/javascript">
+    var options = {width:200, height:425,selectable:false};
+    jQuery("#ssn").mask("999-999-999");
+    var canvas = new fabric.Canvas('c');
+    fabric.Image.fromURL('imgs/color1/Front/Front_View.png', function(oImg) {
+        canvas.add(oImg);
+    }, options);
+</script>
+
+</body>
+</html>

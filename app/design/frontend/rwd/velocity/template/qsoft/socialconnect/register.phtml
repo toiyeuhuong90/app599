@@ -1,0 +1,26 @@
+<?php if ($this->_googleEnabled() || $this->_facebookEnabled() || $this->_twitterEnabled() || $this->_linkedinEnabled() || $this->_vkEnabled()): ?>
+<div class="qs-wolfsburg-25 qs-title-social-login">Socical Connect</div>
+<div class="qs-desc-normal-14">You can register using your Social account.</div>
+<ul class="qs-createacc-social">
+
+    <?php if ($this->_twitterEnabled()): ?>
+        <?php echo $this->getChildHtml('qsoft_socialconnect_register_twitter_button'); ?>
+    <?php endif; ?>
+
+    <?php if ($this->_facebookEnabled()): ?>
+        <?php echo $this->getChildHtml('qsoft_socialconnect_register_facebook_button'); ?>
+    <?php endif; ?>
+
+    <?php if ($this->_linkedinEnabled()): ?>
+        <?php echo $this->getChildHtml('qsoft_socialconnect_register_linkedin_button'); ?>
+    <?php endif; ?>
+
+    <?php if ($this->_googleEnabled()): ?>
+        <?php echo $this->getChildHtml('qsoft_socialconnect_register_google_button'); ?>
+    <?php endif; ?>
+
+    <?php if ($this->_vkEnabled()): ?>
+        <?php echo $this->getChildHtml('qsoft_socialconnect_register_vk_button'); ?>
+    <?php endif; ?>
+</ul>
+<?php endif; ?>

@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <default>
+        <reference name="root">
+            <block type="core/text_list" name="qs-banner-myaccount" translate="label">
+                <label>Banner top</label>
+            </block>
+        </reference>
+        <reference name="head">
+            <action method="addItem"><type>skin_css</type><name>css/bootstrap.min.css</name></action>
+            <action method="addItem"><type>skin_css</type><name>css/font-awesome.min.css</name></action>
+            <action method="addItem"><type>skin_js</type><name>js/bootstrap.min.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>js/velocity.js</name></action>
+            <action method="removeItem"><type>skin_css</type><name>css/madisonisland.css</name></action>
+            <action method="removeItem"><type>skin_js</type><name>js/app.js</name></action>
+            <action method="removeItem"><type>skin_js</type><name>js/slideshow.js</name></action>
+            <action method="removeItem"><type>skin_js</type><name>js/lib/imagesloaded.js</name></action>
+            <action method="removeItem"><type>skin_js</type><name>js/minicart.js</name></action>
+            <action method="removeItem"><type>skin_js</type><name>js/lib/modernizr.custom.min.js</name></action>
+            <action method="removeItem"><type>skin_js</type><name>js/lib/selectivizr.js</name></action>
+            <action method="removeItem"><type>skin_js</type><name>js/lib/matchMedia.js</name></action>
+            <action method="removeItem"><type>skin_js</type><name>js/lib/matchMedia.addListener.js</name></action>
+            <action method="removeItem"><type>skin_js</type><name>js/lib/enquire.js</name></action>
+            <action method="removeItem"><type>skin_js</type><name>js/lib/jquery.cycle2.min.js</name></action>
+            <action method="removeItem"><type>skin_js</type><name>js/lib/jquery.cycle2.swipe.min.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>js/parallax.min.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>js/jquery.jpanelmenu.js</name></action>
+        </reference>
+        <reference name="header">
+            <block type="core/template" name="header.links" as="headerLinks" template="page/html/top.links.phtml"/>
+            <block type="cms/block" name="social.links">
+                <action method="setBlockId">
+                    <block_id>social_links</block_id>
+                </action>
+            </block>
+        </reference>
+        <reference name="footer">
+            <block type="cms/block" name="footer.links">
+                <action method="setBlockId" >
+                    <block_id>footer_links</block_id>
+                </action>
+            </block>
+        </reference>
+    </default>
+
+    <customer_account_login>
+        <reference name="root">
+            <action method="setTemplate">
+                <template>page/1column.phtml</template>
+            </action>
+        </reference>
+        <reference name="customer_form_login">
+            <block type="cms/block" name="login_banner">
+                <action method="setBlockId">
+                    <block_id>login_banner</block_id>
+                </action>
+            </block>
+        </reference>
+    </customer_account_login>
+	
+	<contacts_index_index translate="label">
+        
+        <reference name="root">
+            <action method="setTemplate"><template>page/1column.phtml</template></action>
+        </reference>
+        
+    </contacts_index_index>
+
+    <catalog_category_layered translate="label">
+        <reference name="root">
+            <action method="setTemplate">
+                <template>page/category-2columns-left.phtml</template>
+            </action>
+        </reference>
+    </catalog_category_layered>
+
+    <customer_account>
+        <reference name="customer_account_navigation">
+            <action method="removeLinkByName">
+                <name>tags</name>
+            </action>
+            <action method="removeLinkByName">
+                <name>address_book</name>
+            </action>
+            <action method="removeLinkByName">
+                <name>recurring_profiles</name>
+            </action>
+            <action method="removeLinkByName">
+                <name>billing_agreements</name>
+            </action>
+            <action method="removeLinkByName">
+                <name>downloadable_products</name>
+            </action>
+            <action method="removeLinkByName">
+                <name>OAuth Customer Tokens</name>
+            </action>
+            <action method="removeLinkByName">
+                <name>reviews</name>
+            </action>
+        </reference>
+    </customer_account>
+    <sales_order_history>
+        <reference name="qs-banner-myaccount">
+            <block type="cms/block" name="order.history">
+                <remove name="customer_account_banner"/>
+                <action method="setBlockId" >
+                    <block_id>history_order_banner</block_id>
+                </action>
+            </block>
+        </reference>
+    </sales_order_history>
+
+    <wishlist_index_index>
+        <reference name="qs-banner-myaccount">
+            <block type="cms/block" name="wishlist.banner">
+                <remove name="customer_account_banner"/>
+                <action method="setBlockId" >
+                    <block_id>wishlist_banner</block_id>
+                </action>
+            </block>
+        </reference>
+    </wishlist_index_index>
+
+    <catalog_category_default>
+        <reference name="product_list_toolbar">
+            <action method="setDefaultDirection"><string>desc</string></action>
+        </reference>
+    </catalog_category_default>
+    <catalog_category_layered>
+        <reference name="product_list_toolbar">
+            <action method="setDefaultDirection"><string>desc</string></action>
+        </reference>
+        <reference name="before_body_end">
+            <block type="core/template" name="before-ajax-load-success" template="aw_layerednavigation/loading.phtml"/>
+        </reference>
+    </catalog_category_layered>
+</layout>

@@ -1,0 +1,79 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2016 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+
+<?php /* @var $this QSoft_ProductDesign_Block_Catalog_Product_View_Options_Type_Select */ ?>
+<?php
+$_option = $this->getOption();
+//$givingNameGroup = explode(',', Mage::getStoreConfig('productdesign/group_type/giving_name'));
+//$sizesGroup = explode(',', Mage::getStoreConfig('productdesign/group_type/size'));
+?>
+<?php //if (in_array($_option->getFrontendGroupId(), $givingNameGroup)): ?>
+<?php if($this->getGroupType()=='size'): ?>
+    <div id="<?php echo $_option->getId() . '-' . $this->getGroupType() ?>" class="wp-container-slider">
+        <div id="<?php echo $_option->getId() . '-' . $this->getGroupType() ?>-prev" class="swiper-prev">Pre</div>
+        <div class="swiper-wrapper">
+            <?php echo $this->getSizeValuesHtml() ?>
+        </div>
+        <div id="<?php echo $_option->getId() . '-' . $this->getGroupType() ?>-next" class="swiper-next">Next</div>
+        <div id="<?php echo $_option->getId() . '-' . $this->getGroupType() ?>-pagination" class="swiper-pagination-option"></div>
+    </div>
+<?php elseif($this->getGroupType()=='pad'): ?>
+    <div class="qs-choose-pad" id="qs-pad-<?php echo $_option->getId() . '-' . $this->getGroupType() ?>" style="display: none;">
+        <div id="<?php echo $_option->getId() . '-' . $this->getGroupType() ?>" class="wp-container-slider">
+            <div id="<?php echo $_option->getId() . '-' . $this->getGroupType() ?>-prev" class="swiper-prev">Pre</div>
+            <div class="swiper-wrapper">
+                <?php echo $this->getPadValuesHtml() ?>
+            </div>
+            <div id="<?php echo $_option->getId() . '-' . $this->getGroupType() ?>-next" class="swiper-next">Next</div>
+            <div id="<?php echo $_option->getId() . '-' . $this->getGroupType() ?>-pagination" class="swiper-pagination-option"></div>
+        </div>
+    </div>
+<?php elseif($this->getGroupType()=='multi'): ?>
+
+    <div id="<?php echo $_option->getId() . '-' . $this->getGroupType() ?>" class="wp-container-slider wp-product-slider">
+        <div id="<?php echo $_option->getId() . '-' . $this->getGroupType() ?>-prev" class="swiper-prev">Pre</div>
+        <div class="swiper-wrapper">
+            <?php echo $this->getMultiValuesHtml() ?>
+        </div>
+        <div id="<?php echo $_option->getId() . '-' . $this->getGroupType() ?>-next" class="swiper-next">Next</div>
+        <div id="<?php echo $_option->getId() . '-' . $this->getGroupType() ?>-pagination" class="swiper-pagination-option"></div>
+    </div>
+<?php else: ?>
+    <dt>
+        <label<?php if ($_option->getIsRequire()) echo ' class="required"' ?>><?php if ($_option->getIsRequire()) echo '<em>*</em>' ?><?php echo $this->escapeHtml($_option->getTitle()) ?></label>
+    </dt>
+    <dd<?php if ($_option->decoratedIsLast) { ?> class="last"<?php } ?>>
+        <div class="input-box">
+            <?php echo $this->getValuesHtml() ?>
+            <?php if ($_option->getIsRequire()): ?>
+                <?php if ($_option->getType() == Mage_Catalog_Model_Product_Option::OPTION_TYPE_RADIO || $_option->getType() == Mage_Catalog_Model_Product_Option::OPTION_TYPE_CHECKBOX): ?>
+                    <span id="options-<?php echo $_option->getId() ?>-container"></span>
+                <?php endif; ?>
+            <?php endif; ?>
+        </div>
+    </dd>
+<?php endif; ?>

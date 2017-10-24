@@ -1,0 +1,33 @@
+<?xml version="1.0" ?>
+<config>
+    <menu>
+        <system>
+            <children>
+                <onestepcheckout>
+                    <title>Onestepcheckout</title>
+                    <action>adminhtml/system_config/edit/section/onestepcheckout</action>
+                </onestepcheckout>
+            </children>
+        </system>
+    </menu>
+	<acl>
+        <resources>
+            <admin>
+                <children>
+                    <system>
+						<children>
+							<config>
+								<children>
+									<onestepcheckout translate="title" module="qsoft_onestepcheckout">
+										<title>Qsoft Onestepcheckout</title>
+										<sort_order>70</sort_order>
+									</onestepcheckout>
+								</children>
+							</config>
+						</children>
+					</system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

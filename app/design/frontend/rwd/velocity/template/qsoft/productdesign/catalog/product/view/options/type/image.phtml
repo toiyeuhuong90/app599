@@ -1,0 +1,12 @@
+<?php /* @var QSoft_ProductDesign_Block_Catalog_Product_View_Type_Designimage $this */ ?>
+<?php $_option = $this->getOption() ?>
+    <?php if ($colorBlock = $this->getValuesHtml($this->getGroupType())): ?>
+        <div id="<?php echo $_option->getId() . '-' . $this->getGroupType() ?>" class="wp-container-slider qs-list-choose-button">
+            <div id="<?php echo $_option->getId() . '-' . $this->getGroupType() ?>-prev" class="swiper-prev">Pre</div>
+            <div class="swiper-wrapper">
+                <?php echo $colorBlock ?>
+            </div>
+            <div id="<?php echo $_option->getId() . '-' . $this->getGroupType() ?>-next" class="swiper-next">Next</div>
+            <div id="<?php echo $_option->getId() . '-' . $this->getGroupType() ?>-pagination" class="swiper-pagination-option"></div>
+        </div>
+    <?php endif; ?>

@@ -1,0 +1,37 @@
+<?php
+/**
+ * aheadWorks Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://ecommerce.aheadworks.com/AW-LICENSE.txt
+ *
+ * =================================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * =================================================================
+ * This software is designed to work with Magento community edition and
+ * its use on an edition other than specified is prohibited. aheadWorks does not
+ * provide extension support in case of incorrect edition use.
+ * =================================================================
+ *
+ * @category   AW
+ * @package    AW_Ajaxcartpro
+ * @version    3.2.7
+ * @copyright  Copyright (c) 2010-2012 aheadWorks Co. (http://www.aheadworks.com)
+ * @license    http://ecommerce.aheadworks.com/AW-LICENSE.txt
+ */
+?>
+
+<button id="aw-acp-checkout" class="button aw-acp-checkout" title="<?php echo $this->__('View cart &amp; checkout')?>" type="button"><span><span><?php echo $this->__('View cart &amp; checkout')?></span></span></button>
+
+<script type="text/javascript">
+    document.getElementById("aw-acp-checkout").onclick = function () {
+        location.href = "<?php echo Mage::getUrl('checkout/cart')?>";
+    };
+</script>
+
+<div id="extra-ymal">
+</div>

@@ -1,0 +1,498 @@
+<?php
+$helper = Mage::helper('core');
+$measures = $this->getMeasures();
+$measureValues = $this->getMeasureValues();
+$units = $helper->jsonDecode($measureValues->getUnit());
+$weightUnit = Mage::getStoreConfig('customer_measure/files/default_weight');
+$heightUnit = Mage::getStoreConfig('customer_measure/files/default_height');
+if ($units) {
+    $weightUnit = $units['weight'];
+    $heightUnit = $units['height'];
+}
+$items = $helper->jsonDecode($measureValues->getMeasures());
+?>
+
+<div class="qs-measurement-profile">
+    <div class="qs-title-page-account">
+        <?php echo $this->__('Enter your Measurement') ?>
+    </div>
+    <div class="measurement-tab">
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#body-scan" aria-controls="body-scan" role="tab"
+                                                      data-toggle="tab">3D Body Scan</a></li>
+            <li class="border">|</li>
+            <li role="presentation"><a href="#measurements" aria-controls="measurements" role="tab" data-toggle="tab">Custom
+                    measurements</a></li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="body-scan">
+                <!--    body scan gallery-->
+                <?php if ($bodyScan = $measureValues->getBodyScan()): ?>
+                    <div class="bodyscan-block">
+                        <div class="responsive-table">
+                            <!--                  <div class="block-description">-->
+                            <!--                      --><?php //echo $this->getChildHtml('bodyscan.description') ?>
+                            <!--                  </div>-->
+                            <table class="data-table table history" id="my-bodyscan-table">
+                                <thead>
+                                <tr>
+                                    <th class="number"><?php echo $this->__('Compare') ?></th>
+                                    <th class="date"><?php echo $this->__('Date') ?></th>
+                                    <th class="ship"><?php echo $this->__('Time') ?></th>
+                                    <th class="total"><?php echo $this->__('Description') ?></th>
+                                    <th class="status"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <?php foreach ($this->helper('core')->jsonDecode($bodyScan) as $date => $data): ?>
+                                    <tr>
+                                        <td class="number"><input type="checkbox" value="<?php echo $date?>" onclick="updatePopupBodyscanValue(this);"/></td>
+                                        <td class="date"><?php echo date('m/d/Y',$date)?></td>
+                                        <td class="ship"><?php echo date('g:i A',$date)?></td>
+                                        <td class="total"><span class="price"><?php echo $data['description']?></span></td>
+                                        <td class="status"><a onclick="showCompareItem('<?php echo $date?>');" <em>View</em></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                                </tbody>
+                            </table>
+
+                            <div class="button-wrap-center">
+                                <button onclick="showComparePopup();" class="button compare btn-blue-large"><span><span><?php echo $this->__('Compare')?></span></span></button>
+                            </div>
+                        </div>
+                        <script type="text/javascript">
+                            decorateTable('my-bodyscan-table');
+
+                            var datas = <?php echo $bodyScan?>;
+                            var compareLimit = 2;
+                            var compareSelected = 0;
+                            function updatePopupBodyscanValue(tag){
+                                if(tag.checked){
+                                    if(compareSelected>=compareLimit){
+                                        tag.checked = false;
+                                        alert('You only select 2 items to compare.');
+
+                                    } else {
+                                        compareSelected++;
+                                        reBuiltCompareBlock(tag.value);
+                                    }
+                                }else{
+                                    updateCompareBlock(tag.value);
+                                    compareSelected--;
+                                }
+
+                            }
+                            function showComparePopup(){
+                                if(compareSelected==2){
+                                    jQuery('.qs-bg-mark').show();
+                                    jQuery('#compareblock').show();
+
+                                }else{
+                                    alert('Please select 2 items to compare.')
+                                }
+
+                            }
+                            function reBuiltCompareBlock(id) {
+                                if(compareSelected==0){
+                                    jQuery('#compareblock').html('');
+                                }else{
+                                    var template = '<div id="child'+id+'" class="child-compare">'+
+                                            '<p class="title-center">'+datas[id].description + '</p>'+
+                                            '<div>';
+                                    for(var i=0; i<datas[id].images.length; i++){
+                                        template+= '<img width="500" src="'+datas[id].images[i]+'" title=Page '+i+'"/>';
+                                    }
+                                    template+= '</div>'+
+                                            '</div>';
+                                    jQuery('#compareblock').append(template);
+                                }
+                            }
+
+                            function showCompareItem(id){
+                                var template = '<div class="compare-popup">'+
+                                    '<p class="title-center">'+datas[id].description + '</p>'+
+                                    '<div>';
+                                for(var i=0; i<datas[id].images.length; i++){
+                                    template+= '<img width="500" src="'+datas[id].images[i]+'" title=Page '+i+'"/>';
+                                }
+                                template+= '</div>'+
+                                    '</div>';
+                                jQuery('#compare-item .content').html(template);
+                                jQuery('.qs-bg-mark').show();
+                                jQuery('#compare-item').show();
+                            }
+
+                            function updateCompareBlock(id){
+                                jQuery('#child' + id).remove();
+                            }
+                            jQuery(document).ready(function () {
+                                jQuery('.close-item-compare').click(function () {
+                                    jQuery('.qs-bg-mark').hide();
+                                    jQuery('#compare-item').hide();
+                                    jQuery('#compareblock').hide();
+                                });
+
+                            })
+                        </script>
+                    </div>
+                    <div class="qs-bg-mark" style="width: 100%; height: 100%; background-color: black; opacity: 0.5; display: none; position: fixed; top: 0;left: 0;z-index: 99"></div>
+                    <div id="compareblock" style="display: none;" class="box-compare">
+                        <a class="close-item-compare"><i class="fa fa-times-circle"></i></a>
+                    </div>
+                <div id="compare-item" style="display: none;" class="box-compare">
+                    <a class="close-item-compare"><i class="fa fa-times-circle"></i></a>
+                    <div class="content">
+
+                    </div>
+                </div>
+                <?php else: ?>
+                    <div class="bodyscan-block">
+                        <p class="note-msg"><?php echo $this->__('There are no body-scan file matching the selection.') ?></p>
+                    </div>
+                <?php endif; ?>
+            </div>
+            <style type="text/css">
+                
+            </style>
+            <div role="tabpanel" class="tab-pane" id="measurements">
+                <!-- <div class="qs-desc-page-account">
+          <?php echo $this->__('Fill in the following form with your manual measurements, or use our <a target="_blank" href="%s">3D body scan</a>', $this->getUrl('customer/schedule')) ?>
+          </div> -->
+                <div class="qs-measurement-profile-container">
+                    <form action="<?php echo $this->getUrl('customermeasure/account/updatePost') ?>" method="post">
+                        <div class="qs-row-measurement measurement-first qs-check-hweight">
+                            <input name="hweight"
+                                   type="radio" <?php if ($weightUnit == 1 && $heightUnit == 1): ?> checked="checked" <?php endif; ?>
+                                   id="hweight1" value="1">
+                            <label for="hweight1">kg/cm</label>
+                            <span>|</span>
+                            <input name="hweight"
+                                   type="radio" <?php if ($weightUnit == 2 && $heightUnit == 2): ?> checked="checked" <?php endif; ?>
+                                   id="hweight2" value="2">
+                            <label for="hweight2">lbs/inch</label>
+                        </div>
+
+                        <!--            weight-->
+                        <div class="qs-row-measurement measurement-first qs-check-hweight-hidden">
+                            <input onclick="updateUnitValue(1, this.value);"
+                                   id="weight1" <?php if ($weightUnit == 1): ?> checked="checked" <?php endif; ?>
+                                   value="1" type="radio"
+                                   name="measure[unit][weight]"/>
+                            <input onclick="updateUnitValue(1, this.value);"
+                                   id="weight2" <?php if ($weightUnit == 2): ?> checked="checked" <?php endif; ?>
+                                   value="2" type="radio"
+                                   name="measure[unit][weight]"/>
+                            <input onclick="updateUnitValue(2, this.value);"
+                                   id="height1" <?php if ($heightUnit == 1): ?> checked="checked" <?php endif; ?>
+                                   value="1" type="radio"
+                                   name="measure[unit][height]"/>
+                            <input onclick="updateUnitValue(2, this.value);"
+                                   id="height2" <?php if ($heightUnit == 2): ?> checked="checked" <?php endif; ?>
+                                   value="2" type="radio"
+                                   name="measure[unit][height]"/>
+                        </div>
+                        <div class="qs-measurement-total">
+                            <div class="row">
+                                <?php $count_measures = 0; ?>
+
+                                <?php foreach ($measures as $measure): ?>
+                                    <?php
+                                    $count_measures++;
+                                    $id = $measure->getId();
+                                    $unit = $measure->getUnit();
+                                    $min = $measure->getMinValue();
+                                    $max = $measure->getMaxValue();
+                                    if ($unit == 1 && $weightUnit != 1) {
+                                        $min = round($min * 2.20462);
+                                        $max = round($max * 2.20462);
+                                    }
+                                    if ($unit == 2 && $heightUnit != 1) {
+                                        $min = round($min * 0.393701);
+                                        $max = round($max * 0.393701);
+                                    }
+                                    ?>
+
+                                    <?php if ($count_measures == 1 || $count_measures == (round(count($measures) / 2) + 1)): ?>
+                                        <div class="col-md-6 col-sm-6">
+                                    <?php endif; ?>
+                                    <div class="qs-row-measurement">
+                                        <label class="qs-measurement-option"><?php echo $measure->getTitle() ?></label>
+                                        <input id="item<?php echo $id ?>" unittype="<?php echo $unit ?>"
+                                               name="measure[item][<?php echo $id ?>]" class="input-measurement-type"
+                                               type="text" value="<?php echo $items[$measure->getId()] ?>"/>
+                                        <div class="qs-data-slider">
+                                            <span id="item<?php echo $id ?>-min"
+                                                  class="qs-slider-min"><?php echo $min ?></span>
+                                            <input id="item<?php echo $id ?>-ranger" type="range"
+                                                   min="<?php echo $min ?>" max="<?php echo $max ?>" step="1"
+                                                   value="<?php echo $items[$measure->getId()] ?>" data-rangeslider/>
+                                            <span id="item<?php echo $id ?>-max"
+                                                  class="qs-slider-max"><?php echo $max ?></span>
+                                            <?php if ($measure->getVideoUrl()): ?>
+                                                <a class="qs-watch-video"><i class="fa fa-chevron-circle-up"
+                                                                             aria-hidden="true"></i></a>
+                                            <?php endif; ?>
+                                        </div>
+                                        <?php if ($measure->getVideoUrl()): ?>
+                                            <div id="video<?php echo $id ?>" class="video-content"
+                                                 style="display: none;">
+                                                <a class="play-video" rel="fancyboxVideo" onclick="return false;"
+                                                   href="<?php echo $measure->getVideoUrl() ?>">
+                                                    <img src="<?php echo $this->helper('qsoft_customermeasure')->getVideoThumb($measure->getVideoUrl()) ?>"
+                                                         style="width:200px" class="measurement-video"/>
+                                                    <img class="play-btn"
+                                                         src="<?php echo $this->getSkinUrl('images/play-btn.png') ?>">
+                                                </a>
+                                                <?php if ($description = $measure->getDescription()): ?>
+                                                    <div class="video-description">
+                                                        <?php echo $description ?>
+                                                    </div>
+                                                <?php endif; ?>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                    <?php if ($count_measures == round(count($measures) / 2) || $count_measures == count($measures)): ?>
+                                        </div>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                        <div class="qs-measurement-description">
+                            <?php if ($measureValues->getUpdatedAt()): ?>
+                                Last update on <?php echo date('M d Y', strtotime($measureValues->getUpdatedAt())); ?>
+                            <?php endif; ?>
+                        </div>
+                        <div class="btn-group">
+                            <button type="submit" class="btn-blue-large">Update</button>
+                            <button type="submit" class="btn-gray-large">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--style demo-->
+<style type="text/css">
+    a.play-video {
+        display: inline-block;
+        position: relative;
+    }
+
+    img.play-btn {
+        position: absolute;
+        top: 40%;
+        left: 40%;
+    }
+
+    .bg_measurement {
+        background: #f4f4f4;
+    }
+</style>
+
+
+<script>
+    function toggleVideo(tag, id) {
+        if (jQuery(tag).hasClass('video-active')) {
+            tag.innerHTML = '<i class="fa fa-chevron-circle-down" aria-hidden="true"></i>';
+            jQuery('#video' + id).slideUp(300);
+            jQuery(tag).removeClass('video-active');
+        } else {
+            tag.innerHTML = '<i class="fa fa-chevron-circle-up" aria-hidden="true"></i>';
+            jQuery('.video-content').slideUp(300);
+            jQuery('#video' + id).slideDown(300);
+            jQuery(tag).addClass('video-active');
+        }
+
+    }
+
+    jQuery('.qs-watch-video').click(function () {
+        if (jQuery(this).parent().parent().hasClass('bg_measurement')) {
+            jQuery('.qs-row-measurement').removeClass('bg_measurement');
+        } else {
+            jQuery('.qs-row-measurement').removeClass('bg_measurement');
+            jQuery(this).parent().parent().addClass('bg_measurement');
+        }
+        if (jQuery(this).hasClass('video-active')) {
+            jQuery(this).closest('.qs-data-slider').nextAll('.video-content').slideUp(300);
+            jQuery(this).removeClass('video-active');
+        } else {
+            jQuery('.video-content').slideUp(300);
+            jQuery(this).closest('.qs-data-slider').nextAll('.video-content').slideDown(300);
+            jQuery('.qs-watch-video').removeClass('video-active');
+            jQuery(this).addClass('video-active');
+        }
+    })
+
+    var $document = jQuery(document);
+    var selector = '[data-rangeslider]';
+    var $element = jQuery(selector);
+
+    jQuery(document).ready(function () {
+        <?php if($measureValues->getBodyScan()):?>
+        <?php $items = $this->helper('core')->jsonDecode($measureValues->getBodyScan());?>
+
+        jQuery("#fancybox-bodyscan").click(function () {
+            jQuery.fancybox.open([
+                <?php $i = 1; foreach ($items['images'] as $item): ?>
+                {
+                    href: '<?php echo $item ?>',
+                    title: 'page <?php echo $i ?>'
+                },
+                <?php $i++; endforeach; ?>
+            ], {
+                helpers: {
+                    thumbs: {
+                        width: 75,
+                        height: 50
+                    }
+                }
+            });
+        });
+        <?php endif;?>
+        jQuery("a[rel=fancyboxVideo]").click(function () {
+            jQuery.fancybox({
+                'padding': 0,
+                'autoScale': false,
+                'transitionIn': 'none',
+                'transitionOut': 'none',
+                'title': this.title,
+                'width': 680,
+                'height': 495,
+                'href': this.href.replace(new RegExp("watch\\?v=", "i"), 'v/'),
+                'type': 'swf',
+                'swf': {
+                    'wmode': 'transparent',
+                    'allowfullscreen': 'true'
+                }
+            });
+
+            return false;
+        });
+        jQuery('.input-measurement-type').keypress(function (e) {
+            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                return false;
+            }
+        });
+
+        $document.on('input', 'input[type="range"], ' + selector, function (e) {
+            valueOutput(e.target, jQuery(this).parent().prev());
+        });
+
+        //Change value
+        $document.on('keyup', '.input-measurement-type', function (e) {
+            var $inputRange = jQuery(selector, e.target.parentNode);
+            var value = jQuery(jQuery(this), e.target.parentNode)[0].value;
+
+            if (value) {
+                if (parseInt(value) >= parseInt(jQuery($inputRange).attr('min')) && parseInt(value) <= parseInt(jQuery($inputRange).attr('max'))) {
+                    $inputRange.val(value).change();
+                }
+            }
+        });
+
+        $document.on('change', '.input-measurement-type', function (e) {
+            var $inputRange = jQuery(selector, e.target.parentNode);
+            var value = jQuery(jQuery(this), e.target.parentNode)[0].value;
+
+            if (value) {
+                if (parseInt(value) > parseInt(jQuery($inputRange).attr('max'))) {
+                    jQuery(this).val(jQuery($inputRange).attr('max'));
+                    $inputRange.val(jQuery($inputRange).attr('max')).change();
+                }
+
+                if (parseInt(value) < parseInt(jQuery($inputRange).attr('min'))) {
+                    jQuery(this).val(jQuery($inputRange).attr('min'));
+                    $inputRange.val(jQuery($inputRange).attr('min')).change();
+                }
+            } else {
+                jQuery(this).val(jQuery($inputRange).attr('min'));
+                $inputRange.val(jQuery($inputRange).attr('min')).change();
+            }
+        });
+
+        $element.rangeslider({
+            polyfill: false
+        });
+
+        //Check
+
+        jQuery(document).on('click', '.qs-check-hweight input[name="hweight"]', function () {
+            var value = jQuery(this).val();
+
+            updateUnitValue(1, value);
+            updateUnitValue(2, value);
+
+            document.getElementById('weight' + value).checked = true;
+            document.getElementById('height' + value).checked = true;
+        });
+
+    });
+
+    function valueOutput(element, input) {
+        var value = element.value;
+        jQuery(input).val(value);
+    }
+    var defaultWeight = <?php echo $weightUnit?>;
+    var defaultHeight = <?php echo $heightUnit?>;
+    var cmToInch = 0.393701;
+    var kgToLbs = 2.20462;
+
+    function updateUnitValue(unitType, unitValue) {
+        //weight
+        if (unitType == 1 && unitValue != defaultWeight) {
+            defaultWeight = unitValue;
+            jQuery('input[unittype="1"]').each(function () {
+                var id = jQuery(this).attr('id');
+                var rate = kgToLbs;
+                if (unitValue == 1) {
+                    rate = 1 / kgToLbs;
+                }
+                var newValue = Math.round(jQuery(this).val() * rate);
+                var minValue = Math.round(jQuery('#' + id + '-ranger').attr('min') * rate);
+                var maxValue = Math.round(jQuery('#' + id + '-ranger').attr('max') * rate);
+                var newRangerFill = jQuery('#' + id + '-ranger').parent().find('.rangeslider__fill').width();
+                var newRangerHandle = jQuery('#' + id + '-ranger').parent().find('.rangeslider__handle').css('left');
+
+                jQuery(this).val(newValue);
+                jQuery('#' + id + '-ranger').attr('max', maxValue);
+                jQuery('#' + id + '-ranger').attr('min', minValue);
+                jQuery('#' + id + '-max').html(maxValue);
+                jQuery('#' + id + '-min').html(minValue);
+                jQuery('#' + id + '-ranger').attr('value', newValue);
+                jQuery('#' + id + '-ranger').rangeslider('update', true);
+                jQuery('#' + id + '-ranger').parent().find('.rangeslider__fill').width(newRangerFill);
+                jQuery('#' + id + '-ranger').parent().find('.rangeslider__handle').css('left', newRangerHandle);
+            });
+        }
+        //height
+        if (unitType == 2 && unitValue != defaultHeight) {
+            defaultHeight = unitValue;
+            jQuery('input[unittype="2"]').each(function () {
+                var id = jQuery(this).attr('id');
+                var rate = cmToInch;
+                if (unitValue == 1) {
+                    rate = 2.54;
+                }
+                var newValue = Math.round(jQuery(this).val() * rate);
+                var minValue = Math.round(jQuery('#' + id + '-ranger').attr('min') * rate);
+                var maxValue = Math.round(jQuery('#' + id + '-ranger').attr('max') * rate);
+                var newRangerFill = jQuery('#' + id + '-ranger').parent().find('.rangeslider__fill').width();
+                var newRangerHandle = jQuery('#' + id + '-ranger').parent().find('.rangeslider__handle').css('left');
+
+                jQuery(this).val(newValue);
+                jQuery('#' + id + '-ranger').attr('max', maxValue);
+                jQuery('#' + id + '-ranger').attr('min', minValue);
+                jQuery('#' + id + '-max').html(maxValue);
+                jQuery('#' + id + '-min').html(minValue);
+                jQuery('#' + id + '-ranger').attr('value', newValue);
+                jQuery('#' + id + '-ranger').rangeslider('update', true);
+                jQuery('#' + id + '-ranger').parent().find('.rangeslider__fill').width(newRangerFill);
+                jQuery('#' + id + '-ranger').parent().find('.rangeslider__handle').css('left', newRangerHandle);
+            });
+        }
+    }
+</script>

@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <QSoft_SocialShareButtons>
+            <version>1.1.0</version>
+        </QSoft_SocialShareButtons>
+    </modules>
+    <frontend>
+        <routers>
+            <mrweb>      <!-- I make this match my front name but I'm not sure it matters -->
+                <use>standard</use> <!-- Use standard routing as opposed to admin.  IE: frontend vs admin -->
+                <args>
+                    <module>QSoft_SocialShareButtons</module>  <!-- The module to search for controllers -->
+                    <frontName>socialsharebuttons</frontName> <!-- The first descriminator in the path.  "spinonesolutions" in http://localhost/spinonesolutions/ -->
+                </args>
+            </mrweb>
+        </routers>
+        <layout>
+            <updates>
+                <socialsharebuttons>
+                    <file>socialsharebuttons.xml</file>
+                </socialsharebuttons>
+            </updates>
+        </layout>
+    </frontend>
+    <global>
+        <models>
+            <mrweb_socialsharebuttons>
+                <class>QSoft_SocialShareButtons_Model</class>
+            </mrweb_socialsharebuttons>
+        </models>
+    <helpers>
+      <socialsharebuttons>
+        <class>QSoft_SocialShareButtons_Helper</class>
+      </socialsharebuttons>
+    </helpers>
+	<blocks>
+	  <socialsharebuttons>
+		<class>QSoft_SocialShareButtons_Block</class>
+	  </socialsharebuttons>
+	</blocks>
+    </global>
+</config>

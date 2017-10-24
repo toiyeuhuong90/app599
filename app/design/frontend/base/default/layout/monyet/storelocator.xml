@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <default>
+		<reference name="top.links">
+			<block type="storelocator/links" name="header_store_link" >
+				<action method="addTopLinkStores" />	
+			</block>	
+		</reference>
+		<reference name="footer_links">
+            <block type="storelocator/links" name="footer_store_link" >
+				<action method="addFooterLinkStores" />	
+			</block>
+        </reference>
+		<reference name="head">
+			<action method="addJs"><script>monyet/storelocator/storelocator.js</script></action>
+			<action method="addCss"><styleSheet>monyet/storelocator/css/storelocator.css</styleSheet></action>
+		</reference>	
+    </default>
+	
+    <storelocator_index_index>
+		<reference name="root">
+			<action method="setTemplate"><template>page/1column.phtml</template></action>
+		</reference>
+        <reference name="content">
+            <block type="storelocator/store" name="local_stores" template="monyet/storelocator/list.phtml" >
+			</block>
+        </reference>
+    </storelocator_index_index>
+	
+</layout> 

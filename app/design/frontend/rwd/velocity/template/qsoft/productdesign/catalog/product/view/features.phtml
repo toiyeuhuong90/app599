@@ -1,0 +1,7 @@
+<?php $_features = $this->getProduct()->getProductFeatures(); ?>
+
+<?php if ($_features): ?>
+    <div class="std">
+        <?php echo $this->helper('catalog/output')->productAttribute($this->getProduct(), $_features, 'product_features') ?>
+    </div>
+<?php endif; ?>

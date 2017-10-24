@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<layout>
+    <qsproductdesignadmin_adminhtml_frontendgroup_new>
+        <reference name="head">
+            <action method="addJs"><js>lib/flex.js</js></action>
+            <action method="addJs"><js>lib/FABridge.js</js></action>
+            <action method="addJs"><js>mage/adminhtml/flexuploader.js</js></action>
+            <action method="addJs"><js>qsoft/extensions/browser.js</js></action>
+            <action method="addJs"><js>prototype/window.js</js></action>
+            <action method="addItem"><type>js_css</type><js>prototype/windows/themes/default.css</js></action>
+            <action method="addItem"><type>skin_css</type><js>lib/prototype/windows/themes/magento.css</js></action>
+        </reference>
+    </qsproductdesignadmin_adminhtml_frontendgroup_new>
+    <qsproductdesignadmin_adminhtml_frontendgroup_edit>
+        <reference name="head">
+            <reference name="head">
+                <action method="addJs"><js>lib/flex.js</js></action>
+                <action method="addJs"><js>lib/FABridge.js</js></action>
+                <action method="addJs"><js>mage/adminhtml/flexuploader.js</js></action>
+                <action method="addJs"><js>qsoft/extensions/browser.js</js></action>
+                <action method="addJs"><js>prototype/window.js</js></action>
+                <action method="addItem"><type>js_css</type><js>prototype/windows/themes/default.css</js></action>
+                <action method="addItem"><type>skin_css</type><js>lib/prototype/windows/themes/magento.css</js></action>
+            </reference>
+        </reference>
+    </qsproductdesignadmin_adminhtml_frontendgroup_edit>
+    <adminhtml_catalog_product_new>
+        <reference name="head">
+            <action method="removeItem"><type>js</type><name>megamenu/jscolor/jscolor.js</name></action>
+            <action method="addJs"><js>qsoft/productdesign/jquery-1.9.1.js</js></action>
+            <action method="addJs"><js>qsoft/productdesign/product_edit.js</js></action>
+            <action method="addJs"><js>qsoft/productdesign/jscolor.js</js></action>
+            <action method="addJs"><js>qsoft/extensions/browser.js</js></action>
+        </reference>
+    </adminhtml_catalog_product_new>
+    <adminhtml_catalog_product_edit>
+        <reference name="head">
+            <action method="removeItem"><type>js</type><name>megamenu/jscolor/jscolor.js</name></action>
+            <action method="addJs"><js>qsoft/productdesign/jquery-1.9.1.js</js></action>
+            <action method="addJs"><js>qsoft/productdesign/product_edit.js</js></action>
+            <action method="addJs"><js>qsoft/extensions/browser.js</js></action>
+            <action method="addJs"><js>qsoft/productdesign/jscolor.js</js></action>
+        </reference>
+    </adminhtml_catalog_product_edit>
+
+    <qsproductdesignadmin_adminhtml_inspireme_index>
+        <reference name="content">
+            <block type="productdesign/adminhtml_inspireme" name="inspireme"/>
+        </reference>
+    </qsproductdesignadmin_adminhtml_inspireme_index>
+    <qsproductdesignadmin_adminhtml_inspireme_new>
+        <reference name="head">
+            <action method="addJs"><js>lib/flex.js</js></action>
+            <action method="addJs"><js>lib/FABridge.js</js></action>
+            <action method="addJs"><js>mage/adminhtml/flexuploader.js</js></action>
+            <action method="addJs"><js>qsoft/extensions/browser.js</js></action>
+            <action method="addJs"><js>prototype/window.js</js></action>
+            <action method="addItem"><type>js_css</type><js>prototype/windows/themes/default.css</js></action>
+            <action method="addItem"><type>skin_css</type><js>lib/prototype/windows/themes/magento.css</js></action>
+        </reference>
+        <reference name="content">
+            <block type="core/template" template="qsoft/productdesign/inspireme/js.phtml"/>
+        </reference>
+    </qsproductdesignadmin_adminhtml_inspireme_new>
+    <qsproductdesignadmin_adminhtml_inspireme_edit>
+        <reference name="head">
+            <action method="addJs"><js>lib/flex.js</js></action>
+            <action method="addJs"><js>lib/FABridge.js</js></action>
+            <action method="addJs"><js>mage/adminhtml/flexuploader.js</js></action>
+            <action method="addJs"><js>qsoft/extensions/browser.js</js></action>
+            <action method="addJs"><js>prototype/window.js</js></action>
+            <action method="addItem"><type>js_css</type><js>prototype/windows/themes/default.css</js></action>
+            <action method="addItem"><type>skin_css</type><js>lib/prototype/windows/themes/magento.css</js></action>
+        </reference>
+        <reference name="content">
+            <block type="core/template" template="qsoft/productdesign/inspireme/js.phtml"/>
+        </reference>
+    </qsproductdesignadmin_adminhtml_inspireme_edit>
+
+</layout>

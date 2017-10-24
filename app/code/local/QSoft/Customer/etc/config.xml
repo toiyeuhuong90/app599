@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <QSoft_Customer>
+            <version>0.1.9</version>
+        </QSoft_Customer>
+    </modules>
+    <global>
+        <models>
+            <qsoft_customer>
+                <class>QSoft_Customer_Model</class>
+                <resourceModel>qsoft_customer_resource</resourceModel>
+            </qsoft_customer>
+            <qsoft_customer_resource>
+                <class>QSoft_Customer_Model_Resource</class>
+                <entities>
+                    <schedulebodyscan>
+                        <table>qsoft_schedule_body_scan</table>
+                    </schedulebodyscan>
+                </entities>
+            </qsoft_customer_resource>
+        </models>
+        <blocks>
+            <qsoft_customer>
+                <class>QSoft_Customer_Block</class>
+            </qsoft_customer>
+            <customer>
+                <rewrite>
+                    <account_navigation>QSoft_Customer_Block_Customer_Account_Navigation</account_navigation>
+                </rewrite>
+            </customer>
+        </blocks>
+        <helpers>
+            <qsoft_customer>
+                <class>QSoft_Customer_Helper</class>
+            </qsoft_customer>
+        </helpers>
+        <resources>
+            <qsoft_customer_setup>
+                <setup>
+                    <module>QSoft_Customer</module>
+                    <class>Mage_Eav_Model_Entity_Setup</class>
+                </setup>
+            </qsoft_customer_setup>
+        </resources>
+        <template>
+            <email>
+                <qsoftcustomer_schedule_email_template_for_admin translate="label" module="qsoft_customer">
+                    <label>Schedule body scan for admin</label>
+                    <file>qsoft/schedule_fitting_admin.html</file>
+                    <type>html</type>
+                </qsoftcustomer_schedule_email_template_for_admin>
+                <qsoftcustomer_schedule_email_template_for_customer translate="label" module="qsoft_customer">
+                    <label>Schedule body scan for Customer</label>
+                    <file>qsoft/schedule_fitting_customer.html</file>
+                    <type>html</type>
+                </qsoftcustomer_schedule_email_template_for_customer>
+            </email>
+        </template>
+    </global>
+    <frontend>
+        <routers>
+            <customer>
+                <args>
+                    <modules>
+                        <Qsoft_Customer before="Mage_Customer">QSoft_Customer</Qsoft_Customer>
+                    </modules>
+                </args>
+            </customer>
+        </routers>
+        <layout>
+            <updates>
+                <qsoft_customer>
+                    <file>qsoft/customer.xml</file>
+                </qsoft_customer>
+            </updates>
+        </layout>
+    </frontend>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <Qsoft_Customer before="Mage_Adminhtml">QSoft_Customer_Adminhtml</Qsoft_Customer>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+    <adminhtml>
+        <layout>
+            <updates>
+                <qsoft_customer>
+                    <file>qsoft/customer.xml</file>
+                </qsoft_customer>
+            </updates>
+        </layout>
+        <menu>
+            <customer>
+                <children>
+                    <schedulebodyscan module="qsoft_customer">
+                        <title>Schedule Body scan</title>
+                        <sort_order>0</sort_order>
+                        <action>adminhtml/schedulebodyscan</action>
+                    </schedulebodyscan>
+                </children>
+            </customer>
+        </menu>
+        <acl>
+            <resources>
+                <all>
+                    <title>Allow Everything</title>
+                </all>
+                <admin>
+                    <children>
+                        <customer>
+                            <children>
+                                <schedulebodyscan translate="title">
+                                    <title>Schedule Body scan</title>
+                                    <sort_order>0</sort_order>
+                                </schedulebodyscan>
+                            </children>
+                        </customer>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <qsoftcustomer module="qsoft_customer">
+                                            <title>Customer</title>
+                                        </qsoftcustomer>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+    </adminhtml>
+</config>

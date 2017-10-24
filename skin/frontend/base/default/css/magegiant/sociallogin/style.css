@@ -1,0 +1,140 @@
+#magegiant-sociallogin-container {
+
+}
+
+#magegiant-sociallogin-container input, #magegiant-sociallogin-container select, #magegiant-sociallogin-container textarea {
+    -ms-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+.magegiant-sociallogin-popup {
+    width: 100%;
+    max-width: 500px;
+    background-color: white;
+    z-index: 200;
+    overflow: hidden;
+    height: auto !important;
+    text-align: left;
+    top: 10%;
+}
+
+#magegiant-sociallogin-container .sociallogin-title {
+    margin: 0 -12px 12px -12px;
+    padding: 5px 10px 2px 40px;
+    background-position: 12px center;
+    background-repeat: no-repeat;
+}
+
+#magegiant-sociallogin-container .sociallogin-title h2 {
+    color: #fff;
+    font-size: 18px;
+}
+
+#magegiant-sociallogin-container .sociallogin-title.create-account-title {
+    background-image: url(images/create-account-title.png);
+}
+
+#magegiant-sociallogin-container .sociallogin-title.login-title {
+    background-image: url(images/login-title.png);
+}
+
+#magegiant-sociallogin-container .sociallogin-title.forgot-pass-title {
+    background-image: url(images/forgot-pass-title.png);
+}
+
+#magegiant-sociallogin-container .form-list .input-box {
+    width: auto;
+}
+
+#magegiant-sociallogin-container .input-text {
+    width: 100%;
+    min-height: 30px;
+    margin-bottom: 10px;
+    padding: 0 5px;
+}
+
+#magegiant-sociallogin-container .button {
+    transition: all 0.3s ease 0s;
+    -webkit-transition: all 0.3s ease 0s;
+    -moz-transition: all 0.3s ease 0s;
+}
+
+#magegiant-sociallogin-container button.button span {
+    border: none;
+    background: none;
+}
+
+.giant-sociallogin-auth-form-block {
+    display: block;
+    padding: 0 3px;
+}
+
+#magegiant-sociallogin-container .giant-sociallogin-auth-form-block.last {
+    padding: 10px 10px;
+}
+
+.giant-sociallogin-auth-form-block .button {
+    float: right;
+    min-height: 30px;
+    min-width: 80px;
+}
+
+.giant-sociallogin-auth-form-block .button:hover {
+    opacity: 0.6;
+}
+
+#magegiant-sociallogin-authentication, #magegiant-socialogin-create-user, #sociallogin-forgot {
+    padding: 0 12px 10px 10px;
+}
+
+.ajax-login-image {
+    background: url(images/ajax-loader.gif) no-repeat scroll 0 0 transparent;
+    width: 16px;
+    height: 16px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
+
+.magegiant-invalid-email {
+    color: red;
+}
+
+.magegiant-success-email {
+    color: green;
+}
+
+/*Social button*/
+#social-button-container {
+    padding: 10px 0;
+}
+
+#social-button-container .social-button-wapper {
+    display: block;
+}
+
+#social-button-container .social-button-wapper ul {
+    padding: 10px 20px;
+}
+
+#social-button-container .social-button-wapper ul li {
+    float: left;
+    margin-bottom: 20px;
+}
+
+#social-button-container .social-button-wapper ul li button {
+    padding: 5px 5px;
+    width: 100%;
+}
+
+#social-button-container .social-button-wapper ul li button img {
+    width: 25px;
+    float: left;
+}
+
+#social-button-container .social-button-wapper ul li button span {
+    float: left;
+    margin-left: 10px;
+}

@@ -1,0 +1,46 @@
+<?php
+/**
+ * NOTICE OF LICENSE
+ *
+ * You may not give, sell, distribute, sub-license, rent, lease or lend
+ * any portion of the Software or Documentation to anyone.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade to newer
+ * versions in the future.
+ *
+ * @category   ET
+ * @package    ET_SocialLogin
+ * @copyright  Copyright (c) 2015 ET Web Solutions (http://etwebsolutions.com)
+ * @contacts   support@etwebsolutions.com
+ * @license    http://shop.etwebsolutions.com/etws-license-commercial-v1/   ETWS Commercial License (ECL1)
+ */
+
+
+/** @var $helper ET_SocialLogin_Helper_Data */
+/** @var $this ET_SocialLogin_Block_Auth */
+$helper = Mage::helper('et_sociallogin');
+$accs = $this->getSocialProviders();
+$storeId = Mage::app()->getStore()->getId();
+$sizeClass = $helper->getSocialIconsSizeClass($storeId);
+$iconsClass = $helper->getSocialIconsClass($storeId);
+?>
+<?php if(count($accs)):?>
+    <div class="qs-wolfsburg-25 qs-title-social-login">Or Socical Connect</div>
+    <div class="qs-desc-normal-14">Registration is free and easy?</div>
+    <ul class="qs-login-social">
+        <?php foreach ($accs as $provider => $item): ?>
+            <li>
+                <a href="<?php echo Mage::getUrl('social/auth/login', array('provider' => $provider, 'responsetype' => $this->getResponseType())) ?>"
+                   title="<?php echo $item['auth_title'] ?>"
+                   class="btn-qsoft-social btn-social-icon <?php echo $provider; ?> <?php echo $sizeClass;?> <?php echo $iconsClass;?>"><i class="fa fa-<?php echo $provider!='google' ? $provider : $provider.'-plus'; ?>" aria-hidden="true"></i></a></li>
+
+        <?php endforeach; ?>
+    </ul>
+
+
+
+<?php endif; ?>
+
+

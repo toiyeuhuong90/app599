@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <default>
+        <reference name="minicart_content">
+            <action method="addItemRender">
+                <type>productdesign</type>
+                <block>checkout/cart_item_renderer</block>
+                <template>qsoft/productdesign/checkout/cart/minicart/default.phtml</template>
+            </action>
+        </reference>
+    </default>
+    <checkout_onepage_review>
+        <reference name="root">
+            <action method="addItemRender"><type>productdesign</type><block>checkout/cart_item_renderer</block><template>qsoft/productdesign/checkout/onepage/review/item.phtml</template></action>
+        </reference>
+    </checkout_onepage_review>
+    <PRODUCT_TYPE_productdesign translate="label" module="productdesign">
+        <reference name="head">
+            <reference name="head">
+                <action method="addJs" ifconfig="productdesign/general/include_jquery">
+                    <js>qsoft/productdesign/jquery-1.9.1.js</js>
+                </action>
+                <action method="addItem">
+                    <type>skin_js</type>
+                    <name>qsoft/productdesign/draggabilly.pkgd.js</name>
+                </action>
+                <action method="addItem">
+                    <type>skin_js</type>
+                    <name>qsoft/productdesign/swiper/js/swiper.min.js</name>
+                </action>
+                <action method="addItem">
+                    <type>skin_css</type>
+                    <name>qsoft/productdesign/swiper/css/swiper.min.css</name>
+                </action>
+            </reference>
+        </reference>
+        <reference name="root">
+            <action method="setTemplate"><template>page/1column.phtml</template></action>
+        </reference>
+        <reference name="product.info">
+            <action method="setTemplate">
+                <template>qsoft/productdesign/catalog/product/view.phtml</template>
+            </action>
+            <remove name="product.info.media"/>
+            <block type="catalog/product_view" template="qsoft/productdesign/catalog/product/view/media.phtml" name="preview.design"/>
+        </reference>
+        <reference name="product.info.options.wrapper">
+            <block type="catalog/product_view_options" name="product.info.options.design" as="product_options_design" template="qsoft/productdesign/catalog/product/view/options_design.phtml"/>
+        </reference>
+        <reference name="product.info.options">
+            <action method="addOptionRenderer"><type>text</type><block>catalog/product_view_options_type_text</block><template>qsoft/productdesign/catalog/product/view/options/type/text.phtml</template></action>
+            <action method="addOptionRenderer"><type>imagedesign</type><block>productdesign/catalog_product_view_options_type_designimage</block><template>qsoft/productdesign/catalog/product/view/options/type/image.phtml</template></action>
+        </reference>
+    </PRODUCT_TYPE_productdesign>
+    <checkout_cart_index>
+        <reference name="checkout.cart">
+            <action method="addItemRender"><type>productdesign</type><block>checkout/cart_item_renderer</block><template>qsoft/productdesign/checkout/cart/item/default.phtml</template></action>
+        </reference>
+    </checkout_cart_index>
+    <wishlist_index_index>
+        <reference name="customer.wishlist.item.image">
+            <action method="setTemplate">
+                <template>qsoft/productdesign/wishlist/item/column/image.phtml</template>
+            </action>
+        </reference>
+    </wishlist_index_index>
+</layout>

@@ -1,0 +1,170 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Magegiant
+ * 
+ * NOTICE OF LICENSE
+ * 
+ * This source file is subject to the magegiant.com license that is
+ * available through the world-wide-web at this URL:
+ * http://magegiant.com/license-agreement/
+ * 
+ * DISCLAIMER
+ * 
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ * 
+ * @category    Magegiant
+ * @package     Magegiant_InstagramLogin
+ * @copyright   Copyright (c) 2014 Magegiant (http://magegiant.com/)
+ * @license     http://magegiant.com/license-agreement/
+ */
+-->
+<config>
+    <modules>
+        <Magegiant_InstagramLogin>
+            <version>0.1.0</version>
+        </Magegiant_InstagramLogin>
+    </modules>
+    <frontend>
+        <routers>
+            <instagramlogin>
+                <use>standard</use>
+                <args>
+                    <module>Magegiant_InstagramLogin</module>
+                    <frontName>instagramlogin</frontName>
+                </args>
+            </instagramlogin>
+        </routers>
+        <layout>
+            <updates>
+                <instagramlogin>
+                    <file>magegiant/instagramlogin.xml</file>
+                </instagramlogin>
+            </updates>
+        </layout>
+        <translate>
+            <modules>
+                <Magegiant_InstagramLogin>
+                    <files>
+                        <default>Magegiant_InstagramLogin.csv</default>
+                    </files>
+                </Magegiant_InstagramLogin>
+            </modules>
+        </translate>
+        <events>
+            <social_button_create_before>
+                <observers>
+                    <instagramlogin_observers>
+                        <class>instagramlogin/frontend_observer</class>
+                        <method>addInstagramButton</method>
+                    </instagramlogin_observers>
+                </observers>
+            </social_button_create_before>
+        </events>
+    </frontend>
+    <admin>
+        <routers>
+            <instagramloginadmin>
+                <use>admin</use>
+                <args>
+                    <module>Magegiant_InstagramLogin</module>
+                    <frontName>instagramloginadmin</frontName>
+                </args>
+            </instagramloginadmin>
+        </routers>
+    </admin>
+    <adminhtml>
+        <layout>
+            <updates>
+                <instagramlogin>
+                    <file>magegiant/instagramlogin.xml</file>
+                </instagramlogin>
+            </updates>
+        </layout>
+        <translate>
+            <modules>
+                <Magegiant_InstagramLogin>
+                    <files>
+                        <default>Magegiant_InstagramLogin.csv</default>
+                    </files>
+                </Magegiant_InstagramLogin>
+            </modules>
+        </translate>
+    </adminhtml>   
+    <global>
+        <models>
+            <instagramlogin>
+                <class>Magegiant_InstagramLogin_Model</class>
+                <resourceModel>instagramlogin_mysql4</resourceModel>
+            </instagramlogin>
+            <instagramlogin_mysql4>
+                <class>Magegiant_InstagramLogin_Model_Mysql4</class>
+                <entities>
+                    <instagramlogin>
+                        <table>instagramlogin</table>
+                    </instagramlogin>
+                </entities>
+            </instagramlogin_mysql4>
+        </models>
+        <resources>
+            <magegiant_instagramlogin_setup>
+                <setup>
+                    <module>Magegiant_InstagramLogin</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </magegiant_instagramlogin_setup>
+            <instagramlogin_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </instagramlogin_write>
+            <instagramlogin_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </instagramlogin_read>
+        </resources>
+        <blocks>
+            <instagramlogin>
+                <class>Magegiant_InstagramLogin_Block</class>
+            </instagramlogin>
+        </blocks>
+        <helpers>
+            <instagramlogin>
+                <class>Magegiant_InstagramLogin_Helper</class>
+            </instagramlogin>
+        </helpers>
+        <!-- <events>
+            <controller_action_predispatch>
+                <observers>
+                    <instagramlogin_observers>
+                        <class>instagramlogin/observer</class>
+                        <method>controllerActionPredispatch</method>
+                    </instagramlogin_observers>
+                </observers>
+            </controller_action_predispatch>
+        </events> -->
+    </global>
+
+    <default>
+        <instagramlogin>
+            <general>
+                <is_enabled>1</is_enabled>
+            </general>
+        </instagramlogin>
+        <default>
+            <sociallogin>
+                <instagram>
+                    <enable>0</enable>
+                    <sort_order>7</sort_order>
+                    <instagram_image>default/instagram.png</instagram_image>
+                    <instagram_image_label>Instagram</instagram_image_label>
+                </instagram>
+            </sociallogin>
+        </default>
+    </default>
+    
+</config>

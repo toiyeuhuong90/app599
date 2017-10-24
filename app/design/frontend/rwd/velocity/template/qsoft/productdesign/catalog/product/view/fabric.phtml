@@ -1,0 +1,7 @@
+<?php $_fabric = $this->getProduct()->getProductFabric(); ?>
+
+<?php if ($_fabric): ?>
+    <div class="std">
+        <?php echo $this->helper('catalog/output')->productAttribute($this->getProduct(), $_fabric, 'product_fabric') ?>
+    </div>
+<?php endif; ?>

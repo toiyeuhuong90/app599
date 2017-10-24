@@ -1,0 +1,253 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     default_default
+ * @copyright   Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Template for Mage_Adminhtml_Block_Catalog_Product_Edit
+ */
+?>
+
+
+
+<div class="content-header">
+    <h3 class="icon-head head-products"><?php echo $this->getHeader() ?></h3>
+    <p class="content-buttons form-buttons"><?php echo $this->getBackButtonHtml() ?>
+    <?php echo $this->getCancelButtonHtml() ?>
+    <?php if($this->getProductId()): ?>
+        <?php echo $this->getDeleteButtonHtml() ?>
+        <?php if($this->getProductSetId() && $this->getIsConfigured()): ?>
+            <?php echo $this->getDuplicateButtonHtml() ?>
+        <?php endif; ?>
+    <?php endif; ?>
+    <?php if($this->getProductSetId() && $this->getIsConfigured()): ?>
+        <?php echo $this->getSaveButtonHtml() ?>
+        <?php echo $this->getSaveAndEditButtonHtml() ?>
+    <?php endif; ?>
+    </p>
+</div>
+<form action="<?php echo $this->getSaveUrl() ?>" method="post" id="product_edit_form" enctype="multipart/form-data">
+    <?php echo $this->getBlockHtml('formkey')?>
+    <div style="display:none"></div>
+</form>
+<script type="text/javascript">
+//<![CDATA[
+    var productTemplateSyntax = /(^|.|\r|\n)({{(\w+)}})/;
+    var productForm = new varienForm('product_edit_form', '<?php echo $this->getValidationUrl() ?>');
+    productForm._processValidationResult = function(transport) {
+        var response = transport.responseText.evalJSON();
+        if (response.error){
+            if (response.attribute && $(response.attribute)) {
+                $(response.attribute).setHasError(true, productForm);
+                Validation.ajaxError($(response.attribute), response.message);
+                if (!Prototype.Browser.IE){
+                    $(response.attribute).focus();
+                }
+            }
+            else if ($('messages')) {
+                $('messages').innerHTML = '<ul class="messages"><li class="error-msg"><ul><li>' + response.message + '</li></ul></li></ul>';
+            }
+        }
+        else{
+            productForm._submit();
+        }
+    };
+    function saveAndContinueEdit(urlTemplate) {
+        var template = new Template(urlTemplate, productTemplateSyntax);
+        var url = template.evaluate({tab_id:product_info_tabsJsTabs.activeTab.id});
+        productForm.submit(url);
+    }
+    function setSettings(urlTemplate, setElement, typeElement) {
+        var template = new Template(urlTemplate, productTemplateSyntax);
+        setLocation(template.evaluate({attribute_set:$F(setElement),type:$F(typeElement)}));
+    }
+
+     function setSuperSettings(urlTemplate, attributesClass, validateField) {
+        var attributesFields = $$('.' + attributesClass);
+        var attributes = Form.serializeElements(attributesFields, true).attribute;
+        if(typeof attributes == 'string') {
+            attributes = [attributes];
+        }
+
+        if(!attributes) {
+            $(validateField).value = 'no-attributes';
+        } else {
+            $(validateField).value = 'has-attributes';
+        }
+
+        if (productForm.validator.validate()) {
+            var template = new Template(urlTemplate, productTemplateSyntax);
+            var url = template.evaluate({
+                attributes: encode_base64(attributes.join(',')).replace(new RegExp('/','g'),'%2F').replace(new RegExp('=','g'),'%3D')
+            });
+            setLocation(url);
+        }
+    }
+
+    function checkMaxLength(Object, MaxLen)
+    {
+        if (Object.value.length > MaxLen-1) {
+            Object.value = Object.value.substr(0, MaxLen);
+        }
+        return 1;
+    }
+
+Event.observe(window, 'load', function() {
+    var objName = '<?php echo $this->getSelectedTabId() ?>';
+    if (objName) {
+        obj = $(objName);
+        //IE fix (bubbling event model)
+        product_info_tabsJsTabs.setSkipDisplayFirstTab();
+        product_info_tabsJsTabs.showTabContent(obj);
+    }
+    Product.AttributesBridge.setTabsObject(product_info_tabsJsTabs);
+});
+
+Validation.addAllThese([
+    ['validate-super-product-attributes', '<?php echo Mage::helper('core')->jsQuoteEscape(Mage::helper('catalog')->__('Please select one or more attributes.')) ?>', function(v) {
+                return (v != "no-attributes");
+            }]]);
+//]]>
+</script>
+<script type="text/javascript">
+    function keyupResponse(thisObj)
+    {
+        var d=jQuery(thisObj).attr('numeric');
+        if (d==undefined)
+        {
+            d=jQuery(thisObj).attr('onlynumeric');
+            if (d=='d')
+            {
+                d = 'decimal';
+            }
+        }
+        var val=value=jQuery(thisObj).val();
+        var orignalValue=value;
+        val=val.replace(/[0-9]*/g, "");
+
+        var msg="Only Integer Values allowed.";
+
+        if (d=='decimal'){
+            val=val.replace(/\./, "");
+            msg="Only Numeric Values allowed.";
+        }
+
+        if (val!=''){
+            orignalValue=orignalValue.replace(/([^0-9].*)/g, "")
+            jQuery(thisObj).val(orignalValue);
+            alert(msg);
+        }
+    }
+    function changeResponse(thisObj)
+    {
+        var tval=trim(jQuery(thisObj).val());
+        if (tval=='') return true;
+        reg=/^0*/;
+        tval=tval.replace(reg,'')
+
+        if (tval!='')
+            val=parseInt(tval);
+        else
+            val=0;
+        var min=parseInt(jQuery(thisObj).attr('min'));
+        var max=parseInt(jQuery(thisObj).attr('max'));
+        var msg="";
+
+        if(min!='' && max !=''){
+            msg='Input value should be in range of '+min + ' to ' + max + '.' ;
+        }
+        else{
+            if(min!=''){msg='Input value should be greter than or equal to'+min +'.';}
+
+            else{
+                if(max!=''){msg='Input value should be less than or equal to '+ max +'.';}
+            }
+        }
+        if(min!=''){
+            if (min>val) {
+                alert(msg);
+                jQuery(thisObj).val('');
+                jQuery(thisObj).css('background',_alertColor);
+            }
+        }
+
+        if (max!=''){
+            if (val>max) {
+                alert(msg);
+                jQuery(thisObj).val('');
+                jQuery(thisObj).css('background',_alertColor);
+            }
+        }
+    }
+
+    jQuery(document).ready(function(){
+
+        jQuery('input[numeric]').keyup(function(){
+
+            keyupResponse(this);
+        });
+
+// Min and max check
+
+
+
+        jQuery('input[numeric]').change(function(){
+            // value is present
+            changeResponse(this);
+        });
+    });
+
+    var c=0;
+    var t;
+    function timedMsg()
+    {
+        c++;
+        var old = null;//jQuery("#product_info_tabs_group_5_content tbody").html();
+        if (document.getElementById('truongnvSubLevel') != null)
+        {
+            if (old == null) old = '';
+            old = old + '<tr><td colspan="3" class="label">' + jQuery("#truongnvSubLevel").html() + '</td></tr>';
+            //jQuery("#product_info_tabs_group_5_content tbody:first").append(old);//alert(old);
+            jQuery("tr:contains('Price *')").after(old);
+            jQuery("tr:contains('Price *')").remove();
+            jQuery('#matrixPriceRequired').html('*');
+            jQuery("#truongnvTopLevel").html('');
+        }
+        //jQuery("#truongnvTopLevel").html(c);
+        t=setTimeout("timedMsg()",2000);
+    }
+    timedMsg();
+
+    function setImageSelectedToFocus(obj)
+    {
+        var topParentId = jQuery(obj).attr('topparentid');
+        jQuery("#" + topParentId + " li").attr('class','selectImage-item-unselected');
+        var current = topParentId + '_li_' + jQuery(obj).attr('offset');
+        jQuery("#" + current).attr('class','selectImage-item-selected');
+        jQuery("#" + topParentId + "_selected").val(jQuery(obj).attr('offset'));
+        return false;
+    }
+
+</script>

@@ -1,0 +1,147 @@
+<?php /* @var $this QSoft_ProductDesign_Block_Inspireme  */ ?>
+<?php
+$product = $this->getProduct();
+    $inspiremes = $this->getInspiremes();
+?>
+<?php if ($inspiremes->count()):?>
+    <script type="text/javascript">
+        var inspireMes = <?php echo $this->getInspireMeJson()?>;
+    </script>
+<div class="qs-button-inspire">
+    <span><?php echo $this->__('Inspire Me') ?></span>
+</div>
+
+<div class="qs-inspire-wrapper">
+    <div class="qs-button-inspire-back">
+        <span><?php echo $this->__('Back') ?></span>
+    </div>
+
+    <div class="qs-inspire-container">
+        <div class="container">
+            <div class="qs-inspire-sliders">
+                <div class="qs-title-inspire"><?php echo $this->__('Inspire Me') ?></div>
+                <div id="owl-inspire" class="owl-carousel">
+                    <?php foreach ($inspiremes as $inspireme):?>
+                    <div class="item">
+                        <div class="qs-col-inspire">
+                            <a onclick="design.applyInspireMe(<?php echo $inspireme->getId() ?>);" href="javascript:void(0);"><img src="<?php echo $inspireme->getAvartarImage() ?>" alt="<?php echo $inspireme->getName()?>" /></a>
+                        </div>
+                    </div>
+                    <?php endforeach;?>
+                </div>
+            </div>
+            <!-- Current Design -->
+            <div class="qs-inspire-sliders">
+                <div class="qs-title-inspire"><?php echo $this->__('Sample Design') ?></div>
+
+                <?php if (Mage::getSingleton('customer/session')->isLoggedIn()): ?>
+
+                    <?php if ($this->hasWishlistItems()): ?>
+                    <script type="text/javascript">
+                        var wishlists = <?php echo $this->helper('core')->jsonEncode($this->getWishlistByProduct($product->getId())); ?>;
+                    </script>
+                    <div id="owl-inspire-current" class="owl-carousel">
+                        <?php foreach ($this->getWishlistItems() as $_item):?>
+                            <?php if($_item->getProductId()==$product->getId()):?>
+                            <div class="item">
+                                <div class="qs-col-inspire">
+                                    <a onclick="design.applyWishlist(<?php echo $_item->getId() ?>);" href="javascript:void(0);"><img src="<?php echo $_item->getImageDesign()?>" alt="" /></a>
+                                </div>
+                            </div>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </div>
+                    <?php else: ?>
+                        <p><?php echo $this->__('Have no items in your wishlist.') ?></p>
+                    <?php endif;?>
+                <?php else: ?>
+                    <p style="text-align: center;"><?php echo $this->__('Please login first.') ?></p>
+                <?php endif;?>
+
+
+            </div>
+            <!-- Button Add -->
+            <div class="qs-add-inspire">
+                <button onclick="productToWishlist();"><?php echo $this->__('Add Current Design To Wishlist') ?></button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<?php endif;?>
+<!-- Button Social -->
+<div class="qs-social-custom-product">
+    <div class="overlay-scp"></div>
+    <div class="icon-bar">
+        <span class="line line1"></span>
+        <span class="line line2"></span>
+        <span class="line line3"></span>
+    </div>
+    <div class="group-links">
+        <div class="close-scp">
+            <i class="fa fa-reply" aria-hidden="true"></i>
+            <span>Back</span>
+        </div>
+        <div class="group-links-content">
+            <div class="link-to-wishlist"><a href="javascript:void(0);"><span><?php echo $this->__('My Wishlist') ?></span></a></div>
+            <ul class="list-control-design">
+                <?php if ($this->helper('wishlist')->isAllow()) : ?>
+                    <li><a class="designzoom" href="javascript:void(0);" onclick="productToWishlist();"><img alt="<?php echo $this->__('Save') ?>" src="<?php echo $this->getSkinUrl('qsoft/productdesign/images/save_desgin.png')?>"/><span><?php echo $this->__('Save') ?></span></a></li>
+                <?php endif;?>
+                <li><a class="designzoom" href="javascript:void(0);" onclick="design.resetDefault();return false;"><img alt="<?php echo $this->__('Refresh') ?>" src="<?php echo $this->getSkinUrl('qsoft/productdesign/images/refresh.png')?>"/><span><?php echo $this->__('Start Over') ?></span></a></li>
+            </ul>
+            <ul class="qs-list-social-design">
+                <li><a target="_blank" onclick="return shareDesignToFacebook();" href="http://www.facebook.com/sharer.php?u=<?php echo urlencode($product->getProductUrl())?>"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+                <li><a target="_blank" href="http://twitter.com/share?url=<?php echo urlencode($product->getProductUrl())?>"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+                <li><a target="_blank" href="http://plus.google.com/share?url=<?php echo urlencode($product->getProductUrl())?>"><i class="fa fa-google-plus" aria-hidden="true"></i></a></li>
+                <li><a target="_blank" href="http://pinterest.com/pin/create/button/?url=<?php echo urlencode($product->getProductUrl())?>&media=<?php echo urlencode($this->helper('catalog/image')->init($product, 'small_image')->resize(500))?>&description=<?php echo $product->getName()?>"><i class="fa fa-pinterest-p" aria-hidden="true"></i></a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    jQuery(document).ready(function(){
+        jQuery('.qs-social-custom-product .icon-bar').click(function(){
+            jQuery(this).parents('.qs-social-custom-product').addClass('active');
+        });
+        jQuery('.qs-social-custom-product .overlay-scp').click(function(){
+            jQuery(this).parents('.qs-social-custom-product').removeClass('active');
+        });
+        jQuery('.qs-social-custom-product .close-scp').click(function(){
+            jQuery(this).parents('.qs-social-custom-product').removeClass('active');
+        });
+    });
+    function shareDesignToFacebook(){
+        var option = {};
+        jQuery('.option_image_design').each(function(){
+            if(jQuery(this).is(':checked')){
+                option[jQuery(this).attr('optionid')] = jQuery(this).val();
+            }
+
+        });
+        jQuery.ajax({
+            url: '<?php echo $this->getUrl('productdesign/social/share')?>',
+            type: 'post',
+            dataType: 'json',
+            data: {
+                product: '<?php echo $product->getId()?>',
+                option: option,
+                base64Image: jQuery('#design_image').val()
+            },
+            beforeSend: function(){
+
+            },
+            success: function(data){
+                if(data.url){		    
+		window.open(data.url, 'fbShareWindow', 'height=450, width=550, top=' + (jQuery(window).height() / 2 - 275) + ', left=' + (jQuery(window).width() / 2 - 225) + ', toolbar=0, location=0, menubar=0, directories=0, scrollbars=0');
+
+                }
+            }
+        });
+
+        return false;
+    }
+
+</script>
+

@@ -1,0 +1,33 @@
+<div class="qsoft-socialconnect-checkout">
+    <div class="<?php echo $this->_getColSet(); ?>">
+        <?php if ($this->_googleEnabled() || $this->_facebookEnabled() || $this->_twitterEnabled() || $this->_linkedinEnabled() || $this->_vkEnabled()): ?>
+            <div class="<?php echo $this->_getColSet(); ?> qsoft-socialconnect-checkout">
+                <h3><?php echo $this->__('Social Connect') ?></h3>
+
+                <p><?php echo $this->__('You can continue with checkout using your <strong>Social</strong> account.') ?>
+
+                <div class="qsoft-socialconnect-checkout-button">
+                    <?php if ($this->_googleEnabled()): ?>
+                        <?php echo $this->getChildHtml('qsoft_socialconnect_checkout_google_button') ?>
+                    <?php endif; ?>
+
+                    <?php if ($this->_facebookEnabled()): ?>
+                        <?php echo $this->getChildHtml('qsoft_socialconnect_checkout_facebook_button') ?>
+                    <?php endif; ?>
+
+                    <?php if ($this->_twitterEnabled()): ?>
+                        <?php echo $this->getChildHtml('qsoft_socialconnect_checkout_twitter_button') ?>
+                    <?php endif; ?>
+
+                    <?php if ($this->_linkedinEnabled()): ?>
+                        <?php echo $this->getChildHtml('qsoft_socialconnect_checkout_linkedin_button') ?>
+                    <?php endif; ?>
+
+                    <?php if ($this->_vkEnabled()): ?>
+                        <?php echo $this->getChildHtml('qsoft_socialconnect_checkout_vk_button') ?>
+                    <?php endif; ?>
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>

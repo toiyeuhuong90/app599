@@ -1,0 +1,52 @@
+<?php
+/**
+ * NOTICE OF LICENSE
+ *
+ * You may not give, sell, distribute, sub-license, rent, lease or lend
+ * any portion of the Software or Documentation to anyone.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade to newer
+ * versions in the future.
+ *
+ * @category   ET
+ * @package    ET_SocialLogin
+ * @copyright  Copyright (c) 2015 ET Web Solutions (http://etwebsolutions.com)
+ * @contacts   support@etwebsolutions.com
+ * @license    http://shop.etwebsolutions.com/etws-license-commercial-v1/   ETWS Commercial License (ECL1)
+ */
+
+$socialNetworks = array(
+    '1' => 'vk',
+    '2' => 'facebook',
+    '3' => 'mailru',
+    '4' => 'odnoklassniki',
+    '5' => 'twitter',
+    '6' => 'google',
+);
+ksort($socialNetworks);
+/** @var  $helper ET_SocialLogin_Helper_Data*/
+$helper = Mage::helper('et_sociallogin');
+$storeId = Mage::app()->getStore()->getId();
+$sizeClass = $helper->getSocialIconsSizeClass($storeId, 'share');
+$iconsClass = $helper->getSocialIconsClass($storeId, 'share');
+
+ if ($helper->isSharingEnabled()): ?>
+    <?php $item = $this->getShareData();?>
+    <div class="socibutton <?php echo $this->getSize(); ?>">
+        <b><?php echo $this->getData('label_text'); ?></b><br>
+        <ul class="social-list">
+        <?php foreach ($socialNetworks as $socialNetwork): ?>
+            <li>
+                 <?php if ($helper->isProviderEnabled($socialNetwork)): ?>
+                 <a class="share-icons <?php echo $socialNetwork ?> socicon <?php echo $sizeClass;?> <?php echo $iconsClass;?>"
+                     onclick="Share.<?php echo $socialNetwork ?>('<?php echo $item['url'] ?>', '<?php echo $item['title'] ?>', '<?php echo $item['image'] ?>', '<?php echo $item['description'] ?>')"
+                     title="<?php echo $helper->getShareIconTitle($socialNetwork);?>"
+                     ></a>
+                <?php endif; ?>
+            </li>
+         <?php endforeach; ?>
+        </ul>
+     </div>
+<?php endif; ?>

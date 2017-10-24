@@ -1,0 +1,21 @@
+/************************************
+------------- ADMIN CONFIG ----------
+*************************************/
+
+.line {border-top: 1px solid #c6c6c6; padding-top: 10px;}
+.qsoft-developer-label {color: #000000; font-weight:bold; width: 185px; padding-right: 15px;}
+.qsoft-developer-label .qsoft-logo{width: 80%; height: auto}
+.qsoft-developer-text { padding: 5px 5px 15px;}
+.qsoft-developer {width: 600px; }
+
+.qsoft-socialconnect-conflicts-notification{
+    background: #EAF0EE;
+    border: 1px solid #CCCCCC;
+    margin-bottom: 10px;
+    padding: 10px;
+    font-weight:bold;
+}
+
+.qsoft-socialconnect-conflicts-notification .conflict-class{
+    color: #EA7601;
+}

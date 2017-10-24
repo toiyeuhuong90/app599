@@ -1,0 +1,151 @@
+<?xml version="1.0"?>
+<config>
+    <sections>
+         <socialsharebuttonssettings translate="label" module="adminhtml">
+            <label>Social Share Buttons</label>
+              <tab>qsoft</tab>
+            <sort_order>510</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+				 <socialsharebuttonsgeneral translate="label socialsharebuttons">
+                    <label>General Settings</label>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <comment><![CDATA[We have released a pro version which not only demonstrates the flexibility of Social Share Buttons, but also adds some important features (responsive buttons,show number of share count...etc).<h2><strong><a href="http://ssbwfs.mrwebsolution.in/pro" target="_blank">Go Pro</a></strong></h2>]]></comment>
+                    <fields>
+                        <ssb_enable translate="label socialsharebuttons">
+                            <label>Enable Module</label>
+                            <comment>enable social share buttons</comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_enabledisable</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </ssb_enable>
+                        <ssb_mob_disable translate="label socialsharebuttons">
+                            <label>Disable On Mobile</label>
+                            <comment>disable social share buttons on mobile</comment>
+                            <frontend_type>select</frontend_type>
+                             <source_model>adminhtml/system_config_source_Yesno</source_model>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </ssb_mob_disable>
+                         <ssb_home_disable translate="label socialsharebuttons">
+                            <label>Show On Home Page</label>
+                            <comment>disable social share buttons on home page</comment>
+                            <frontend_type>select</frontend_type>
+                             <source_model>adminhtml/system_config_source_Yesno</source_model>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </ssb_home_disable>
+                         <!--<ssb_cms_disable translate="label socialsharebuttons">
+                            <label>Show On CMS Pages</label>
+                            <comment>disable social share buttons on cms pages</comment>
+                            <frontend_type>select</frontend_type>
+                             <source_model>adminhtml/system_config_source_Yesno</source_model>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </ssb_cms_disable>-->
+                        <ssb_delay_time translate="label socialsharebuttons">
+                            <label>Delay Time</label>
+                            <comment>define delay time for publish buttons</comment>
+                             <frontend_type>text</frontend_type>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </ssb_delay_time>                        
+                        <ssb_disable_showhide translate="label socialsharebuttons">
+                            <label>Disable Show/Hide button</label>
+                            <comment>disable social share buttons on mobile</comment>
+                            <frontend_type>select</frontend_type>
+                             <source_model>adminhtml/system_config_source_Yesno</source_model>
+                            <sort_order>6</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </ssb_disable_showhide>
+                        <ssb_margin_top translate="label socialsharebuttons">
+                            <label>Margin from top</label>
+                            <comment>define top margin 10px/10%</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>7</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </ssb_margin_top>
+                        
+                        <ssb_position translate="label socialsharebuttons">
+                            <label>Sidebar Position</label>
+                            <comment>enable social share buttons</comment>
+                            <frontend_type>select</frontend_type>
+                             <source_model>mrweb_socialsharebuttons/system_config_position</source_model>
+                            <sort_order>8</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </ssb_position>
+                        
+                        <ssb_num_share_buttons translate="label socialsharebuttons">
+                            <label>Publish Buttons</label>
+                            <comment>select share buttons.</comment>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>mrweb_socialsharebuttons/system_config_buttons</source_model>
+                            <sort_order>9</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </ssb_num_share_buttons>
+                         <ssb_jquery_yesno translate="label">
+                            <label>Load jQuery</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_Yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Load jquery file or not</comment>
+                        </ssb_jquery_yesno>
+                         <ssb_mail_url translate="label socialsharebuttons">
+                            <label>Mail Button URL</label>
+                            <comment>define mail button URL</comment>
+                             <frontend_type>text</frontend_type>
+                            <sort_order>12</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </ssb_mail_url>  
+                        <ssb_yt_url translate="label socialsharebuttons">
+                            <label>Youtube Button URL</label>
+                            <comment>define youtube channel URL</comment>
+                             <frontend_type>text</frontend_type>
+                            <sort_order>13</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </ssb_yt_url>       
+                    </fields>
+                </socialsharebuttonsgeneral>
+                <socialsharebuttonssupport translate="label socialsharebuttons support">
+				   <label>Go Pro and Support</label>
+                    <sort_order>2</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <comment><![CDATA[We have released a pro version which not only demonstrates the flexibility of Social Share Buttons, but also adds some important features (responsive buttons,show number of share count...etc).<br> Please have a look on this link for find live demo <a href="http://ssbwfs.mrwebsolution.in/pro" target="_blank">Live Demo</a></br>Feel free to contact us for any query on our email <a href="mailto:raghunath.0087@gmail.com">raghunath.0087@gmail.com</a>]]></comment>     
+               </socialsharebuttonssupport>
+            </groups>
+        </socialsharebuttonssettings>
+    </sections>
+</config>

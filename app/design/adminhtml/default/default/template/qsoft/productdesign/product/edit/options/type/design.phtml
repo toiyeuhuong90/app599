@@ -1,0 +1,311 @@
+
+<?php
+$_product = Mage::registry('product');
+$designTypes = $this->helper('productdesign')->getProductGroupDesign($_product);
+?>
+<script type="text/javascript">
+//<![CDATA[
+OptionTemplateDesign = '<table class="border-design" cellpadding="0" cellspacing="0">'+
+//        '<input type="hidden" class="required-option-design-type-rows" name="validation_{{option_id}}_result" value="" >'+
+        '<thead>'+
+        '<tr class="headings">'+
+            '<th class="type-title"><?php echo Mage::helper('core')->jsQuoteEscape(Mage::helper('catalog')->__('Title')) ?> <span class="required">*</span></th>'+
+            <?php if ($this->getCanReadPrice() !== false) : ?>
+            '<th class="type-price"><?php echo Mage::helper('core')->jsQuoteEscape(Mage::helper('catalog')->__('Price')) ?></th>' +
+            '<th class="type-type"><?php echo Mage::helper('core')->jsQuoteEscape(Mage::helper('catalog')->__('Price Type')) ?></th>' +
+            <?php endif; ?>
+    '<th class="type-sku"><?php echo Mage::helper('core')->jsQuoteEscape(Mage::helper('catalog')->__('SKU')) ?></th>'+
+    '<th class="type-video"><?php echo Mage::helper('core')->jsQuoteEscape(Mage::helper('catalog')->__('Video Url')) ?></th>'+
+    '<th><?php echo Mage::helper('core')->jsQuoteEscape(Mage::helper('catalog')->__('Image Type')) ?></th>'+
+    '<th><?php echo Mage::helper('core')->jsQuoteEscape(Mage::helper('catalog')->__('Icon')) ?></th>'+
+    '<th><?php echo Mage::helper('core')->jsQuoteEscape(Mage::helper('catalog')->__('Is Default')) ?></th>'+
+        <?php if(count($designTypes)):?>
+            <?php foreach ($designTypes as $designType):?>
+            '<th><?php echo Mage::helper('core')->jsQuoteEscape(Mage::helper('catalog')->__('Design for ' . $designType['name'])) ?></th>'+
+            <?php endforeach;?>
+        <?php endif;?>
+            '<th class="type-order"><?php echo Mage::helper('core')->jsQuoteEscape(Mage::helper('catalog')->__('Sort Order')) ?></th>'+
+            '<th class="type-butt last">&nbsp;</th>'+
+        '</tr>'+
+        '</thead>'+
+        '<tbody id="design_option_type_row_{{option_id}}">'+
+        '</tbody>'+
+        '<tfoot>'+
+        '<tr>'+
+        '<td colspan="100" class="a-right"><?php echo $this->getAddButtonHtml() ?></td>'+
+        '</tr>'+
+        '</tfoot>'+
+    '</table>';
+
+OptionTemplateDesigntRow = '<tr id="product_option_{{id}}_select_{{select_id}}">'+
+            '<td>'+
+            '<input type="hidden" name="product[options][{{id}}][values][{{select_id}}][option_type_id]" value="{{option_type_id}}">'+
+            '<input type="hidden" id="product_option_{{id}}_select_{{select_id}}_is_delete" name="product[options][{{id}}][values][{{select_id}}][is_delete]" value="">'+
+            '<input type="text" class="required-entry input-text select-type-title" id="product_option_{{id}}_select_{{select_id}}_title" name="product[options][{{id}}][values][{{select_id}}][title]" value="{{title}}">{{checkboxScopeTitle}}</td>'+
+            <?php if ($this->getCanReadPrice() !== false) : ?>
+            '<td><input type="text" class="input-text validate-number product-option-price" id="product_option_{{id}}_select_{{select_id}}_price" name="product[options][{{id}}][values][{{select_id}}][price]" value="{{price}}"<?php if ($this->getCanEditPrice() === false) : ?> disabled="disabled"<?php endif; ?>></td>' +
+            '<td><?php echo $this->getPriceTypeSelectHtml() ?>{{checkboxScopePrice}}</td>' +
+            <?php else : ?>
+            '<input type="hidden" id="product_option_{{id}}_select_{{select_id}}_price" name="product[options][{{id}}][values][{{select_id}}][price]">' +
+            '<input type="hidden" name="product[options][{{id}}][values][{{select_id}}][price_type]" id="product_option_{{id}}_select_{{select_id}}_price_type">' +
+            <?php endif; ?>
+    '<td><input type="text" class="input-text" name="product[options][{{id}}][values][{{select_id}}][sku]" value="{{sku}}"></td>'+
+    '<td><input type="text" class="input-text" name="product[options][{{id}}][values][{{select_id}}][video]" value="{{video}}"></td>'+
+            '<td><select class="select" id="product_option_{{id}}_design_{{select_id}}_image_type" name="product[options][{{id}}][values][{{select_id}}][image_type]">' +
+    <?php foreach ($this->helper('productdesign')->getImageType() as $k=>$v):?>
+        '<option value="<?php echo $k ?>"><?php echo $v ?></option>'+
+        <?php endforeach;?>
+    '</select></td>' +
+            '<td>' +
+            '<div id="{{id}}_{{select_id}}_uploader_row-icon" class="hide_uploader_row">' +
+            '<div class="row" >' +
+            '<span class="preview-icon">{{preview_icon}}</span>' +
+            '<input type="hidden" onchange="instOptionImages.changeImage(this,\'{{id}}\',\'{{select_id}}\',\'-icon\')" class="icon_{{id}}_{{select_id}}" id="product_option_{{id}}_{{select_id}}_icon" name="product[options][{{id}}][values][{{select_id}}][icon]" value="{{icon}}" />' +
+            '<button class="fail" type="button" onclick="MT.MediabrowserUtility.openDialog(\'<?php echo Mage::getSingleton('adminhtml/url')->getUrl('adminhtml/cms_wysiwyg_images/index') ?>static_urls_allowed/1/target_element_id/product_option_{{id}}_{{select_id}}_icon\')"><span><?php echo $this->__('....') ?></span></button>' +
+            '</div>' +
+            '</div>' +
+            '</td>' +
+            '<td>' +
+            '<input type="hidden" class="input-checkbox" id="is_default_{{select_id}}_{{id}}" name="product[options][{{id}}][values][{{select_id}}][is_default]" value="{{is_default}}">' +
+            '<input type="checkbox" class="input-checkbox checkbox-{{id}}" onclick="designOptionType.setIsDefault(\'checkbox-{{id}}\',this);" id="{{select_id}}_{{id}}" {{checked}}>' +
+            '</td>'+
+            <?php if(count($designTypes)):?>
+            '<input type="hidden"  class="validate-optionimages-file" id="design_images{{id}}_{{select_id}}" name="product[options][{{id}}][values][{{select_id}}][design_images]" value="{{design_images}}" />' +
+                <?php foreach ($designTypes as $designType):?>
+
+                    '<td>' +
+                    '<div id="{{id}}_{{select_id}}_uploader_row-<?php echo $designType['key']?>" class="hide_uploader_row">' +
+                    '<div class="row" >' +
+                    '<span class="preview-<?php echo $designType['key']?>">{{preview_<?php echo $designType['key']?>}}</span>' +
+                    '<input type="hidden" onchange="instOptionImages.changeImage(this,\'{{id}}\',\'{{select_id}}\',\'-<?php echo $designType['key']?>\')" class="design_images{{id}}_{{select_id}}" id="product_option_{{id}}_{{select_id}}_<?php echo $designType['key']?>" name="image_<?php echo $designType['key']?>" value="{{image_<?php echo $designType['key']?>}}" />' +
+                    '<button class="fail" type="button" onclick="MT.MediabrowserUtility.openDialog(\'<?php echo Mage::getSingleton('adminhtml/url')->getUrl('adminhtml/cms_wysiwyg_images/index') ?>static_urls_allowed/1/target_element_id/product_option_{{id}}_{{select_id}}_<?php echo $designType['key']?>\')"><span><?php echo $this->__('....') ?></span></button>' +
+                    '</div>' +
+                    '</div>' +
+                    '</td>' +
+                <?php endforeach;?>
+            <?php endif;?>
+            '<td><input type="text" class="validate-zero-or-greater input-text" name="product[options][{{id}}][values][{{select_id}}][sort_order]" value="{{sort_order}}"></td>'+
+            '<td class="last"><span title="Delete row"><?php echo $this->getDeleteButtonHtml() ?></span></td>'+
+        '</tr>';
+
+var OptionImages = Class.create();
+OptionImages.prototype = {
+    initialize: function () {
+    },
+    loadUploader: function (id, select_id, icon) {
+        $(id + '_' + select_id + '_uploader_place-holder' + icon).hide();
+        $(id + '_' + select_id + '_uploader_row' + icon).show();
+    },
+    changeImage: function (elm, id, select_id, icon) {
+        var uri = $(elm).value;
+        var preview = $(elm).up('div').down('span.preview' + icon);
+
+        if (preview) {
+            $(preview).update('<img src="' + uri + '" style="background:#000" /><span class="del_img" onclick="instOptionImages.delete(\'' + id + '\',\'' + select_id + '\',\'' + icon + '\')">x</span>');
+        }
+        this.updateDesignImages(id, select_id);
+    },
+    delete: function (id, select_id, icon) {
+        if (window.confirm("<?php echo Mage::helper('catalog')->__('Are you sure?'); ?>")) {
+            $(id + '_' + select_id + '_uploader_row' + icon).down('span.preview' + icon).update('');
+            icon = icon.replace('-', '');
+            $('product_option_' + id + '_' + select_id + '_' + icon).value = '';
+        }
+        this.updateDesignImages(id, select_id);
+    },
+
+    updateDesignImages: function (id,selectId) {
+        var dataDesign = jQuery('.design_images' + id + '_' + selectId).serializeArray();
+        jQuery('#design_images' + id + '_' + selectId).val(JSON.stringify(dataDesign));
+    }
+};
+
+instOptionImages = new OptionImages();
+
+designOptionType = {
+    div : 'design_option_type_row',
+    valueIds: [],
+    itemCount : 0,
+    itemExitsCount : 0,
+    templateSyntax : /(^|.|\r|\n)({{(\w+)}})/,
+    templateText : OptionTemplateDesigntRow,
+    add : function(data) {
+
+        this.template = new Template(this.templateText, this.templateSyntax);
+
+        if (data.target || data.srcElement) {//data is Event (work in IE and Firefox)
+            element = $(Event.findElement(data, 'button'));
+            optionId = element.readAttribute('id').sub('add_design_row_button_', '');
+            console.log(this.getSelectionId(optionId, this.itemCount));
+            data = {};
+            data.option_type_id = '-1';
+            data.select_id = this.getSelectionId(this.itemCount);
+        } else {
+            optionId = data.option_id;
+            data.select_id = data.option_type_id;
+            this.itemCount = data.item_count;
+            this.valueIds[this.itemExitsCount] = data.item_count;
+            this.itemExitsCount++;
+        }
+
+        data.id  = optionId;
+
+        Element.insert($(this.div+'_'+data.id), {'bottom':this.template.evaluate(data)});
+
+        if (data.checkboxScopeTitle) {
+            //set disabled
+            if ($('product_option_'+data.id+'_design_'+data.select_id+'_title') && data.scopeTitleDisabled) {
+                $('product_option_'+data.id+'_design_'+data.select_id+'_title').disable();
+            }
+        }
+        if (data.checkboxScopePrice) {
+            //set disabled
+            if ($('product_option_'+data.id+'_design_'+data.select_id+'_price') && data.scopePriceDisabled) {
+                $('product_option_'+data.id+'_design_'+data.select_id+'_price').disable();
+                $('product_option_'+data.id+'_design_'+data.select_id+'_price_type').disable();
+            }
+        }
+
+        // image type
+        if (data.image_type) {
+            $A($('product_option_'+data.id+'_design_'+data.select_id+'_image_type').options).each(function(option){
+                if (option.value==data.image_type) option.selected = true;
+            });
+        }
+
+        if (data.price_type) {
+            $A($('product_option_'+data.id+'_design_'+data.select_id+'_price_type').options).each(function(option){
+                if (option.value==data.price_type) option.selected = true;
+            });
+        }
+        <?php foreach ($designTypes as $designType):?>
+        if (data.<?php echo 'image_' . $designType['key']?>) {
+            var elm<?php echo $designType['key']?> = $('product_option_' + data.id + '_' + data.select_id + '_<?php echo $designType['key']?>');
+            instOptionImages.changeImage(elm<?php echo $designType['key']?>, data.id, data.select_id, '-<?php echo $designType['key']?>');
+        }
+        <?php endforeach; ?>
+
+        if (data.icon) {
+            var elmIcon = $('product_option_' + data.id + '_' + data.select_id + '_icon');
+            instOptionImages.changeImage(elmIcon, data.id, data.select_id, '-icon');
+        }
+        this.itemCount++;
+        this.bindRemoveButtons();
+    },
+    remove : function(event){
+        var element = $(Event.findElement(event, 'tr'));
+
+        if(element){
+            $(element.readAttribute('id')+'_is_delete').value = '1';
+            element.addClassName('no-display');
+            element.addClassName('ignore-validate');
+            element.hide();
+        }
+    },
+    bindRemoveButtons : function(){
+        var buttons = $$('.delete-design-row');
+        for(var i=0;i<buttons.length;i++){
+            if(!$(buttons[i]).binded){
+                $(buttons[i]).binded = true;
+                Event.observe(buttons[i], 'click', this.remove.bind(this));
+            }
+        }
+    },
+    bindAddButton : function()
+    {
+        var buttons = $$('.add-design-row');
+        for(var i=0;i<buttons.length;i++){
+            if(!$(buttons[i]).binded){
+                $(buttons[i]).binded = true;
+                Event.observe(buttons[i], 'click', this.add.bind(this));
+            }
+        }
+    },
+
+    setIsDefault : function(classHtml, tag){
+        if(tag.checked){
+            $('is_default_' + tag.id).value = 1;
+            $$('.' + classHtml).each(function(elm){
+                if(elm.id!=tag.id){
+                    elm.checked = false;
+                    $('is_default_' + elm.id).value = 0;
+                }
+            });
+        }else{
+            $('is_default_' + tag.id).value = 0;
+        }
+    },
+    getSelectionId : function(itemCount){
+
+        if(!in_array(itemCount, this.valueIds)){
+            return itemCount;
+        }else{
+            this.itemCount++;
+            return this.getSelectionId(this.itemCount);
+        }
+    }
+};
+
+if ($('option_panel_type_design')) {
+    $('option_panel_type_design').remove();
+}
+
+designOptionType.bindRemoveButtons();
+
+Validation.addAllThese([
+    ['required-option-design-type-rows', <?php echo $this->helper('core')->jsonEncode(Mage::helper('catalog')->__('Please add rows to option.')); ?>, function(v, elm) {
+            var optionContainerElm = elm.up('div.grid');
+            var selectTypesFlag = false;
+            selectTypeElements = $$('#'+optionContainerElm.id+' .design-type-title');
+            selectTypeElements.each(function(elm){
+                if (elm.id && elm.up('tr').visible()) {
+                    selectTypesFlag = true;
+                }
+            });
+            elm.advaiceContainer = optionContainerElm.id+'_advice';
+        return selectTypesFlag;
+}]]);
+
+if($('add_design_row_button')){
+    Event.observe('add_design_row_button', 'click', designOptionType.add.bind(designOptionType));
+}
+//]]>
+</script>
+<style type="text/css">
+    .hide_uploader_row {
+        clear: both
+    }
+
+    .hide_uploader_row > .row > span {
+        width: 60px;
+        height: 60px;
+        border: 1px solid #aaa;
+        display: block;
+        margin-bottom: 5px;
+        position: relative;
+    }
+
+    .hide_uploader_row > .row > span span.del_img {
+        border: 1px solid;
+        border-radius: 10px;
+        color: blue;
+        cursor: pointer;
+        display: block;
+        font-size: 16px;
+        font-weight: 700;
+        height: 10px;
+        padding: 0 4px 10px 6px;
+        position: absolute;
+        right: -10px;
+        top: -10px;
+        width: 10px;
+    }
+    .hide_uploader_row > .row > span span.del_img:hover {
+        color: red;
+    }
+
+    .border-design img{
+        max-width: 60px;
+        max-height: 60px;
+    }
+</style>

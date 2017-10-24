@@ -1,0 +1,236 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2016 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Edit customer address template
+ *
+ * @see Mage_Customer_Block_Address_Edit
+ */
+?>
+<?php
+$cacheKey = 'DIRECTORY_COUNTRY_SELECT_STORE_'.Mage::app()->getStore()->getCode();
+if (Mage::app()->useCache('config') && $cache = Mage::app()->loadCache($cacheKey)) {
+    $options = unserialize($cache);
+} else {
+    $options = $this->getCountryCollection()->toOptionArray();
+    if (Mage::app()->useCache('config')) {
+        Mage::app()->saveCache(serialize($options), $cacheKey, array('config'));
+    }
+}
+?>
+<script type="text/javascript">
+    var addressTemplate =
+'<div id="address-{{id}}" class="box-address">'+
+'<form action="<?php echo $this->getUrl('customer/account/editPost') ?>" method="post" autocomplete="off" id="form-address-{{id}}"  enctype="multipart/form-data">' +
+'<?php echo str_replace("\n",'',$this->getBlockHtml('formkey'))?>'+
+    '<input name="save_address" value="1" type="hidden">'+
+'<div class="section-title">'+
+        '{{title}}'+
+    '</div>'+
+    '<div class="fieldset">'+
+        '<div class="form-list row">'+
+            '<div class="field col-md-6">'+
+                '<label class="required" for="firstname{{id}}"><?php echo $this->__('First Name') ?><span class="qs-required">*</span></label>'+
+                '<div class="input-box">'+
+                    '<input id="firstname{{id}}" type="text" name="address[{{id}}][firstname]" title="<?php echo Mage::helper('core')->quoteEscape($this->__('First Name')) ?>" value="{{firstname}}" class="input-text <?php echo $this->helper('customer/address')->getAttributeValidationClass('firstname') ?>" placeholder="<?php echo $this->__('First Name') ?>" />'+
+                '</div>'+
+            '</div>'+
+            '<div class="field col-md-6">'+
+                '<label class="required" for="lastname{{id}}"><?php echo $this->__('Last Name') ?><span class="qs-required">*</span></label>'+
+                '<div class="input-box">'+
+                    '<input id="lastname{{id}}" type="text" name="address[{{id}}][lastname]"  title="<?php echo Mage::helper('core')->quoteEscape($this->__('Last Name')) ?>" value="{{lastname}}" class="input-text <?php echo $this->helper('customer/address')->getAttributeValidationClass('lastname') ?>" placeholder="<?php echo $this->__('Last Name') ?>" />'+
+                '</div>'+
+            '</div>'+
+            '<div class="field col-md-6">'+
+                '<label for="company{{id}}"><?php echo $this->__('Company') ?></label>'+
+                '<div class="input-box">'+
+                    '<input id="company{{id}}" type="text" name="address[{{id}}][company]" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Company')) ?>" value="{{company}}" class="input-text <?php echo $this->helper('customer/address')->getAttributeValidationClass('company') ?>" placeholder="<?php echo $this->__('Company') ?>" />'+
+                '</div>'+
+            '</div>'+
+            <?php $_streetValidationClass = $this->helper('customer/address')->getAttributeValidationClass('street'); ?>
+            '<div class="field col-md-6">'+
+                '<label class="required" for="address{{id}}"><?php echo $this->__('Address') ?><span class="qs-required">*</span></label>'+
+                '<div class="input-box">'+
+                    '<input id="address{{id}}" type="text" name="address[{{id}}][street][]" value="{{street1}}" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Address 1')) ?>" class="input-text <?php echo $_streetValidationClass ?>" placeholder="<?php echo $this->__('Address 1') ?>" />'+
+                '</div>'+
+            '</div>'+
+            <?php $_streetValidationClass = trim(str_replace('required-entry', '', $_streetValidationClass)); ?>
+            <?php for ($_i = 2, $_n = $this->helper('customer/address')->getStreetLines(); $_i <= $_n; $_i++): ?>
+                '<div class="field col-md-6">'+
+                    '<label for="address{{id}}_<?php echo $_i?>"><?php echo $this->__('Address') ?> <?php echo $_i?></label>'+
+                    '<div class="input-box">'+
+                        '<input id="address{{id}}_<?php echo $_i?>" type="text" name="address[{{id}}][street][]" value="{{street<?php echo $_i?>}}" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Address %s', $_i)) ?>" class="input-text <?php echo $_streetValidationClass ?>" placeholder="<?php echo $this->__('Address %s', $_i) ?>" />'+
+                    '</div>'+
+                '</div>'+
+            <?php endfor; ?>
+            '<div class="field col-md-6">'+
+                '<label class="required" for="city{{id}}"><?php echo $this->__('City') ?><span class="qs-required">*</span></label>'+
+                '<div class="input-box">'+
+                    '<input id="city{{id}}" type="text" name="address[{{id}}][city]" value="{{city}}"  title="<?php echo Mage::helper('core')->quoteEscape($this->__('City')) ?>" class="input-text <?php echo $this->helper('customer/address')->getAttributeValidationClass('city') ?>" id="city" placeholder="<?php echo $this->__('City') ?>" />'+
+                '</div>'+
+            '</div>'+
+            '<div class="field col-md-6">'+
+                '<label class="required" for="region_id{{id}}"><?php echo $this->__('State/Province') ?><span class="qs-required">*</span></label>'+
+                '<div class="input-box">'+
+                    '<div class="border_select">'+
+                        '<select id="region_id{{id}}" name="address[{{id}}][region_id]" title="<?php echo Mage::helper('core')->quoteEscape($this->__('State/Province')) ?>" class="validate-select" style="display:none;">'+
+                            '<option value=""><?php echo $this->__('Please select region, state or province') ?></option>'+
+                        '</select>'+
+                    '</div>'+
+
+                    '<input type="text" id="region{{id}}" name="address[{{id}}][region]" value="<?php echo $this->escapeHtml($this->getAddress()->getRegion()) ?>"  title="<?php echo Mage::helper('core')->quoteEscape($this->__('State/Province')) ?>" class="input-text <?php echo $this->helper('customer/address')->getAttributeValidationClass('region') ?>" placeholder="<?php echo $this->__('State/Province') ?>" />'+
+                '</div>'+
+            '</div>'+
+            '<div class="field col-md-6">'+
+                '<label class="required" for="postcode{{id}}"><?php echo $this->__('Postcode') ?><span class="qs-required">*</span></label>'+
+                '<div class="input-box">'+
+                    '<input id="postcode{{id}}" type="text" name="address[{{id}}][postcode]" value="{{postcode}}" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Zip/Postal Code')) ?>" id="zip{{id}}" class="input-text validate-zip-international <?php echo $this->helper('customer/address')->getAttributeValidationClass('postcode') ?>" placeholder="<?php echo $this->__('Zip/Postal Code') ?>" />'+
+                '</div>'+
+            '</div>'+
+            '<div class="field col-md-6">'+
+                '<label class="required" for="country_id{{id}}"><?php echo $this->__('Country') ?><span class="qs-required">*</span></label>'+
+                '<div class="input-box">'+
+                    '<div class="border_select">'+
+                    '<select id="country_id{{id}}" name="address[{{id}}][country_id]" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Country')) ?>" class="validate-select">'+
+                    <?php foreach ($options as $option):?>
+                        '<option value="<?php echo $option['value']?>"><?php echo $option['label']?></option>'+
+                    <?php endforeach;?>
+                    '</select>'+
+                    '</div>'+
+                '</div>'+
+            '</div>'+
+            '<div class="field col-md-6">'+
+                '<label class="required" for="telephone{{id}}"><?php echo $this->__('Telephone') ?><span class="qs-required">*</span></label>'+
+                '<div class="input-box">'+
+                    '<input id="telephone{{id}}" type="text" name="address[{{id}}][telephone]" value="{{telephone}}" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Telephone')) ?>" class="input-text  <?php echo $this->helper('customer/address')->getAttributeValidationClass('telephone') ?>"  placeholder="<?php echo $this->__('Telephone') ?>" />'+
+                '</div>'+
+            '</div>'+
+            '<div class="field col-md-6">'+
+            '<label class="required" for="fax{{id}}"><?php echo $this->__('Fax') ?></label>'+
+                '<div class="input-box">'+
+                    '<input id="fax{{id}}" type="text" name="address[{{id}}][fax]" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Fax')) ?>" value="{{fax}}" class="input-text <?php echo $this->helper('customer/address')->getAttributeValidationClass('fax') ?>" placeholder="<?php echo $this->__('Fax') ?>" />'+
+                '</div>'+
+            '</div>'+
+            '<div class="field col-md-12">'+
+                '<div class="input-box-checkbox">'+
+                    '<input {{billing_checked}} type="checkbox" id="default_billing{{id}}" name="address[{{id}}][default_billing]" value="1" class="checkbox" />'+
+                    '<label for="default_billing{{id}}"><?php echo $this->__('Use as my default billing address') ?></label>'+
+                '</div>'+
+                '<div class="input-box-checkbox">'+
+                    '<input  {{shipping_checked}} type="checkbox" id="default_shipping{{id}}" name="address[{{id}}][default_shipping]" value="1" class="checkbox" />'+
+                    '<label for="default_shipping{{id}}"><?php echo $this->__('Use as my default shipping address') ?></label>'+
+                '</div>'+
+            '</div>'+
+        '</div>'+
+    '</div>'+
+    '<div class="button-wrap">'+
+    '<button type="submit" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Save')) ?>" class="button btn-blue-large"><?php echo $this->__('Save') ?></button>'+
+    '<button onclick="return window.customerAddress.remove(\'{{id}}\',\'{{parent}}\');" class="btn-cancel btn-gray-large"><?php echo $this->__('Cancel') ?></button>'+
+    '</form>'+
+    '</div>';
+
+
+    //<![CDATA[
+//    var dataForm = new VarienForm('form-validate', true);
+//    new RegionUpdater('country', 'region', 'region_id', <?php //echo $this->helper('directory')->getRegionJson() ?>//, undefined, 'zip');
+    //]]>
+</script>
+
+
+<script>
+    window.customerAddress = {
+        template: new Template(addressTemplate, new RegExp('(^|.|\\r|\\n)({{\\s*(\\w+)\\s*}})', "")),
+        itemsCount: 0,
+
+        add: function (address, containerId, parentId, is_defaultAddress=0, is_defaultBilling=0, is_defaultShipping=0) {
+            var id = address.entity_id || randomString(15);
+            var container = $(containerId);
+            var data = {
+                firstname: address.firstname || '',
+                lastname: address.lastname || '',
+                company: address.company || '',
+                telephone: address.telephone || '',
+                fax: address.fax || '',
+                city: address.city || '',
+                postcode: address.postcode || '',
+                street1: address.street1 || '',
+                street2: address.street2 || '',
+                region_id: address.region_id || '',
+                country_id: address.country_id || 'US',
+                is_default: is_defaultAddress,
+                parent: parentId,
+                title: is_defaultShipping ? 'Default Shipping Address' : (is_defaultAddress ? 'Default Billing Address' : 'Additional Address Entries'),
+                shipping_checked: is_defaultShipping ? 'checked="checked"' : '',
+                billing_checked: is_defaultBilling ? 'checked="checked"' : '',
+                id: id
+            };
+
+            container.insert({bottom: this.template.evaluate(data)});
+            setTimeout(function () {
+                var validate = 'var dataForm' + id + ' = new VarienForm("form-address-' + id + '", true);';
+                eval(validate);
+            },500);
+            $('country_id' + data.id).value = data.country_id;
+            $('country_id' + data.id).setAttribute('defaultValue',  data.country_id);
+            $('region_id' + data.id).setAttribute('defaultValue',  data.region_id);
+            new RegionUpdater('country_id' + data.id, 'region' + data.id, 'region_id' + data.id, <?php echo $this->helper('directory')->getRegionJson() ?>, undefined, 'zip' + data.id);
+            var parent = $(parentId);
+            if (parent) parent.hide();
+            jQuery('#telephone' + data.id).keypress(function (event) {
+                if ((event.which != 46 || jQuery(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57) && event.which != 8) {
+                    event.preventDefault();
+                }
+            });
+            //jQuery('#telephone' + data.id).mask("999-999-9999");
+        },
+        remove: function (id, parentId) {
+            var item = $('address-' + id);
+            if (item) item.remove();
+            var parent = $(parentId);
+            if (parent) parent.show();
+            return false;
+        },
+        
+    };
+
+    $j = jQuery.noConflict();
+
+    $j(document).ready(function() {
+        $j('.show-address span').click(function() {
+            window.customerAddress.add({},'additional-address-entries','addition-asdasd', 0);
+        });
+    });
+    function randomString(len) {
+        var charSet = '0123456789abcdefghijklmnopqrstuvwxyz';
+        var randomString = '';
+        for (var i = 0; i < len; i++) {
+            var randomPoz = Math.floor(Math.random() * charSet.length);
+            randomString += charSet.substring(randomPoz, randomPoz + 1);
+        }
+        return randomString;
+    }
+</script>

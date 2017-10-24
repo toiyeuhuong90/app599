@@ -1,0 +1,27 @@
+<?php
+if ($this->helper('checkout/cart')->getSummaryCount()):
+    $ite_minicart = $this->helper('checkout/cart')->getSummaryCount();
+else:
+    $ite_minicart = '0';
+endif;
+?>
+<ul class="qs-list-link">
+    <li class="hidden-sm hidden-xs">
+        <div class="qs-icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
+    </li>
+    <li>
+        <div class="qs-icon-cart">
+            <a href="<?php echo $this->getUrl('checkout/cart') ?>" title="Cart">
+                <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                <span class="qs-quantity-cart"><?php echo $ite_minicart ?></span>
+            </a>
+        </div>
+    </li>
+    <?php if (Mage::getSingleton('customer/session')->isLoggedIn()): ?>
+        <li class="hidden-sm hidden-xs"><a href="<?php echo $this->getUrl('customer/account') ?>">My Account</a></li>
+        <li class="hidden-sm hidden-xs"><a href="<?php echo $this->getUrl('customer/account/logout') ?>">Sign Out</a></li>
+    <?php else: ?>
+        <li class="hidden-sm hidden-xs"><a href="<?php echo $this->getUrl('customer/account/login') ?>">Login</a></li>
+        <li class="hidden-sm hidden-xs"><a href="<?php echo $this->getUrl('customer/account/create') ?>">Register</a></li>
+    <?php endif; ?>
+</ul>

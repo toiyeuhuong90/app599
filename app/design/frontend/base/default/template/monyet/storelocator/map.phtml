@@ -1,0 +1,137 @@
+<?php $_storeCollection = $this->getStoreCollection();?>
+<?php $size = $this->getMapSize();?>
+<br>
+<div id="map" style="width: <?php echo $size[0];?>px; height: <?php echo $size[1];?>px"></div>
+<div class="input-box storelocator-method">
+	<input type="hidden" name="storeId" id="storeId" value="" class="required-entry" />
+	<div class="clear" ></div>					
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+	var map = new google.maps.Map(
+        document.getElementById('map'), {
+          center: new google.maps.LatLng(37.4419, -122.1419),
+          zoom: 13,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+      });
+	var markers = [];
+
+	var marker = new google.maps.Marker({
+            position: new google.maps.LatLng(37.4419, -122.1419),
+            map: map
+      });
+	var infoWindow = new google.maps.InfoWindow();
+
+	var bounds = new google.maps.LatLngBounds();
+
+<?php foreach($_storeCollection as $_store):?>
+<?php
+		$coordinates['lat'] = $_store->getStoreLatitude();
+		$coordinates['lng'] = $_store->getStoreLongitude();
+		if($coordinates['lat'] == '0.000' && $coordinates['lat'] == '0.000')
+			$coordinates = $this->getCoordinates($_store);
+		$address = $_store->getFormatedAddressforMap();	
+?>
+	var lat = <?php echo $coordinates['lat'] ?>;
+	var lng = <?php echo $coordinates['lng'] ?>; 
+	var storeId = <?php echo $_store->getId();?>;
+	var name = "<?php echo $_store->getStoreName() ?>";
+	var address = "<?php echo $address?>";
+	var latlng = new google.maps.LatLng(
+	  parseFloat(lat),
+	  parseFloat(lng)
+	);
+	createMarker(latlng, name, address, storeId);
+	bounds.extend(latlng);
+
+<?php endforeach; ?>
+
+	map.fitBounds(bounds);
+
+	function createMarker(latlng, name, address, storeId) {
+		var html = "<b>" + name + "</b> <br/>" + address;
+		var marker = new google.maps.Marker({
+			map: map,
+			position: latlng
+		});
+		google.maps.event.addListener(marker, 'click', function() {
+			infoWindow.setContent(html);
+			infoWindow.open(map, marker);
+			$('storeId').value = storeId;
+			updateStoreLocation();
+		});
+		markers.push(marker);
+		
+	}
+	function updateStoreLocation()
+	{
+		var storeId;
+		
+		storeId = $('storeId').value;
+		
+		var url = '<?php echo $this->getUrl('storelocator/index/updatestore', array('_secure'=>true)); ?>' ;
+		
+		url = url + 'store_id/' + storeId;
+	   
+		var request = new Ajax.Request(url,{method: 'get', onFailure: ""}); 
+		
+		if($('storelocator-method') != null){
+			$('storelocator-method').style.display = 'block';
+		}
+		if($('selectedStore') != null)
+		{
+			var selected_store = $('selectedStore').value;
+			
+			if($('store_'+ selected_store) != null)
+			{
+				$('store_'+ selected_store).style.display = 'none';
+			}		
+			if($('store_'+ storeId) != null)
+			{
+				$('store_'+ storeId).style.display = 'block';
+				$('selectedStore').value = storeId;
+			}		
+		}
+	}
+//]]>
+
+</script>  
+
+<a href="<?php echo $this->getUrl('storelocator/index/index')?>" target="_blank"><?php echo $this->__('View all local stores')?></a>
+<?php if(count($_storeCollection)):?>
+<?php $modelshipping = Mage::getModel('storelocator/shipping_storelocator') ?>
+<div>	
+	<div id="store-details">
+	<?php if(count($_storeCollection)): ?>
+		<?php foreach($_storeCollection as $_store) : ?>
+		<?php $address = $_store->getFormatedAddress();?>
+		<div id="store_<?php echo $_store->getId()?>" style="display:none;" >
+			<div class="left">
+				<span class="title"><?php echo $_store->getStoreName() ?></span>
+				<span><?php echo $address ?></span>
+				<?php if($_store->getDescription() !=null): ?>
+				<div>
+					<span class="title"><?php echo $this->__('Description') ?></span>
+					<span><?php echo $_store->getDescription() ?></span>
+				</div>
+				<?php endif; ?>
+			</div>
+		</div>
+		<?php endforeach;?>
+	<?php endif;?>
+	<input type="hidden" id="selectedStore" name="selectedStore" value="" />
+	</div>
+</div>
+<div class="clear fix">&nbsp;</div>
+	
+<?php else :?>
+	<?php echo $this->__('There is no store found')?>
+<?php endif;?>		
+
+<script type="text/javascript">
+	//<![CDATA[
+		var storelocator = new Storelocator('<?php echo Mage::helper('storelocator')->getUpdateStoreUrl(); ?>');
+		
+	//]]>
+</script>

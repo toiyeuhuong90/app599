@@ -1,0 +1,146 @@
+
+<div class="design-mark">
+    <img src="<?php echo $this->getSkinUrl('images/design-loading.gif') ?>"/>
+</div>
+<?php
+$product = $this->getProduct();
+$groupsDesign = $product->getDefaultImageZoom();
+
+$attrs = $product->getOptions();
+?>
+<div id="image-gallery" style="display: none;">
+        <?php $k = 1;
+        $mainImage = '';
+        $zoomImage = '';
+        foreach ($groupsDesign as $groupDesign): ?>
+            <?php if($k==1):?>
+                <?php
+                $mainImage = $groupDesign['image'] ;
+                $zoomImage = $groupDesign['image-image'];
+                ?>
+            <?php endif;?>
+                    <a id="item-zoom-<?php echo $k ?>" href="javascript:void(0);"
+                       data-image="<?php echo $groupDesign['image']?>"
+                       data-zoom-image="<?php echo $groupDesign['image-image']?>">
+                    <img src="<?php echo $groupDesign['thumbnail']?>" />
+                    </a>
+            <?php $k++; endforeach; ?>
+</div>
+<div id="prev-main-slider" class="prev-main-slider">Prev</div>
+<div class="wp-main-image">
+    <img id="main_image" data-zoom-image="<?php echo $zoomImage ?>" src="<?php echo $mainImage?>"/>
+</div>
+<div id="next-main-slider" class="next-main-slider">Next</div>
+
+<div class="qs-list-control-design">
+    <ul>
+        <li><a class="designzoom" href="javascript:void(0);" onclick="design.resetDefault();return false;"><img alt="<?php echo $this->__('Refresh') ?>" src="<?php echo $this->getSkinUrl('qsoft/productdesign/images/refresh.png')?>"/></a></li>
+        <li class="qs-sym-control-design"></li>
+        <?php if ($this->helper('wishlist')->isAllow()) : ?>
+        <li><a class="designzoom" href="javascript:void(0);" onclick="productToWishlist('0');"><img alt="<?php echo $this->__('Save') ?>" src="<?php echo $this->getSkinUrl('qsoft/productdesign/images/save_desgin.png')?>"/></a></li>
+        <?php endif;?>
+    </ul>
+</div>
+<canvas id="canvas_design" style="display: none"></canvas>
+<script type="text/javascript">
+    var count = 0;
+    var loaded = [];
+    function in_array(needle, haystack) {
+        for (var key = 0; key < haystack.length; key++) {
+            if (needle == haystack[key]) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    jQuery(document).ready(function () {
+        jQuery("#main_image").elevateZoom({
+            zoomType: "inner",
+            gallery:'image-gallery',
+            cursor: 'pointer',
+            zoomWindowFadeIn: 500,
+            zoomWindowFadeOut: 750,
+            responsive: true,
+            galleryActiveClass: "active"
+        });
+
+    });
+
+    var sliderControl = Class.create();
+    sliderControl.prototype = {
+        initialize: function (prevSelector, nextSelector, totalItem) {
+            this.prevSelector = prevSelector;
+            this.nextSelector = nextSelector;
+            this.currentItem = 1;
+            this.totalItem = totalItem;
+            $(this.prevSelector).observe("click", this.previouItemZoom.bind(this));
+            $(this.nextSelector).observe("click", this.nextItemZoom.bind(this));
+        },
+
+        previouItemZoom: function() {
+            var prev = this.currentItem - 1;
+            if(this.currentItem==1){
+                prev = this.totalItem;
+            }
+            this.currentItem = prev;
+            $('item-zoom-' + prev).click();
+        },
+
+        nextItemZoom: function() {
+            var next = this.currentItem + 1;
+
+            if(this.currentItem==this.totalItem){
+                next = 1;
+            }
+            this.currentItem = next;
+            $('item-zoom-' + next).click();
+        },
+
+        loadImage: function(img){
+            var async = false;
+            if (window.chrome && window.chrome.webstore) {
+                async = true;
+            }
+            if(!in_array(img, loaded)){
+                jQuery.ajax({
+                    /* The whisperingforest.org URL is not longer valid, I found a new one that is similar... */
+                    url: img,
+                    async: async,
+                    dataType: 'html',
+                    beforeSend: function(){
+                        jQuery('.design-mark').show();
+                    },
+                    success:function(data){
+                        jQuery('.design-mark').hide();
+                    }
+                });
+                loaded[count] = img;
+                count++;
+            }
+        },
+
+        updateZoomContent: function(data){
+            for(var i=1; i<=this.totalItem; i++){
+                this.loadImage(data[i + '-image']);
+                this.loadImage(data[i + '-zoom-image']);
+                jQuery('#item-zoom-' + i).attr('data-image',data[i + '-image']).attr('data-zoom-image',data[i + '-zoom-image'])
+            }
+            var ez = jQuery("#main_image").data('elevateZoom');
+
+            ez.swaptheimage(data[this.currentItem + '-image'], data[this.currentItem + '-zoom-image']);
+        },
+
+        setImageCart: function () {
+            jQuery('#design_image').val(jQuery('#main_image').attr('src'));
+        }
+    };
+
+    var zoomControl = new sliderControl('prev-main-slider', 'next-main-slider', <?php echo count($groupsDesign) ?>);
+</script>
+<style type="text/css">
+    .zoomWindow:hover{
+        background-color: #EFEFEF;
+        border: 1px solid #000000;
+    }
+</style>

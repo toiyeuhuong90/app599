@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <default>
+        <reference name="head">
+            <action method="addCss"><name>qsoft/customer_measure/css/style.css</name></action>
+        </reference>
+    </default>
+    <qsoft_customermeasure_adminhtml_measurement_type_edit>
+        <reference name="head">
+            <action method="addJs"><js>lib/flex.js</js></action>
+            <action method="addJs"><js>lib/FABridge.js</js></action>
+            <action method="addJs"><js>mage/adminhtml/flexuploader.js</js></action>
+            <action method="addJs"><js>qsoft/customer_measure/adminhtml/browser.js</js></action>
+            <action method="addJs"><js>prototype/window.js</js></action>
+            <action method="addItem"><type>js_css</type><js>prototype/windows/themes/default.css</js></action>
+            <action method="addItem"><type>skin_css</type><js>lib/prototype/windows/themes/magento.css</js></action>
+        </reference>
+    </qsoft_customermeasure_adminhtml_measurement_type_edit>
+    <qsoft_customermeasure_adminhtml_measurement_type_new>
+        <reference name="head">
+            <action method="addJs"><js>lib/flex.js</js></action>
+            <action method="addJs"><js>lib/FABridge.js</js></action>
+            <action method="addJs"><js>mage/adminhtml/flexuploader.js</js></action>
+            <action method="addJs"><js>qsoft/customer_measure/adminhtml/browser.js</js></action>
+            <action method="addJs"><js>prototype/window.js</js></action>
+            <action method="addItem"><type>js_css</type><js>prototype/windows/themes/default.css</js></action>
+            <action method="addItem"><type>skin_css</type><js>lib/prototype/windows/themes/magento.css</js></action>
+        </reference>
+    </qsoft_customermeasure_adminhtml_measurement_type_new>
+    <adminhtml_customer_edit>
+        <reference name="head">
+            <action method="addJs"><js>qsoft/customer_measure/adminhtml/jquery-1.9.1.js</js></action>
+            <action method="addJs"><js>qsoft/customer_measure/adminhtml/measure.js</js></action>
+        </reference>
+    </adminhtml_customer_edit>
+    <qsoft_customermeasure_adminhtml_measurement_type_history>
+        <block type="core/text_list" name="root" output="toHtml">
+            <block type="qsoft_customermeasure/adminhtml_history" name="adminhtml.customer.edit.tab.orders"/>
+        </block>
+    </qsoft_customermeasure_adminhtml_measurement_type_history>
+</layout>

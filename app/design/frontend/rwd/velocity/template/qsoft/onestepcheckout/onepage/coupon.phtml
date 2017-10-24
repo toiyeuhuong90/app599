@@ -1,0 +1,24 @@
+<form id="opc-discount-coupon-form" action="<?php echo $this->getUrl('checkout/cart/couponPost', array('_secure' => $this->getRequest()->isSecure())) ?>" method="post">
+    <div class="discount">
+        <div class="discount-form">
+            <div class="row">
+                <div class="col-sm-6">
+                    <label for="coupon_code"><?php echo $this->__('Discount Codes:') ?></label>
+                    <div class="qs-desc-code"><?php echo $this->__('Enter your coupon code if you have one.') ?></div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="input-box">
+                        <input class="input-text" id="coupon_code" type="text" name="coupon_code" value="<?php echo $this->htmlEscape($this->getCouponCode()) ?>" autocomplete="off"/>
+                        <span class="qs-desc-input-code"><?php echo $this->__('Example: 8456 84DE D5') ?></span>
+                    </div>
+                    <div class="qs-row-button">
+                        <button type="button" title="<?php echo $this->__('Apply') ?>" class="button apply-coupon"  value="<?php echo $this->__('Apply') ?>"><?php echo $this->__('Apply') ?></button>
+                        <?php if(strlen($this->getCouponCode())): ?>
+                            &nbsp; <button type="button" title="<?php echo $this->__('Cancel') ?>" class="button remove-coupon right"  value="<?php echo $this->__('Cancel') ?>"><?php echo $this->__('Cancel') ?></button>
+                        <?php endif;?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

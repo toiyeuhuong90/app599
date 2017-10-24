@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout>
+    <adminhtml_system_config_edit>
+        <reference name="head">
+            <action method="addJs"><file>qsoft/onestepcheckout/colorpicker/jscolor.js</file></action>
+        </reference>
+        <reference name="before_body_end">
+            <block type="core/template" name="Qsoft.Onestepcheckout.jsinit" template="qsoft/onestepcheckout/jsinit.phtml"/>
+        </reference>
+    </adminhtml_system_config_edit>
+</layout>

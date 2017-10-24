@@ -1,0 +1,322 @@
+<?php
+
+$product = $this->getProduct();
+$groupsDesign = $this->helper('productdesign')->getProductGroupDesign($product);
+?>
+<input type="hidden" name="design_image" id="design_image"/>
+<script type="text/javascript">
+    var opConfigDesign = <?php echo $this->getJsonConfigDesign() ?>;
+    var opGroupDesign = <?php echo Mage::helper('core')->jsonEncode($groupsDesign) ?>;
+    console.log(opGroupDesign);
+    var opTextDesign = <?php echo $this->getJsonTextDesign() ?>;
+
+
+    var DesignProduct = Class.create();
+    DesignProduct.prototype = {
+        initialize: function (config, background, textDesign) {
+            this.config = config;
+            this.bgs = background;
+            this.textDesign = textDesign;
+            this.countScale = 0;
+            document.observe("dom:loaded", this.hoverCanvas.bind(this));
+        },
+        buildDesign: function () {
+            var currentGroupActive = $$('.swiper-pagination-bullet-active')[0].getAttribute('group');
+            var destroyDrag = 0;
+            var currentCanvasActive = jQuery('#bg-' + currentGroupActive);
+            if (currentCanvasActive.width() < jQuery(currentCanvasActive).parent().width()) {
+                destroyDrag = 1;
+            }
+            this.zoomOut(destroyDrag);
+            this.applyDesign();
+            var cs = this;
+
+            setTimeout(function () {
+                cs.setImageDesignToCart();
+            }, 1000);
+
+        },
+        getOptionSelected: function () {
+            var options = [];
+            var d = 0;
+            $$('.option_image_design').each(function (elm) {
+                if (elm.checked) {
+                    options[d] = elm.value;
+                    d++;
+                }
+            });
+            return options;
+        },
+        applyDesign: function () {
+            var options = this.getOptionSelected();
+
+            var bg = this.getCurrentGroupActive();
+
+            var w = bg.width;
+            var h = bg.height;
+            var bgImage = bg.image_resized;
+            var canvas = document.getElementById('bg-' + bg.id);
+            canvas.width = w;
+            canvas.height = h;
+            var context = canvas.getContext("2d");
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            var imgs = {bg: bgImage};
+            var k = 1;
+            for (var j = 0; j < options.length; j++) {
+                if (this.config[options[j]]['image_' + bg.key] != '') {
+                    imgs['bg' + k] = this.config[options[j]]['image_' + bg.key];
+                    k++;
+                }
+            }
+            this.loadImages(imgs, function (images) {
+                for (var m in images) {
+                    context.drawImage(images[m], 0, 0, w, h);
+                }
+            });
+            var cs = this;
+            if (this.groupHasTextDesign(bg.id)) {
+                setTimeout(function () {
+                    var textDesign = cs.groupHasTextDesign(bg.id);
+                    var optionTextId = textDesign.id;
+                    var textPrint = $('options_' + optionTextId + '_text').value;
+                    var color = cs.getOptionColor(optionTextId);
+                    context.fillStyle = '#' + color;
+                    context.font = "bold 16px Arial";
+                    context.fillText(textPrint, textDesign.left, textDesign.top, 100);
+                }, 100);
+            }
+
+        },
+        loadImages: function (sources, callback) {
+            var images = {};
+            var loadedImages = 0;
+            var numImages = 0;
+            // get num of sources
+            for (var src in sources) {
+                numImages++;
+            }
+            for (var src in sources) {
+                images[src] = new Image();
+                images[src].onload = function () {
+                    if (++loadedImages >= numImages) {
+                        callback(images);
+                    }
+                };
+                images[src].src = sources[src];
+            }
+        },
+        getOptionColor: function (optionId) {
+            var colors = document.getElementsByName('colour[' + optionId + ']');
+            for (var i = 0; i < colors.length; i++) {
+                if (colors[i].checked) {
+                    return colors[i].value;
+                }
+            }
+        },
+
+        groupHasTextDesign: function (groupId) {
+            for (var i in this.textDesign) {
+                if (this.textDesign[i].groupId == groupId) {
+                    return this.textDesign[i];
+                }
+            }
+            return false;
+        },
+
+        setImageDesignToCart: function () {
+            for (var i = 0; i < this.bgs.length; i++) {
+                if (this.bgs[i].is_default == 1) {
+                    var canvas = document.getElementById('bg-' + this.bgs[i].id);
+                    var pngUrl = canvas.toDataURL();
+                    $('design_image').value = pngUrl;
+                    break;
+                }
+            }
+        },
+        showGroupDesign: function (id, groupIds) {
+            $$('.qs-option-design').each(function (elm) {
+                $(elm).hide();
+                $('qs-option-' + id).show();
+
+            });
+            var currentGroupActive = $$('.swiper-pagination-bullet-active')[0].getAttribute('group');
+            var groups = groupIds.split(',');
+            if (!in_array(currentGroupActive, groups)) {
+                $('qs-ds-' + groups[0]).click();
+            }
+
+        },
+        hoverCanvas: function () {
+            var cs = this;
+            $$('.qs-canvas-design').each(function (elm) {
+                var canvasId = $(elm).getAttribute('group');
+                var canvasD = document.getElementById('bg-' + canvasId);
+                for (var i = 0; i < cs.bgs.length; i++) {
+                    if (canvasId == cs.bgs[i].id) {
+                        var bg = cs.bgs[i];
+                    }
+                }
+                $(elm).observe('click', function (event) {
+                    var options = cs.getOptionSelected();
+                    var offset = jQuery(this).offset();
+                    var x = event.pageX - offset.left;
+                    var y = event.pageY - offset.top;
+                    for (var j = 0; j < options.length; j++) {
+                        var image = cs.config[options[j]]['image_' + bg.key];
+                        var zoomIn = cs.config[options[j]]['showInGroup'].split(',');
+                        if (image != '' && in_array(bg.id, zoomIn)) {
+                            //console.log(image);
+                            if (cs.getChildPosition(bg, x, y, image)) {
+                                $$('.qs-option-design').each(function (elm) {
+                                    $(elm).hide();
+                                });
+                                $('qs-option-' + cs.config[options[j]]['optionId']).show();
+                                jQuery('#canvas-mark').attr('src', image).css({
+                                    width: bg.realWidth + 'px',
+                                    height: bg.realHeight + 'px',
+                                    opacity: 0.5,
+                                    'z-index': 999
+                                });
+                            }
+                            jQuery(elm).css('cursor', 'pointer');
+                        }
+                    }
+                });
+            })
+        },
+        getChildPosition: function (group, x, y, image) {
+            jQuery('#check-image').remove();
+            var canvas = document.createElement('canvas');
+            canvas.setAttribute('width', group.realWidth);
+            canvas.setAttribute('height', group.realHeight);
+
+            canvas.setAttribute('id', 'check-image');
+
+            var context = canvas.getContext("2d");
+            var img = new Image();
+            img.src = image;
+            img.onload = function () {
+                context.drawImage(img, 0, 0, group.realWidth, group.realHeight);
+                //img.style.display = 'none';
+            };
+            context.drawImage(img, 0, 0, group.realWidth, group.realHeight);
+
+            var pixel = context.getImageData(x, y, 1, 1);
+            var data = pixel.data;
+            if (data[0] != 0 || data[1] != 0 || data[2] != 0 || data[3] != 0) {
+                return true;
+            }
+
+            return false;
+        },
+        /*
+         * zoom in
+         * */
+        zoomIn: function () {
+            this.countScale++;
+            //console.log(this.countScale);
+            if (this.countScale >= 3) {
+                this.countScale = 3;
+                var scale = Math.pow(1.25, 3);
+            } else {
+                var scale = Math.pow(1.25, this.countScale);
+            }
+            swiper.detachEvents();
+            jQuery('.swiper-button-prev, .swiper-button-next, .swiper-pagination').hide();
+            this.applyDragCanvas(scale);
+        },
+        /*
+         * zoom out
+         * */
+        zoomOut: function (destroy) {
+            this.countScale = 1;
+            var scale = 1;
+            swiper.attachEvents();
+            jQuery('.swiper-button-prev, .swiper-button-next').show();
+
+            this.applyDragCanvas(scale, destroy);
+        },
+
+        applyDragCanvas: function (scale, destroy) {
+            var currentGroupActive = $$('.swiper-pagination-bullet-active')[0].getAttribute('group');
+            var currentDesign = this.getCurrentGroupActive();
+            var widthOrigin = currentDesign.realWidth;
+            var heightOrigin = currentDesign.realHeight;
+            var canvas = $('bg-' + currentGroupActive);
+            var currentWidth = widthOrigin * scale;
+            var currentHeight = heightOrigin * scale;
+            jQuery('#bg-' + currentGroupActive).css({
+                width: currentWidth + 'px',
+                height: currentHeight + 'px',
+                top: 0,
+                left: 0
+            });
+
+            jQuery('#draggable-' + currentGroupActive).css({
+                width: (currentWidth * 2 - widthOrigin ) + 'px',
+                height: (currentHeight * 2 - heightOrigin) + 'px',
+                top: '-' + (currentHeight - heightOrigin) + 'px',
+                left: '-' + (currentWidth - widthOrigin) + 'px'
+            });
+            if (scale > 1) {
+                jQuery('#bg-' + currentGroupActive).draggabilly({
+                    containment: true
+                });
+            }
+            if (destroy) {
+                jQuery('#bg-' + currentGroupActive).draggabilly('destroy');
+            }
+
+        },
+
+        getCurrentGroupActive: function () {
+            var currentGroupActive = $$('.swiper-pagination-bullet-active')[0].getAttribute('group');
+            console.log(currentGroupActive);
+            for (var i = 0; i < this.bgs.length; i++) {
+                if (this.bgs[i].id == currentGroupActive) {
+                    return this.bgs[i];
+                }
+            }
+        },
+        resetDefault: function () {
+            $$('.option_image_design').each(function (elm) {
+                if (elm.getAttribute('is_default')) {
+                    elm.checked = true;
+                }
+            });
+            this.applyDesign();
+        }
+    };
+
+    var design = new DesignProduct(opConfigDesign, opGroupDesign, opTextDesign);
+
+    document.observe("dom:loaded", function () {
+        design.applyDesign();
+    });
+
+    var swiper = new Swiper('.swiper-container', {
+        pagination: '.swiper-pagination',
+        paginationClickable: true,
+        prevButton: '.swiper-button-prev',
+        nextButton: '.swiper-button-next',
+        paginationBulletRender: function (index, className) {
+            return '<span group="' + opGroupDesign[index].id + '" id="qs-ds-' + opGroupDesign[index].id + '" class="' + className + '">' + (index + 1) + '</span>';
+        },
+        onSlideNextStart: function (swiper) {
+            design.applyDesign();
+        },
+        onSlidePrevStart: function (swiper) {
+            design.applyDesign();
+        }
+    });
+
+    function in_array(needle, haystack) {
+        for (var key = 0; key < haystack.length; key++) {
+            if (needle == haystack[key]) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+</script>

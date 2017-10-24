@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<config>
+    <sections>
+        <general>
+            <groups>
+                <storelocator translate="label" module="storelocator">
+                    <label>Storelocator</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>12</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <active translate="label">
+                            <label>Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </active>
+						<display_store_url translate="label">
+                            <label>Show stores link</label>
+                            <frontend_type>select</frontend_type>
+							<source_model>storelocator/source_displaystores</source_model>
+							<sort_order>25</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </display_store_url>
+						<link_title translate="label">
+                            <label>Store Link Title</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>28</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+							<comment></comment>
+                        </link_title>
+						<store_title translate="label">
+                            <label>Store Meta Title</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+							<comment></comment>
+                        </store_title>
+						<search_fields translate="label">
+                            <label>Allowed Search by</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>storelocator/source_searchfield</source_model>
+                            <sort_order>35</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </search_fields>
+						<store_map translate="label">
+                            <label>Shown type of list store on checkout page</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>storelocator/source_storemap</source_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+							<comment>Display store list or store map in Shipping Method step</comment>
+                        </store_map>	
+						<map_size translate="label">
+                            <label>Map size</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+							<comment>Format example : width*height (width, height in pixel and separated by asterisk).</comment>
+                        </map_size>
+
+                        <num_top_store translate="label">
+                            <label>Num stores shown in selector</label>
+                            <frontend_type>text</frontend_type>
+							<sort_order>160</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+							<comment>Num stores shown in selector on checkout page</comment>
+                        </num_top_store>		
+                        <active_gapi translate="label">
+                            <label>Enabled Google API</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>160</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+							<comment>Use Googlemap API to calculate distance between Store and customer address</comment>
+                        </active_gapi>	
+                        <gkey translate="label">
+                            <label>Google map Key</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>180</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </gkey>		
+					</fields>
+                </storelocator>
+            </groups>
+        </general>
+    </sections>
+</config>

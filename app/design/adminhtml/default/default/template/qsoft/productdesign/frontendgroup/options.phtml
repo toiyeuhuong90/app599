@@ -1,0 +1,110 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     default_default
+ * @copyright   Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Template for Mage_Adminhtml_Block_Widget_Grid
+ *
+ *  getId()
+ *  getCollection()
+ *  getColumns()
+ *  getPagerVisibility()
+ *  getVarNamePage()
+ */
+$numColumns = sizeof($this->getColumns());
+?>
+<?php if($this->getCollection()): ?>
+    <?php if($this->canDisplayContainer()): ?>
+    <?php if($this->getGridHeader()): ?>
+        <div class="content-header">
+            <table cellspacing="0">
+                <tr>
+                    <td style="width:50%;"><h2><?php echo $this->getGridHeader(); ?></h2></td>
+                </tr>
+            </table>
+        </div>
+    <?php endif ?>
+
+    <div id="<?php echo $this->getId() ?>">
+        <?php else: ?>
+            <?php echo $this->getMessagesBlock()->toHtml() ?>
+        <?php endif; ?>
+
+        <?php if($this->getMassactionBlock()->isAvailable()): ?>
+            <?php echo $this->getMassactionBlockHtml() ?>
+        <?php endif ?>
+        <div class="grid">
+            <div class="hor-scroll">
+                <table cellspacing="0" class="data" id="<?php echo $this->getId() ?>_table">
+
+
+                    <tbody>
+                    <?php if (($this->getCollection()->getSize()>0) && (!$this->getIsCollapsed())): ?>
+                        <?php $values = Mage::helper('productdesign/frontendgroup')->getSelectcat() ?>
+                        <?php foreach ($values as $_item): ?>
+                        <tr>
+                            <td><a style="text-decoration: none; color: #4c4c4c;" href="<?php echo $this->getUrl('*/*/edit', array('id' => $_item['value'])); ?>"><?php echo $_item['label'] ?></a></td>
+                            <td>
+                                <?php if($_item['value']!=0):?>
+                                <a href="<?php echo $this->getUrl('*/*/edit', array('id' => $_item['value'])); ?>">Edit</a>
+                                <?php endif;?>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    <?php elseif ($this->getEmptyText()): ?>
+                        <tr>
+                            <td class="empty-text <?php echo $this->getEmptyTextClass() ?>" colspan="<?php echo $numColumns ?>"><?php echo $this->getEmptyText() ?></td>
+                        </tr>
+                    <?php endif; ?>
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+        <?php if($this->canDisplayContainer()): ?>
+    </div>
+    <script type="text/javascript">
+        //<![CDATA[
+        <?php echo $this->getJsObjectName() ?> = new varienGrid('<?php echo $this->getId() ?>', '<?php echo $this->getGridUrl() ?>', '<?php echo $this->getVarNamePage() ?>', '<?php echo $this->getVarNameSort() ?>', '<?php echo $this->getVarNameDir() ?>', '<?php echo $this->getVarNameFilter() ?>');
+        <?php echo $this->getJsObjectName() ?>.useAjax = '<?php echo $this->getUseAjax() ?>';
+        <?php if($this->getRowClickCallback()): ?>
+        <?php echo $this->getJsObjectName() ?>.rowClickCallback = <?php echo $this->getRowClickCallback() ?>;
+        <?php endif; ?>
+        <?php if($this->getCheckboxCheckCallback()): ?>
+        <?php echo $this->getJsObjectName() ?>.checkboxCheckCallback = <?php echo $this->getCheckboxCheckCallback() ?>;
+        <?php endif; ?>
+        <?php if($this->getRowInitCallback()): ?>
+        <?php echo $this->getJsObjectName() ?>.initRowCallback = <?php echo $this->getRowInitCallback() ?>;
+        <?php echo $this->getJsObjectName() ?>.initGridRows();
+        <?php endif; ?>
+        <?php if($this->getMassactionBlock()->isAvailable()): ?>
+        <?php echo $this->getMassactionBlock()->getJavaScript() ?>
+        <?php endif ?>
+        <?php echo $this->getAdditionalJavaScript(); ?>
+        //]]>
+    </script>
+<?php endif; ?>
+<?php endif ?>

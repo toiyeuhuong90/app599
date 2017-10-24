@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Evince_Testimony extension
+ * 
+ * NOTICE OF LICENSE
+ * 
+ * This source file is subject to the MIT License
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/mit-license.php
+ * 
+ * @category   	Evince
+ * @package		Evince_Testimony
+ * @copyright  	Copyright (c) 2014
+ * @license		http://opensource.org/licenses/mit-license.php MIT License
+ */
+-->
+<config>
+	<modules>
+		<Evince_Testimony>
+			<version>0.0.1</version>
+		</Evince_Testimony>
+	</modules>
+	<global>
+		<resources>
+			<evince_testimony_setup>
+				<setup>
+					<module>Evince_Testimony</module>
+					<class>Evince_Testimony_Model_Resource_Setup</class>
+				</setup>
+			</evince_testimony_setup>
+		</resources>
+		<blocks>
+			<testimony>
+				<class>Evince_Testimony_Block</class>
+			</testimony>
+		</blocks>
+		<helpers>
+			<testimony>
+				<class>Evince_Testimony_Helper</class>
+			</testimony>
+		</helpers>
+		<models>
+			<testimony>
+				<class>Evince_Testimony_Model</class>
+				<resourceModel>testimony_resource</resourceModel>
+			</testimony>
+			<testimony_resource>
+				<class>Evince_Testimony_Model_Resource</class>
+				<entities>
+					<testimonial>
+						<table>testimony_testimonial</table>
+					</testimonial>
+					<testimonial_store>
+						<table>testimony_testimonial_store</table>
+					</testimonial_store>
+				</entities>
+			</testimony_resource>
+		</models>
+	</global>
+	<adminhtml>
+		<layout>
+			<updates>
+				<evince_testimony>
+					<file>evince_testimony.xml</file>
+				</evince_testimony>
+			</updates>
+		</layout>
+		<translate>
+			<modules>
+				<Evince_Testimony>
+					<files>
+						<default>Evince_Testimony.csv</default>
+					</files>
+				</Evince_Testimony>
+			</modules>
+		</translate>
+	</adminhtml>
+	<admin>
+		<routers>
+			<adminhtml>
+				<args>
+					<modules>
+						<Evince_Testimony before="Mage_Adminhtml">Evince_Testimony_Adminhtml</Evince_Testimony>
+					</modules>
+				</args>
+			</adminhtml>
+		</routers>
+	</admin>
+	<frontend>
+		<routers>
+			<testimony>
+				<use>standard</use>
+				<args>
+					<module>Evince_Testimony</module>
+					<frontName>testimony</frontName>
+				</args>
+			</testimony>
+		</routers>
+		<layout>
+			<updates>
+				<evince_testimony>
+					<file>evince_testimony.xml</file>
+				</evince_testimony>
+			</updates>
+		</layout>
+		<translate>
+			<modules>
+				<Evince_Testimony>
+					<files>
+						<default>Evince_Testimony.csv</default>
+					</files>
+				</Evince_Testimony>
+			</modules>
+		</translate>
+	</frontend>
+	<default>
+		<testimony>
+			<testimonial>
+				<breadcrumbs>1</breadcrumbs>
+				<limit>8</limit>
+			</testimonial>
+		</testimony>
+	</default>
+</config>

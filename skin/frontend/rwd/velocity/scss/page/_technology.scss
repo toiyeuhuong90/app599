@@ -1,0 +1,264 @@
+.cms-technology{
+    .page-title{
+        display:none;
+    }
+}
+.technology-page{
+    .banner{
+        border-top:1px solid #fff;
+        position: relative;
+        @media(max-width:$bp-xs){
+            height:300px;
+            overflow: hidden;
+            img{
+                max-height:100%;
+                max-width:none;
+            }
+        }
+        .banner-text{
+            position: absolute;
+            top:50%;
+            @include transform(translateY(-50%));
+            right:250px;
+            text-align:center;
+            display: flex;
+            justify-content: center;
+            color:#fff;
+            max-width:500px;
+            @media(max-width:$bp-xxl){
+                right:20px;
+            }
+            @media(max-width:$bp-xs){
+                right:0;
+                bottom:20px;
+                top:auto;
+                @include transform(translateY(0%));
+                padding:10px;
+            }
+            h2{
+                font-family:'Wolfburg';
+                font-size:46px;
+                line-height:1.2em;
+                @media(max-width:$bp-xs){
+                    font-size:29px;
+                }
+            }
+            p{
+                font-family:$f-stack-default;
+                font-size:16px;
+                line-height: 1.25em;
+                @media(max-width:$bp-xs){
+                    font-size:12px;
+                }
+            }
+            .bx-link{
+                margin:30px 0;
+                @media(max-width:$bp-xs){
+                    margin:20px 0 0;
+                }
+                a{
+                    display:inline-block;
+                    border:1px solid #fff;
+                    padding:0 10px;
+                    font-size:22px;
+                    color:#fff;
+                    font-family:$f-stack-default;
+                    height:52px;
+                    line-height: 50px;
+                    min-width:162px;
+                    text-align: center;
+                    @include box-sizing(border-box);
+                    @media(max-width:$bp-xs){
+                        height:32px;
+                        line-height: 30px;
+                        font-size:15px;
+                        min-width:90px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.fabrics-tabs{
+    background-color: #e9e9e9;
+    color:#000;
+    padding-top:20px;
+    position: relative;
+    overflow:hidden;
+    h2{
+        text-align:center;
+        font-family:$f-stack-default;
+        font-weight:bold;
+        font-size:54px;
+        @media(max-width:$bp-md){
+            font-size:44px;
+        }
+    }
+    .item-tab{
+        .top-tab{
+            h3{
+                font-family:$f-stack-default;
+                font-size:17px;
+                font-weight:bold;
+                color:#181818;
+                text-transform: uppercase;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                @media(min-width:768px) and (max-width:979px){
+                    font-size:15px;
+                }
+            }
+            .note{
+                font-family:$f-stack-default;
+                font-size:13px;
+                margin:0 0 10px;
+                height:76px;
+                -webkit-line-clamp: 4;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                @media(min-width:768px) and (max-width:1024px){
+                    height:95px;
+                    -webkit-line-clamp: 5;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+                @media(min-width:768px) and (max-width:979px){
+                    font-size:10px;
+                }
+                @media(max-width:$bp-md){
+                    height:auto;
+                }
+            }
+        }
+    }
+    .fabrics-tab-wp{
+        &:after{
+            @include clearfix;
+        }
+        &.container{
+            @media(max-width:$bp-md){
+                padding:0;
+            }
+        }
+        .item-tab{
+            .wp-img{
+                img{
+                    width:100%;
+                }
+            }
+            .top-tab{
+                display:none;
+                text-align:center;
+                padding:10px;
+                max-width:260px;
+                margin:0 auto;
+                position: relative;
+                cursor: pointer;
+                &:after{
+                    content:'';
+                    width:20px;
+                    height:20px;
+                    border:2px solid #000;
+                    border-top:0;
+                    border-left:0;
+                    position: absolute;
+                    @include transform(rotate(45deg));
+                    bottom:20px;
+                    left:50%;
+                    margin-left:-10px;
+                    @include opacity(0);
+                }
+                @media(max-width:$bp-md){
+                    display:block;
+                }
+                h2{
+                    margin:20px 0 5px;
+                }
+            }
+            .content-tab{
+                display:none;
+                background-color: #fff;
+                position: relative;
+                padding:0 0 40px 0;
+                @media(max-width:$bp-md){
+                    padding:0 0 20px 0;
+                    .container{
+                        padding:0;
+                    }
+                }
+                img{
+                    max-width:100%;
+                }
+            }
+            &.active{
+                background-color: #fff;
+                .top-tab{
+                    padding-bottom:95px;
+                    &:after{
+                        @include opacity(1);
+                        bottom:45px;
+                    }
+                }
+                .content-tab{
+                    display:block;
+                }
+            }
+        }
+    }
+}
+.list-item-tab{
+    &:after{
+        @include clearfix;
+    }
+    .item-tab{
+        float:left;
+        width:25%;
+        @include box-sizing(border-box);
+        padding:5px;
+        padding-bottom:50px;
+        position: relative;
+        cursor: pointer;
+        &:after{
+            content:'';
+            width:20px;
+            height:20px;
+            border:2px solid #000;
+            border-top:0;
+            border-left:0;
+            position: absolute;
+            @include transform(rotate(45deg));
+            bottom:20px;
+            left:50%;
+            margin-left:-10px;
+            @include opacity(0);
+        }
+        @media(max-width:$bp-md){
+            display:none;
+        }
+        &:hover,&.active{
+            background-color:#fff;
+        }
+        &.active{
+            &:after{
+                @include opacity(1);
+            }
+        }
+        img{
+            width:100%;
+        }
+        .top-tab{
+            text-align:center;
+        }
+    }
+}
+#fabrics{
+    position: relative;
+    top:-80px;
+    height:0;
+    @media(max-width:$bp-md){
+        top:0;
+    }
+}

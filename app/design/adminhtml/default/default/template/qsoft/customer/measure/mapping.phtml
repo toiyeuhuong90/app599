@@ -1,0 +1,22 @@
+<?php
+$measures = $this->getMeasures();
+$csvData = $this->getDataCsv();
+?>
+
+<table>
+    <?php $i=1; foreach ($csvData as $key => $label): ?>
+        <?php if (trim($label) != ''): ?>
+            <tr>
+                <td><b><?php echo $i ?>,</b> <?php echo $label ?></td>
+                <td>
+                    <select name="mapping[<?php echo $key ?>]">
+                        <option value="">--Pls select one--</option>
+                        <?php foreach ($measures as $measure): ?>
+                            <option value="<?php echo $measure->getId() ?>"><?php echo $measure->getTitle() ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </td>
+            </tr>
+        <?php $i++; endif; ?>
+    <?php endforeach; ?>
+</table>

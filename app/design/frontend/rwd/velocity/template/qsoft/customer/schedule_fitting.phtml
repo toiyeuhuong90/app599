@@ -1,0 +1,89 @@
+<?php
+    $customer = Mage::getSingleton('customer/session')->getCustomer();
+?>
+
+<!--<script type="text/javascript" src="--><?php //echo $this->getSkinUrl('js/jquery.maskedinput.js') ?><!--"></script>-->
+
+<?php echo $this->getChildHtml('schedule_banner') ?>
+
+<div class="qs-page-container schedule-page">
+    <div class="container">
+        <?php echo $this->getMessagesBlock()->toHtml() ?>
+        <?php echo $this->getChildHtml('schedule_info') ?>
+        <div class="qs-form-schedule">
+            <form id="schedule_fitting_form" action="<?php echo $this->getUrl('customer/schedule/indexPost')?>" method="post">
+                <?php echo $this->getBlockHtml('formkey'); ?>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="qs-row-form form-group">
+                            <label><?php echo $this->__('First Name') ?><span class="qs-required">*</span></label>
+                            <input tabindex="1" name="firstname" type="text" class="form-control required-entry" />
+                        </div>
+                        <div class="qs-row-form form-group">
+                            <label><?php echo $this->__('Mobile Phone') ?><span class="qs-required">*</span></label>
+                            <input id="telephone" tabindex="3" name="telephone" type="text" class="form-control required-entry" maxlength="15"/>
+                        </div>
+                        <div class="qs-row-form form-group">
+                            <label><?php echo $this->__('Email') ?><span class="qs-required">*</span></label>
+                            <input tabindex="4" name="email" type="text" class="form-control required-entry validate-email" />
+                        </div>
+                        <div class="qs-row-form form-group">
+                            <label><?php echo $this->__('Address') ?></label>
+                            <input tabindex="5" name="address" type="text" class="form-control" />
+                        </div>
+                        <div class="qs-row-form form-group">
+                            <label><?php echo $this->__('Preferred date and time') ?><span class="qs-required">*</span></label>
+                            <div class="input-group date" id="datetimepicker">
+                                <input tabindex="6" name="book_time" type="text" class="form-control  required-entry" />
+                                <span class="input-group-addon">
+                                    <span class="fa fa-calendar">
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="qs-row-form form-group">
+                            <label><?php echo $this->__('Last Name') ?><span class="qs-required">*</span></label>
+                            <input tabindex="2" name="lastname" type="text" class="form-control required-entry" />
+                        </div>
+                        <div class="qs-row-form form-group">
+                            <label><?php echo $this->__('Interested in(select all that apply)') ?></label>
+                            <div class="list-checkbox-schedule">
+                                <label><input tabindex="7" name="checkSchedule[1]" type="checkbox" class="form-control" value="<?php echo $this->__('RUN') ?>" /><?php echo $this->__('RUN') ?></label>
+                                <label><input tabindex="8" name="checkSchedule[2]" type="checkbox" class="form-control" value="<?php echo $this->__('BIKE') ?>" /><?php echo $this->__('BIKE') ?></label>
+                                <label><input tabindex="9" name="checkSchedule[3]" type="checkbox" class="form-control" value="<?php echo $this->__('SWIM') ?>" /><?php echo $this->__('SWIM') ?></label>
+                                <label><input tabindex="10" name="checkSchedule[4]" type="checkbox" class="form-control" value="<?php echo $this->__('TRIATHLON') ?>" /><?php echo $this->__('TRIATHLON') ?></label>
+                                <label><input tabindex="11" name="checkSchedule[5]" type="checkbox" class="form-control" value="<?php echo $this->__('CUSTOM DESIGN') ?>" /><?php echo $this->__('CUSTOM DESIGN') ?></label>
+                                <label><input tabindex="12" name="checkSchedule[6]" type="checkbox" class="form-control" value="<?php echo $this->__('NEWSLETTER') ?>" /><?php echo $this->__('NEWSLETTER') ?></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="qs-row-form form-group">
+                            <label><?php echo $this->__('Message') ?><span class="qs-required">*</span></label>
+                            <textarea tabindex="13" name="note" class="form-control required-entry"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="qs-row-form form-group qs-button-form">
+                            <button type="submit"><?php echo $this->__('Book Now') ?></button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    //<![CDATA[
+    var dataForm = new VarienForm('schedule_fitting_form', true);
+
+    jQuery('#telephone').keypress(function (event) {
+        if ((event.which != 46 || jQuery(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57) && event.which != 8) {
+            event.preventDefault();
+        }
+    });
+    //jQuery('#telephone').mask('(999)999-999-9999');
+    //]]>
+</script>

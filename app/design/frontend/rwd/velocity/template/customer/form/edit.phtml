@@ -1,0 +1,155 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2006-2016 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php echo $this->getMessagesBlock()->toHtml() ?>
+
+<div class="box-content">
+    <div class="box-content__inner">
+        <div class="title-large title-flex qs-title-page-account">
+            <span><?php echo $this->__('Account Information') ?></span>
+            <a onclick="setPasswordForm();" href="javascript:void(0);">Change Password</a>
+            <form style="display: none;" action="<?php echo $this->getUrl('customer/account/editPost') ?>" method="post" autocomplete="off" id="form-profile-password" class="form-change-password" enctype="multipart/form-data">
+            <?php echo $this->getBlockHtml('formkey')?>
+                <input style="display: none" type="checkbox" name="change_password" id="change_password" value="1" onclick="setPasswordForm(this.checked)" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Change Password')) ?>" checked="checked" class="checkbox" />
+                <div class="form-change-password__header">
+                  <span>Change Password</span>
+                  <a href="javascript:void(0);" onclick="hidePasswordForm();"><i class="fa fa-times"></i></a>
+                </div>
+                <div class="form-change-password__content">
+                  <div class="input-box">
+                      <input type="text" class="input-text no-display" name="dummy" id="dummy" />
+                      <input type="password" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Current Password')) ?>" class="required-entry input-text" name="current_password" id="current_password" placeholder="Old Password" />
+                  </div>
+                  <div class="input-box">
+                      <input type="password" title="<?php echo Mage::helper('core')->quoteEscape($this->__('New Password')) ?>" class="input-text required-entry validate-password" name="password" id="password" placeholder="New Password" />
+                  </div>
+
+                  <div class="input-box">
+                      <input type="password" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Confirm New Password')) ?>" class="input-text required-entry validate-cpassword" name="confirmation" id="confirmation" placeholder="Confirm Password" />
+                  </div>
+                  <div class="button-wrap">
+                      <button type="submit" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Save')) ?>" class="button btn-blue-large"><?php echo $this->__('Save') ?></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="box-content__body">
+            <div class="qs-box-content" id="profile-detail">
+                <div class="section-title no-border">
+                    <label>Contact Info</label>
+                    <a href="javascript:voi(0);" onclick="showProfileForm();">Edit</a>
+                </div>
+                <div class="block-content" >
+                    <p><?php echo $this->escapeHtml($this->getCustomer()->getName()) ?></p>
+                    <p><?php echo $this->escapeHtml($this->getCustomer()->getEmail()) ?></p>
+                </div>
+            </div>
+            <script type="text/javascript">
+                function showProfileForm(){
+                    jQuery('#profile-detail').hide();
+                    jQuery('#form-profile-validate').show();
+                }
+                function hideProfileFrom() {
+                    jQuery('#profile-detail').show();
+                    jQuery('#form-profile-validate').hide();
+                    return false;
+                }
+            </script>
+            <form style="display: none" action="<?php echo $this->getUrl('customer/account/editPost') ?>" method="post" autocomplete="off" id="form-profile-validate" class="scaffold-form" enctype="multipart/form-data">
+                <div class="fieldset">
+                    <?php echo $this->getBlockHtml('formkey')?>
+                    <div class="form-list">
+                        <div class="form-list__item">
+                            <div class="row">
+                                <?php echo $this->getLayout()->createBlock('customer/widget_name')->setObject($this->getCustomer())->toHtml() ?>
+                            </div>
+                        </div>
+                        <div class="form-list__item">
+                            <div class="row">
+                                <div class="field col-md-6">
+                                    <label for="email" class="required"><?php echo $this->__('Email') ?><span class="qs-required">*</span></label>
+                                    <div class="input-box">
+                                        <input type="email" autocapitalize="off" autocorrect="off" spellcheck="false" name="email" id="email" value="<?php echo $this->escapeHtml($this->getCustomer()->getEmail()) ?>" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Email Address')) ?>" class="input-text required-entry validate-email" />
+                                    </div>
+                                </div>
+                                <div class="field col-md-6">
+                                    <label for="telephone"><?php echo $this->__('Phone') ?></label>
+                                    <div class="input-box">
+                                        <input type="text" placeholder="<?php echo $this->__('Optional') ?>" name="telephone" value="<?php echo $this->escapeHtml($this->getCustomer()->getTelephone()) ?>" title="<?php echo $this->__('Telephone') ?>" class="input-text" id="telephone" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <?php // $_gender = $this->getLayout()->createBlock('customer/widget_gender') ?>
+                        <?php /* if ($_gender->isEnabled()): ?>
+                            <div class="form-list__item">
+                                <label><?php echo $this->__('Select a gender') ?><span class="qs-required">*</span></label>
+                                <div class="input-box">
+                                    <div class="box-line">
+                                        <input type="radio" <?php if($this->getCustomer()->getGender()==1):?> checked <?php endif;?>  name="gender" id="gender1" value="1"/>
+                                        <label for="gender1">Male</label>
+                                    </div>
+                                    <div class="box-line">
+                                        <input type="radio" <?php if($this->getCustomer()->getGender()==2):?> checked <?php endif;?> name="gender" id="gender2" value="2"/>
+                                        <label for="gender2">Female</label>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endif */ ?>
+                    </div>
+                </div>
+
+
+                <div class="button-wrap">
+                    <button type="submit" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Save')) ?>" class="button btn-blue-large"><?php echo $this->__('Save') ?></button>
+                    <button type="button " class="button btn-cancel btn-gray-large" onclick="return hideProfileFrom();"><span><span>Cancel</span></span></button>
+                    
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="box-content__inner">
+        <?php echo $this->getChildHtml('address_book');?>
+
+         <div class="qs-bg-mark" style="width: 100%; height: 100%; background-color: #b6b6b6; opacity: 0.36; display: none; position: fixed; top: 0;left: 0;"></div>
+        <script type="text/javascript">
+            //<![CDATA[
+            var dataProfileForm = new VarienForm('form-profile-validate', true);
+            var dataPasswordForm = new VarienForm('form-profile-password', true);
+            function setPasswordForm(){
+                jQuery('.qs-bg-mark').show();
+                jQuery('#form-profile-password').show();
+            }
+            function hidePasswordForm() {
+                jQuery('.qs-bg-mark').hide();
+                jQuery('#form-profile-password').hide();
+            }
+
+            //]]>
+        </script>
+    </div>
+    
+</div>

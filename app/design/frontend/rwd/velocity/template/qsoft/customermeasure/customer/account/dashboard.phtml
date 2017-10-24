@@ -1,0 +1,227 @@
+<?php
+$helper = Mage::helper('core');
+$measures = $this->getMeasuresDaskboard();
+$measureValues = $this->getMeasureValues();
+$units = $helper->jsonDecode($measureValues->getUnit());
+$weightUnit = Mage::getStoreConfig('customer_measure/files/default_weight');
+$heightUnit = Mage::getStoreConfig('customer_measure/files/default_height');
+if ($units) {
+    $weightUnit = $units['weight'];
+    $heightUnit = $units['height'];
+}
+    $unitLabel[1][1]='Kg';
+    $unitLabel[1][2]='Lbs';
+    $unitLabel[2][1]='Cm';
+    $unitLabel[2][2]='Inch';
+$items = $helper->jsonDecode($measureValues->getMeasures());
+?>
+
+<div class="qs-measurement-profile">
+
+    <div class="section-title"><?php echo $this->__('My Measurement Profile') ?></div>
+
+    <div class="qs-measurement-profile-container">
+        <div class="block-content body-scan">
+            <div class="body-scan__wrap">
+                <label>Body Scan</label>
+            </div>
+        </div>
+        <div class="block-content measurement">
+            <label>CUSTOM measurements</label>
+            <div class="measurement__group">
+                <?php $i=0; $_columnCount=2; $_collectionSize = $measures->getSize();foreach ($measures as $measure): ?>
+                    <?php $unit = $measure->getUnit();
+                    if($unit == 1){
+                        $label = $unitLabel[$unit][$weightUnit];
+                    }else{
+                        $label = $unitLabel[$unit][$heightUnit];
+                    }
+                    ?>
+                    <?php if ($i++%$_columnCount==0): ?>
+                        <ul class="products-grid">
+                    <?php endif ?>
+                        <li>
+                            <label><?php echo $measure->getTitle() ?>:</label>
+                            <span><?php echo $items[$measure->getId()].' '.$label?></span>
+                        </li>
+                    <?php if ($i%$_columnCount==0 || $i==$_collectionSize): ?>
+                        </ul>
+                    <?php endif ?>
+                <?php endforeach; ?>
+            </div>
+        </div>
+
+    </div>
+<div class="action text-center">
+    <button onclick="setLocation('<?php echo $this->getUrl('customermeasure/account')?>');" class="button btn-blue"><span><span>Manage My Measurements</span></span></button>
+</div>
+</div>
+
+<script>
+    var $document = jQuery(document);
+    var selector = '[data-rangeslider]';
+    var $element = jQuery(selector);
+
+    jQuery(document).ready(function () {
+        <?php if($measureValues->getBodyScan()):?>
+        <?php $items = $this->helper('core')->jsonDecode($measureValues->getBodyScan());?>
+
+        jQuery("#fancybox-bodyscan").click(function() {
+            jQuery.fancybox.open([
+                <?php $i=1; foreach ($items['images'] as $item): ?>
+                {
+                    href : '<?php echo $item ?>',
+                    title : 'page <?php echo $i ?>'
+                },
+                <?php $i++; endforeach; ?>
+            ], {
+                helpers : {
+                    thumbs : {
+                        width: 75,
+                        height: 50
+                    }
+                }
+            });
+        });
+        <?php endif;?>
+        //Width Label
+
+        if(jQuery('.qs-row-measurement .qs-measurement-option').length) {
+            calWidthLabel('.qs-row-measurement .qs-measurement-option');
+        }
+
+        jQuery('.input-measurement-type').keypress(function (e) {
+            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                return false;
+            }
+        });
+
+        $document.on('input', 'input[type="range"], ' + selector, function (e) {
+            valueOutput(e.target, jQuery(this).parent().prev().find('input'));
+        });
+
+        //Change value
+        $document.on('keyup', '.input-measurement-type', function (e) {
+            var $inputRange = jQuery(selector, e.target.parentNode.parentNode);
+            var value = jQuery(jQuery(this), e.target.parentNode.parentNode)[0].value;
+
+            if(value) {
+                if(parseInt(value) >= parseInt(jQuery($inputRange).attr('min')) && parseInt(value) <= parseInt(jQuery($inputRange).attr('max'))) {
+                    $inputRange.val(value).change();
+                }
+            }
+        });
+
+        $document.on('change', '.input-measurement-type', function (e) {
+            var $inputRange = jQuery(selector, e.target.parentNode.parentNode);
+            var value = jQuery(jQuery(this), e.target.parentNode.parentNode)[0].value;
+
+            if (value) {
+                if(parseInt(value) > parseInt(jQuery($inputRange).attr('max'))) {
+                    jQuery(this).val(jQuery($inputRange).attr('max'));
+                    $inputRange.val(jQuery($inputRange).attr('max')).change();
+                }
+
+                if(parseInt(value) < parseInt(jQuery($inputRange).attr('min'))) {
+                    jQuery(this).val(jQuery($inputRange).attr('min'));
+                    $inputRange.val(jQuery($inputRange).attr('min')).change();
+                }
+            } else {
+                jQuery(this).val(jQuery($inputRange).attr('min'));
+                $inputRange.val(jQuery($inputRange).attr('min')).change();
+            }
+        });
+
+        $element.rangeslider({
+            polyfill: false
+        });
+
+        //Check
+        jQuery(document).on('click', '.qs-check-hweight input[name="hweight"]', function() {
+            var value = jQuery(this).val();
+
+            updateUnitValue(1, value);
+            updateUnitValue(2, value);
+
+            document.getElementById('weight' + value).checked = true;
+            document.getElementById('height' + value).checked = true;
+        });
+
+    });
+
+    function valueOutput(element, input) {
+        var value = element.value;
+        jQuery(input).val(value);
+    }
+    var defaultWeight = <?php echo $weightUnit?>;
+    var defaultHeight = <?php echo $heightUnit?>;
+    var cmToInch = 0.393701;
+    var kgToLbs = 2.20462;
+
+    function updateUnitValue(unitType, unitValue) {
+        //weight
+        if(unitType==1 && unitValue!=defaultWeight){
+            defaultWeight = unitValue;
+            jQuery('input[unittype="1"]').each(function () {
+                var id = jQuery(this).attr('id');
+                var rate = kgToLbs;
+                if(unitValue==1){
+                    rate = 1 / kgToLbs;
+                }
+                var newValue = Math.round(jQuery(this).val() * rate);
+                var minValue = Math.round(jQuery('#' + id + '-ranger').attr('min') * rate);
+                var maxValue = Math.round(jQuery('#' + id + '-ranger').attr('max') * rate);
+                var newRangerFill = jQuery('#' + id + '-ranger').parent().find('.rangeslider__fill').width();
+                var newRangerHandle = jQuery('#' + id + '-ranger').parent().find('.rangeslider__handle').css('left');
+
+                jQuery(this).val(newValue);
+                jQuery('#' + id + '-ranger').attr('max', maxValue);
+                jQuery('#' + id + '-ranger').attr('min', minValue);
+                jQuery('#' + id + '-max').html( maxValue);
+                jQuery('#' + id + '-min').html( minValue);
+                jQuery('#' + id + '-ranger').attr('value', newValue);
+                jQuery('#' + id + '-ranger').rangeslider('update', true);
+                jQuery('#' + id + '-ranger').parent().find('.rangeslider__fill').width(newRangerFill);
+                jQuery('#' + id + '-ranger').parent().find('.rangeslider__handle').css('left',newRangerHandle);
+            });
+        }
+        //height
+        if(unitType==2 && unitValue!=defaultHeight){
+            defaultHeight = unitValue;
+            jQuery('input[unittype="2"]').each(function () {
+                var id = jQuery(this).attr('id');
+                var rate = cmToInch;
+                if(unitValue==1){
+                    rate = 2.54;
+                }
+                var newValue = Math.round(jQuery(this).val() * rate);
+                var minValue = Math.round(jQuery('#' + id + '-ranger').attr('min') * rate);
+                var maxValue = Math.round(jQuery('#' + id + '-ranger').attr('max') * rate);
+                var newRangerFill = jQuery('#' + id + '-ranger').parent().find('.rangeslider__fill').width();
+                var newRangerHandle = jQuery('#' + id + '-ranger').parent().find('.rangeslider__handle').css('left');
+
+                jQuery(this).val(newValue);
+                jQuery('#' + id + '-ranger').attr('max', maxValue);
+                jQuery('#' + id + '-ranger').attr('min', minValue);
+                jQuery('#' + id + '-max').html( maxValue);
+                jQuery('#' + id + '-min').html( minValue);
+                jQuery('#' + id + '-ranger').attr('value', newValue);
+                jQuery('#' + id + '-ranger').rangeslider('update', true);
+                jQuery('#' + id + '-ranger').parent().find('.rangeslider__fill').width(newRangerFill);
+                jQuery('#' + id + '-ranger').parent().find('.rangeslider__handle').css('left',newRangerHandle);
+            });
+        }
+    }
+
+    function calWidthLabel(child) {
+        var minWidth = 0;
+
+        jQuery(child).each(function() {
+            jQuery(this).removeAttr('style');
+            var width = jQuery(this).width();
+            minWidth = (width > minWidth) ? width: minWidth;
+        });
+
+        jQuery(child).removeAttr('style').css('min-width', minWidth + 'px');
+    }
+</script>

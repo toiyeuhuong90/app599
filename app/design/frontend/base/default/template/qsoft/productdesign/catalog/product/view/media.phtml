@@ -1,0 +1,32 @@
+<?php
+$product = $this->getProduct();
+$groupsDesign = $this->helper('productdesign')->getProductGroupDesign($product);
+?>
+<div class="swiper-container">
+    <div class="swiper-wrapper">
+        <?php $k = 0;
+        foreach ($groupsDesign as $groupDesign): ?>
+            <div class="swiper-slide">
+                <div class="canvas-wrapper" style=" width: <?php echo $groupDesign['realWidth'] ?>px; height: <?php echo $groupDesign['realHeight']?>px;">
+                    <div class="draggable-wrapper" id="draggable-<?php echo $groupDesign['id'] ?>"
+                         style="width: <?php echo $groupDesign['realWidth'] ?>px; height: <?php echo $groupDesign['realHeight'] ?>px;">
+                        <canvas class="qs-canvas-design" group="<?php echo $groupDesign['id'] ?>" style="width: <?php echo $groupDesign['realWidth'] ?>px;height: <?php echo $groupDesign['realHeight'] ?>px;"
+                                id="bg-<?php echo $groupDesign['id'] ?>">
+                            <p>No Canvas Support in Browser</p>
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+            <?php $k++; endforeach; ?>
+    </div>
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
+    <div class="swiper-pagination"></div>
+    <!--    <a href="javascript:void(0);" onclick="swiper.detachEvents(); return false;"><span><span>Detach</span></span></a>-->
+    <!--    <a href="javascript:void(0);" onclick="swiper.attachEvents();return false;"><span><span>Attach</span></span></a>-->
+    <a class="designzoom" href="javascript:void(0);" onclick="design.zoomIn();return false;"><img width="30" src="<?php echo $this->getSkinUrl('qsoft/productdesign/images/zoom_in.png')?>"/> </a>
+    <a class="designzoom" href="javascript:void(0);"
+       onclick="design.zoomOut(1);return false;"><img width="30" src="<?php echo $this->getSkinUrl('qsoft/productdesign/images/zoomout.png')?>"/> </a>
+    <a class="designzoom" href="javascript:void(0);"
+       onclick="design.resetDefault();return false;"><img width="30" src="<?php echo $this->getSkinUrl('qsoft/productdesign/images/refresh.png')?>"/> </a>
+</div>

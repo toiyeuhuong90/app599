@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Evince_Testimony extension
+ * 
+ * NOTICE OF LICENSE
+ * 
+ * This source file is subject to the MIT License
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/mit-license.php
+ * 
+ * @category   	Evince
+ * @package		Evince_Testimony
+ * @copyright  	Copyright (c) 2014
+ * @license		http://opensource.org/licenses/mit-license.php MIT License
+ */
+--> 
+<config>
+	<tabs>
+		<evince translate="label" module="testimony">
+			<label>Evince</label>
+			<sort_order>2000</sort_order>
+		</evince>
+	</tabs>
+ 	<sections>
+		<testimony translate="label" module="testimony">
+			<class>separator-top</class>
+			<label>Testimony</label>
+			<tab>evince</tab>
+			<frontend_type>text</frontend_type>
+			<sort_order>100</sort_order>
+			<show_in_default>1</show_in_default>
+			<show_in_website>1</show_in_website>
+			<show_in_store>1</show_in_store>
+			<groups>
+				<testimonial translate="label" module="testimony">
+					<label>Testimonial</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>10</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>1</show_in_website>
+					<show_in_store>1</show_in_store>
+					<fields>
+						<breadcrumbs translate="label" module="testimony">
+							<label>Use Breadcrumbs For Testimonial Pages</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>10</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</breadcrumbs>
+						<limit translate="label" module="testimony">
+							<label>Limit number of Testimonial on Home Page</label>
+							<comment>Default value: 4; Input 0 for unlimited number of Testimonial</comment>
+							<frontend_type>text</frontend_type>
+							<sort_order>20</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</limit>
+					</fields>
+				</testimonial>
+			</groups>
+		</testimony>
+	</sections>
+</config> 

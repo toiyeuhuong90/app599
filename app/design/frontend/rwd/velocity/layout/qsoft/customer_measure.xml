@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<layout>
+
+    <customer_account>
+        <reference name="customer_account_navigation">
+            <action method="addLink" translate="label" module="qsoft_customermeasure"><name>customer_measure</name><path>customermeasure/account/index</path><label>My Measurements</label></action>
+        </reference>
+    </customer_account>
+
+    <customer_account_index>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>fancybox/jquery.fancybox.css</name>
+            </action>
+            <action method="addItem">
+                <type>skin_js</type>
+                <name>fancybox/jquery.fancybox.pack.js</name>
+            </action>
+        </reference>
+        <reference name="customer_account_dashboard">
+            <block type="qsoft_customermeasure/customer_measure" name="customer_account_dashboard_info1" as="info1" template="review/customer/recent.phtml"/>
+        </reference>
+    </customer_account_index>
+    <customermeasure_account_index>
+        <update handle="customer_account"/>
+        <reference name="qs-banner-myaccount">
+            <remove name="customer_account_banner"/>
+            <block type="cms/block" name="myaccount.measure">
+                <action method="setBlockId" >
+                    <block_id>measure_banner</block_id>
+                </action>
+            </block>
+        </reference>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>qsoft/productdesign/owl-carousel/assets/owl.carousel.css</name>
+            </action>
+            <action method="addItem">
+                <type>skin_js</type>
+                <name>qsoft/productdesign/owl-carousel/owl.carousel.min.js</name>
+            </action>
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>css/rangeslider.css</name>
+            </action>
+            <action method="addItem">
+                <type>skin_js</type>
+                <name>js/rangeslider.min.js</name>
+            </action>
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>fancybox/jquery.fancybox.css</name>
+            </action>
+            <action method="addItem">
+                <type>skin_js</type>
+                <name>fancybox/jquery.fancybox.pack.js</name>
+            </action>
+        </reference>
+        <reference name="my.account.wrapper">
+            <block type="qsoft_customermeasure/account" name="address_book" template="qsoft/customermeasure/account.phtml">
+                <block type="cms/block" name="bodyscan.description">
+                    <action method="setBlockId">
+                        <block_id>body-scan-description</block_id>
+                    </action>
+                </block>
+            </block>
+        </reference>
+    </customermeasure_account_index>
+</layout>

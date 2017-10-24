@@ -1,0 +1,152 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Magegiant
+ * 
+ * NOTICE OF LICENSE
+ * 
+ * This source file is subject to the magegiant.com license that is
+ * available through the world-wide-web at this URL:
+ * http://magegiant.com/license-agreement/
+ * 
+ * DISCLAIMER
+ * 
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ * 
+ * @category    Magegiant
+ * @package     Magegiant_LinkedInLogin
+ * @copyright   Copyright (c) 2014 Magegiant (http://magegiant.com/)
+ * @license     http://magegiant.com/license-agreement/
+ */
+-->
+<config>
+    <modules>
+        <Magegiant_LinkedInLogin>
+            <version>0.1.0</version>
+        </Magegiant_LinkedInLogin>
+    </modules>
+    <frontend>
+        <routers>
+            <linkedinlogin>
+                <use>standard</use>
+                <args>
+                    <module>Magegiant_LinkedInLogin</module>
+                    <frontName>linkedinlogin</frontName>
+                </args>
+            </linkedinlogin>
+        </routers>
+        <layout>
+            <updates>
+                <linkedinlogin>
+                    <file>magegiant/linkedinlogin.xml</file>
+                </linkedinlogin>
+            </updates>
+        </layout>
+        <translate>
+            <modules>
+                <Magegiant_LinkedInLogin>
+                    <files>
+                        <default>Magegiant_LinkedInLogin.csv</default>
+                    </files>
+                </Magegiant_LinkedInLogin>
+            </modules>
+        </translate>
+    </frontend>
+    <admin>
+        <routers>
+            <linkedinloginadmin>
+                <use>admin</use>
+                <args>
+                    <module>Magegiant_LinkedInLogin</module>
+                    <frontName>linkedinloginadmin</frontName>
+                </args>
+            </linkedinloginadmin>
+        </routers>
+    </admin>
+    <adminhtml>
+        <layout>
+            <updates>
+                <linkedinlogin>
+                    <file>magegiant/linkedinlogin.xml</file>
+                </linkedinlogin>
+            </updates>
+        </layout>
+        <translate>
+            <modules>
+                <Magegiant_LinkedInLogin>
+                    <files>
+                        <default>Magegiant_LinkedInLogin.csv</default>
+                    </files>
+                </Magegiant_LinkedInLogin>
+            </modules>
+        </translate>
+    </adminhtml>   
+    <global>
+        <models>
+            <linkedinlogin>
+                <class>Magegiant_LinkedInLogin_Model</class>
+                <resourceModel>linkedinlogin_mysql4</resourceModel>
+            </linkedinlogin>
+            <linkedinlogin_mysql4>
+                <class>Magegiant_LinkedInLogin_Model_Mysql4</class>
+                <entities>
+                    <linkedinlogin>
+                        <table>magegiant_linkedinlogin</table>
+                    </linkedinlogin>
+                </entities>
+            </linkedinlogin_mysql4>
+        </models>
+        <resources>
+            <magegiant_linkedinlogin_setup>
+                <setup>
+                    <module>Magegiant_LinkedInLogin</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </magegiant_linkedinlogin_setup>
+            <linkedinlogin_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </linkedinlogin_write>
+            <linkedinlogin_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </linkedinlogin_read>
+        </resources>
+        <blocks>
+            <linkedinlogin>
+                <class>Magegiant_LinkedInLogin_Block</class>
+            </linkedinlogin>
+        </blocks>
+        <helpers>
+            <linkedinlogin>
+                <class>Magegiant_LinkedInLogin_Helper</class>
+            </linkedinlogin>
+        </helpers>
+         <events>
+            <social_button_create_before>
+                <observers>
+                    <linkedinlogin_observers>
+                        <class>linkedinlogin/observer</class>
+                        <method>addLinkedInButton</method>
+                    </linkedinlogin_observers>
+                </observers>
+            </social_button_create_before>
+        </events>
+    </global>
+
+    <default>
+        <linkedinlogin>
+            <general>
+                <is_enabled>0</is_enabled>
+                <linkedin_image_label>Linkedin</linkedin_image_label>
+                <position>10</position>
+            </general>
+        </linkedinlogin>
+    </default>
+    
+</config>

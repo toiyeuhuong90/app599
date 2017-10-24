@@ -1,0 +1,62 @@
+<?php $_storeCollection = $this->getStoreByLocation();
+ ?>
+<?php if(count($_storeCollection)) :?>
+	<?php $modelshipping = Mage::getModel('storelocator/shipping_storelocator') ?>
+<div>	
+	<div id="select-store" >
+		<div class="input-box storelocator-method">				
+			<div class="input-box">
+			<select name="storeId" id="storeId" class="required-entry validate-select" >
+				<option value="" selected ><?php echo $this->__('Select Store To Pickup') ?></option>
+				<?php foreach($_storeCollection as $_store): ?>
+					<?php $store = $_store['info'] ?>
+					<option value="<?php echo $store->getId() ?>" ><?php echo $_store['label'] ?></option>
+				<?php endforeach;?>
+			</select>
+			</div>
+			<div class="clear" ></div>					
+		</div>	
+	</div>
+	<div id="store-details">
+	<?php if(count($_storeCollection)): ?>
+		<?php foreach($_storeCollection as $_store) : ?>
+		<?php $store = $_store['info'] ?>
+		<?php $address = $store->getAddress().'<br/>'. $store->getCity() ?>
+		<?php $address .='<br/>'. $store->getRegion() .', '. $store->getZipcode() .'<br/>'. $store->getCountryName()?>
+			<div id="store_<?php echo $store->getId()?>" style="display:none;" >
+				<div class="info left">
+					<span class="title"><?php echo $store->getStoreName() ?></span>
+					<span><?php echo $address ?></span>
+					<?php if($store->getDescription()): ?>
+					<div>
+						<span class="title"><?php echo $this->__('Description') ?></span>
+						<span><?php echo $store->getDescription() ?></span>
+					</div>
+					<?php endif; ?>
+				</div>
+				<?php if ($store->getStoreLatitude()!=0 || $store->getStoreLongitude()!=0): ?>
+				<div class="store-gmap-image">
+					<img src=<?php echo "http://maps.google.com/maps/api/staticmap?center=".$store->getStoreLatitude().",".$store->getStoreLongitude()."&zoom=14&size=250x250&markers=color:red|label:S|".$store->getStoreLatitude().",".$store->getStoreLongitude()."&sensor=false" ?> />
+				</div>
+				<?php endif; ?>
+			</div>
+		<?php endforeach;?>
+	<?php endif;?>
+	<input type="hidden" id="selectedStore" name="selectedStore" value="" />
+	</div>
+</div>
+	<div class="clear fix">&nbsp;</div>
+	<script type="text/javascript">
+	//<![CDATA[
+		var storelocator = new Storelocator('<?php echo Mage::helper('storelocator')->getUpdateStoreUrl(); ?>');
+		
+		if($('storeId')) {
+			Event.observe('storeId', 'change', function(event){ 
+				storelocator.updateStore();
+			});
+		}
+	//]]>
+	</script>	
+<?php else :?>
+	<?php echo $this->__('There is no store found')?>
+<?php endif; ?>

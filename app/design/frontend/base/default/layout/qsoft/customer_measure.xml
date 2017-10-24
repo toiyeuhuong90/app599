@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<layout>
+    <default>
+        <reference name="head">
+            <action method="addCss"><name>qsoft/customer_measure/css/style.css</name></action>
+        </reference>
+    </default>
+    <customer_account>
+        <reference name="customer_account_navigation">
+            <action method="addLink" translate="label" module="qsoft_customermeasure"><name>customer_measure</name><path>review/customer</path><label>Add More Measurements</label></action>
+        </reference>
+    </customer_account>
+
+    <customer_account_index>
+        <reference name="customer_account_dashboard">
+            <block type="qsoft_customermeasure/customer_measure" name="customer_account_dashboard_info1" as="info1" template="review/customer/recent.phtml"/>
+        </reference>
+    </customer_account_index>
+</layout>

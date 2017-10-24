@@ -1,0 +1,200 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2016 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Temlate for Mage_Customer_Block_Address_Book block
+ * @var $test Mage_Customer_Block_Address_Book
+ */
+?>
+<script>
+    <?php
+    if(Mage::getSingleton('customer/session')->getCustomer()->getDefaultBilling()):
+    $billingAddress = Mage::getSingleton('customer/session')->getCustomer()->getDefaultBillingAddress();
+    $billingAddressData = $billingAddress->getData();
+    $billingAddressData['street1'] = $billingAddress->getStreet(1);
+    $billingAddressData['street2'] = $billingAddress->getStreet(2);
+    ?>
+
+    var billingAddress = <?php echo Mage::helper('core')->jsonEncode($billingAddressData) ?>;
+    <?php endif;?>
+    <?php
+    if(Mage::getSingleton('customer/session')->getCustomer()->getDefaultShipping()):
+    $shippingAddress = Mage::getSingleton('customer/session')->getCustomer()->getDefaultShippingAddress();
+    $shippingAddressData = $shippingAddress->getData();
+    $shippingAddressData['street1'] = $shippingAddress->getStreet(1);
+    $shippingAddressData['street2'] = $shippingAddress->getStreet(2);
+    ?>
+
+    var shippingAddress = <?php echo Mage::helper('core')->jsonEncode($shippingAddressData) ?>;
+    <?php endif;?>
+    <?php if($_pAddsses = $this->getAdditionalAddresses()): ?>
+    var additionAddress = <?php echo Mage::helper('qsoft_customer')->getAdditionAddressJson($_pAddsses);?>;
+    <?php endif;?>
+</script>
+<!-- <div class="show-address-book"> -->
+    <div class="qs-title-page-account">
+        <?php echo $this->__('Address Book') ?>
+        <div class="show-address">
+            <span><?php echo $this->__('Add New Address') ?></span>
+        </div>
+    </div>
+    <div class="box-content__body">
+      <div class="col2-set addresses-list">
+        <div class="addresses-primary ">
+
+            <div class="box-content">
+                <div class="form-list">
+                    <?php if ($_pAddsses = Mage::getSingleton('customer/session')->getCustomer()->getDefaultBilling()): ?>
+                        <div class="billing-address-container ">
+                            <div id="billing-address">
+                                <div class="section-title no-border">
+                                    <label><?php echo $this->__('Default Billing Address') ?></label>
+                                    <a href="javascript:void(0);"
+                                       onclick="window.customerAddress.add(billingAddress,'billing-form','billing-address', 1, 1, 0);"><?php echo $this->__('Edit') ?></a>
+                                </div>
+
+                                <address>
+                                    <?php echo $this->getAddressHtml(Mage::getSingleton('customer/session')->getCustomer()->getAddressById($_pAddsses)) ?>
+                                </address>
+                            </div>
+                            <div id="billing-form"></div>
+                        </div>
+                    <?php else: ?>
+                        <div class="billing-address-container ">
+                            <div id="billing-address">
+                                <div class="section-title">
+                                    <label><?php echo $this->__('Default Billing Address') ?></label>
+                                    <a href="javascript:void(0);"
+                                       onclick="window.customerAddress.add({},'billing-form','billing-address', 1);"><?php echo $this->__('Add Billing Address') ?></a>
+                                </div>
+                                <p><?php echo $this->__('You have no default billing address in your address book.') ?></p>
+                            </div>
+                            <div id="billing-form"></div>
+                        </div>
+                    <?php endif ?>
+                    <?php if ($_pAddsses = Mage::getSingleton('customer/session')->getCustomer()->getDefaultShipping()): ?>
+                        <div class="shipping-address-container">
+                            <div id="shipping-address">
+                                <div class="section-title">
+                                    <label><?php echo $this->__('Default Shipping Address') ?></label>
+                                    <a href="javascript:void(0);"
+                                       onclick="window.customerAddress.add(shippingAddress,'shipping-form','shipping-address', 1, 0, 1 );"><?php echo $this->__('Edit') ?></a>
+                                </div>
+                                <address>
+                                    <?php echo $this->getAddressHtml(Mage::getSingleton('customer/session')->getCustomer()->getAddressById($_pAddsses)) ?>
+                                </address>
+                            </div>
+                            <div id="shipping-form"></div>
+                        </div>
+                    <?php else: ?>
+                        <div class="shipping-address-container">
+                            <div id="shipping-address">
+                                <div class="section-title">
+                                    <label><?php echo $this->__('Default Shipping Address') ?></label>
+                                    <a href="javascript:void(0);"
+                                       onclick="window.customerAddress.add({},'shipping-form','shipping-address', 1, 0, 1);"><?php echo $this->__('Change Shipping Address') ?></a>
+                                </div>
+                                <?php echo $this->__('You have no default shipping address in your address book.') ?>
+                            </div>
+                            <div id="shipping-form"></div>
+                        </div>
+                    <?php endif ?>
+                </div>
+            </div>
+        </div>
+        <div class="addresses-additional ">
+            <div class="box-content">
+                <div class="form-list">
+                    <?php if ($_pAddsses = $this->getAdditionalAddresses()): ?>
+                        <?php foreach ($_pAddsses as $key => $_address): ?>
+                            <div class="box-address-container">
+                                <div id="addition-<?php echo $_address->getId() ?>">
+                                    <div class="section-title">
+                                        <label>Additional Address</label>
+                                        <span class="group-delete">
+                                          <a href="javascript:void(0);"
+                                           onclick="window.customerAddress.add(additionAddress[<?php echo $key ?>],'address-form-<?php echo $_address->getId() ?>','addition-<?php echo $_address->getId() ?>', 0);"><?php echo $this->__('Edit') ?></a>
+                                          <a href="javascript:void(0);" class="link-remove"
+                                             onclick="return showDeleteConfirmBlock();"><?php echo $this->__('Delete') ?></a>
+                                          <div class="delete-confirm form-delete" style="display: none;" >
+                                            <div class="form-delete__header">
+                                                <label>Delete Confirmation</label>
+                                            </div>
+                                            <div class="form-delete__content">
+                                                <p>Are you sure want to delete?</p>
+                                                <p>This cannot be undone</p>
+                                                <div class="action button-wrap">
+                                                    <button addressid="" onclick="deleteAddress(this)" class="button bnt-delete-address btn-blue-large" id="bnt-delete-address"><span><span>Delete</span></span></button>
+                                                    <button onclick="hideDeleteConfirmBlock();" class="btn-gray-large"><span><span>Cancel</span></span></button>
+                                                </div>
+                                            </div>
+                                          </div>
+                                        </span>
+                                        
+                                    </div>
+                                    <address>
+                                        <?php echo $this->getAddressHtml($_address) ?>
+                                    </address>
+                                </div>
+                                <div id="address-form-<?php echo $_address->getId() ?>"></div>
+                            </div>
+                        <?php endforeach; ?>
+
+                    <?php endif ?>
+                </div>
+            </div>
+            <div id="additional-address-entries"></div>
+
+        </div>
+      </div>
+      <div class="qs-bg-mark" style="width: 100%; height: 100%; background-color: #b6b6b6; opacity: 0.36; display: none; position: fixed; top: 0;left: 0;"></div>
+      <script type="text/javascript">
+          //<![CDATA[
+          function deleteAddress(elm) {
+              var addressId = jQuery(elm).attr('addressid');
+              window.location = '<?php echo $this->getDeleteUrl() ?>id/' + addressId;
+              return false;
+          }
+
+          jQuery('.link-remove').click(function() {
+            jQuery(this).next().show();
+            jQuery('.qs-bg-mark').show();
+            jQuery(this).addClass('active');
+          });
+          // function showDeleteConfirmBlock(){
+          //     jQuery('.qs-bg-mark').show();
+              
+          // }
+          function hideDeleteConfirmBlock() {
+              jQuery('.qs-bg-mark').hide();
+              jQuery('.delete-confirm').hide();
+          }
+          //]]>
+      </script>
+    </div>
+    
+<!-- </div> -->

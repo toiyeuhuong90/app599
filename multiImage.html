@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <style>
+        body {
+            margin: 0px;
+            padding: 0px;
+        }
+    </style>
+</head>
+<body>
+<canvas id="myCanvas" width="200" height="425"></canvas>
+<script>
+    function loadImages(sources, callback) {
+        var images = {};
+        var loadedImages = 0;
+        var numImages = 0;
+        // get num of sources
+        for(var src in sources) {
+            numImages++;
+        }
+        for(var src in sources) {
+            images[src] = new Image();
+            images[src].onload = function() {
+                if(++loadedImages >= numImages) {
+                    callback(images);
+                }
+            };
+            images[src].src = sources[src];
+        }
+    }
+    var canvas = document.getElementById('myCanvas');
+    var context = canvas.getContext('2d');
+
+    var sources = {
+        bg: 'imgs/color1/Front/Front_View.png',
+        yoda: 'imgs/color1/Front/Front_left.png',
+        darthVader: 'imgs/color1/Front/Front_right.png',
+
+    };
+
+    loadImages(sources, function(images) {
+        for(var i in images){
+            context.drawImage(images[i], 0, 0, 200, 425);
+            console.log(i);
+        }
+//        context.drawImage(images.darthVader, 100, 30, 200, 137);
+//        context.drawImage(images.yoda, 350, 55, 93, 104);
+    });
+
+</script>
+</body>
+</html>

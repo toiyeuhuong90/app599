@@ -1,0 +1,54 @@
+<?xml version="1.0" ?>
+<config>
+	<tabs>
+		<qsoft translate="label" module="qsoft_customermeasure">
+			<label>
+				<![CDATA[
+                <div style="padding-left:22px; background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAA7EAAAOxAGVKw4bAAACFUlEQVQ4y52ST0iTcRjHP++7d+tNW9v0XVPn/ihRmBGFKzpkVjjRqLxk4CFZESgMuqxD3sb6dwiC6mJEBBUhHRpIWYfUOpQ4JCizwEPYKsdCki2F6fZuHXpXy9Zln9PveX7P9/v78uMRKGR3Vz3GyqPARmAONX0n7H6WaHPjBwy5HCMPp5fGex7Mp/IS4bd4/8kOJMMgYATekogfJBKeA3hywlazt05+rd1NvfqU6vDeii/8Mdjna0UvPwLWAHES8R1EwrHCcF/7HT7zWvG2Vo4NTCS9gccLqsD2dgWr+z1gBSCr9jFy8warCHnNhkCz6RtgAlCzudPrg9HrAt6+S8BZbS5NbEbh3WiSIiyFXM+BFq2MXn6RcEtAV8HM50LxhTaz1LmlvFUpF7eJAintD/I4G6v0DRJQV9DU5Q8zAbvHbpLuAZv5D5Io2CTgO6Bovdp1O9uVyJ4ph90kja568R/Sai4mAcNATz7BplrLMZdF6gUWgQSwATAU0S9nskQFmo44qKiJAFUAFfp0/HjlR8/Vu2NfAIZ9NkNLvXwF8BdJ0PtrDzydLizV14BDgAgM6eZnu89XT6b9u8rO6EQhBEhFUjwV/iq3HrBjVJoxyA49mQ8vmyaWG82ZU4ATSKrZ3PjiSu6NSRbvAzIQEyiBZNB5UScK/UCyJIPBbqvzcEPZLDBQkoG2lUPT8ZVzper5EXR6AX4Cdo2dkU41ugUAAAAASUVORK5CYII=) left 50% no-repeat;">QSoft Extensions</div> ]]>
+			</label>
+			<sort_order>100</sort_order>
+		</qsoft>
+	</tabs>
+	<sections>
+		<customer_measure translate="label" module="qsoft_customermeasure">
+			<label>Customer Measure Settings</label>
+			<sort_order>2</sort_order>
+			<class>superclass</class>
+			<show_in_default>1</show_in_default>
+			<show_in_website>1</show_in_website>
+			<show_in_store>1</show_in_store>
+			<tab>qsoft</tab>
+			<groups>
+
+                <files translate="label" module="qsoft_customermeasure">
+					<label>Settings</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>100</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>1</show_in_website>
+					<show_in_store>1</show_in_store>
+					<fields>
+						<default_weight translate="label" module="qsoft_customermeasure">
+							<label>Unit default for Weight </label>
+							<frontend_type>select</frontend_type>
+							<source_model>qsoft_customermeasure/source_weight</source_model>
+							<sort_order>1</sort_order>
+							<show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</default_weight>
+						<default_height translate="label" module="qsoft_customermeasure">
+							<label>Unit default for Height</label>
+							<frontend_type>select</frontend_type>
+							<source_model>qsoft_customermeasure/source_height</source_model>
+							<sort_order>3</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</default_height>
+                    </fields>
+				</files>
+			</groups>
+		</customer_measure>
+	</sections>
+</config>

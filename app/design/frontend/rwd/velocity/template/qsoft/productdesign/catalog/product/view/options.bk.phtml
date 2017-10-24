@@ -1,0 +1,342 @@
+<?php
+/* @var $this QSoft_ProductDesign_Block_Catalog_Product_View_Options */
+?>
+<?php
+$_product = Mage::registry('current_product');
+$optionsTabs = $_product->getOptionTabs();
+$relatedProducts = $this->getRelated();
+$realatedCount = count($relatedProducts->getItems());
+$_columnCount = 8;
+?>
+<?php $_options = Mage::helper('core')->decorateArray($this->getOptions()) ?>
+<?php if (count($_options)):?>
+    <script type="text/javascript">
+    //<![CDATA[
+    var optionFileUpload = {
+        productForm : $('product_addtocart_form'),
+        formAction : '',
+        formElements : {},
+        upload : function(element){
+            this.formElements = this.productForm.select('input', 'select', 'textarea', 'button');
+            this.removeRequire(element.readAttribute('id').sub('option_', ''));
+
+            template = '<iframe id="upload_target" name="upload_target" style="width:0; height:0; border:0;"><\/iframe>';
+
+            Element.insert($('option_'+element.readAttribute('id').sub('option_', '')+'_uploaded_file'), {after: template});
+
+            this.formAction = this.productForm.action;
+
+            var baseUrl = '<?php echo $this->getUrl('*/product/upload') ?>';
+            var urlExt = 'option_id/'+element.readAttribute('id').sub('option_', '');
+
+            this.productForm.action = parseSidUrl(baseUrl, urlExt);
+            this.productForm.target = 'upload_target';
+            this.productForm.submit();
+            this.productForm.target = '';
+            this.productForm.action = this.formAction;
+        },
+        removeRequire : function(skipElementId){
+            for(var i=0; i<this.formElements.length; i++){
+                if (this.formElements[i].readAttribute('id') != 'option_'+skipElementId+'_file' && this.formElements[i].type != 'button') {
+                    this.formElements[i].disabled='disabled';
+                }
+            }
+        },
+        addRequire : function(skipElementId){
+            for(var i=0; i<this.formElements.length; i++){
+                if (this.formElements[i].readAttribute('name') != 'options_'+skipElementId+'_file' && this.formElements[i].type != 'button') {
+                    this.formElements[i].disabled='';
+                }
+            }
+        },
+        uploadCallback : function(data){
+            this.addRequire(data.optionId);
+            $('upload_target').remove();
+
+            if (data.error) {
+
+            } else {
+                $('option_'+data.optionId+'_uploaded_file').value = data.fileName;
+                $('option_'+data.optionId+'_file').value = '';
+                $('option_'+data.optionId+'_file').hide();
+                $('option_'+data.optionId+'').hide();
+                template = '<div id="option_'+data.optionId+'_file_box"><a href="#"><img src="var/options/'+data.fileName+'" alt=""><\/a><a href="#" onclick="optionFileUpload.removeFile('+data.optionId+')" title="Remove file" \/>Remove file<\/a>';
+
+                Element.insert($('option_'+data.optionId+'_uploaded_file'), {after: template});
+            }
+        },
+        removeFile : function(optionId)
+        {
+            $('option_'+optionId+'_uploaded_file').value= '';
+            $('option_'+optionId+'_file').show();
+            $('option_'+optionId+'').show();
+
+            $('option_'+optionId+'_file_box').remove();
+        }
+    }
+    var optionTextCounter = {
+        count : function(field,cntfield,maxlimit){
+            if (field.value.length > maxlimit){
+                field.value = field.value.substring(0, maxlimit);
+            } else {
+                cntfield.innerHTML = maxlimit - field.value.length;
+            }
+        }
+    }
+
+    Product.Options = Class.create();
+    Product.Options.prototype = {
+        initialize : function(config) {
+            this.config = config;
+            this.reloadPrice();
+            document.observe("dom:loaded", this.reloadPrice.bind(this));
+        },
+        reloadPrice : function() {
+            var config = this.config;
+            var skipIds = [];
+            $$('body .product-custom-option').each(function(element){
+                var optionId = 0;
+                element.name.sub(/[0-9]+/, function(match){
+                    optionId = parseInt(match[0], 10);
+                });
+                if (config[optionId]) {
+                    var configOptions = config[optionId];
+                    var curConfig = {price: 0};
+                    if (element.type == 'checkbox' || element.type == 'radio') {
+                        if (element.checked) {
+                            if (typeof configOptions[element.getValue()] != 'undefined') {
+                                curConfig = configOptions[element.getValue()];
+                            }
+                        }
+                    } else if(element.hasClassName('datetime-picker') && !skipIds.include(optionId)) {
+                        dateSelected = true;
+                        $$('.product-custom-option[id^="options_' + optionId + '"]').each(function(dt){
+                            if (dt.getValue() == '') {
+                                dateSelected = false;
+                            }
+                        });
+                        if (dateSelected) {
+                            curConfig = configOptions;
+                            skipIds[optionId] = optionId;
+                        }
+                    } else if(element.type == 'select-one' || element.type == 'select-multiple') {
+                        if ('options' in element) {
+                            $A(element.options).each(function(selectOption){
+                                if ('selected' in selectOption && selectOption.selected) {
+                                    if (typeof(configOptions[selectOption.value]) != 'undefined') {
+                                        curConfig = configOptions[selectOption.value];
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        if (element.getValue().strip() != '') {
+                            curConfig = configOptions;
+                        }
+                    }
+                    if(element.type == 'select-multiple' && ('options' in element)) {
+                        $A(element.options).each(function(selectOption) {
+                            if (('selected' in selectOption) && typeof(configOptions[selectOption.value]) != 'undefined') {
+                                if (selectOption.selected) {
+                                    curConfig = configOptions[selectOption.value];
+                                } else {
+                                    curConfig = {price: 0};
+                                }
+                                optionsPrice.addCustomPrices(optionId + '-' + selectOption.value, curConfig);
+                                optionsPrice.reload();
+                            }
+                        });
+                    } else {
+                        optionsPrice.addCustomPrices(element.id || optionId, curConfig);
+                        optionsPrice.reload();
+                    }
+                }
+            });
+        }
+    }
+    function validateOptionsCallback(elmId, result) {
+        var container = $(elmId).up('ul.options-list');
+        if (result == 'failed') {
+            container.removeClassName('validation-passed');
+            container.addClassName('validation-failed');
+        } else {
+            container.removeClassName('validation-failed');
+            container.addClassName('validation-passed');
+        }
+    }
+    var opConfig = new Product.Options(<?php echo $this->getJsonConfig() ?>);
+    //]]>
+    </script>
+    <?php if(count($optionsTabs)): ?>
+
+<div class="qs-control-top">
+    <!-- Tab panel -->
+    <div class="qs-control-tab">
+        <ul class="qs-nav-tabs hidden-sm hidden-xs">
+            <?php /*
+            <li class="item item-color active">
+                <a href="">
+                    <span class="co-ic co-ic-color"></span>
+                    <span class="text">Color</span>
+                </a>
+            </li>
+            <li class="item item-pattern">
+                <a href="">
+                    <span class="co-ic co-ic-pattern"></span>
+                    <span class="text">Pattern</span>
+                </a>
+            </li>
+            <li class="item item-option">
+                <a href="">
+                    <span class="co-ic co-ic-option"></span>
+                    <span class="text">Option</span>
+                </a>
+            </li>
+            <li class="item item-size">
+                <a href="">
+                    <span class="co-ic co-ic-size"></span>
+                    <span class="text">Size</span>
+                </a>
+            </li>
+            <li class="item item-product">
+                <a href="#product_related">
+                    <span class="co-ic co-ic-product"></span>
+                    <span class="text">Product</span>
+                </a>
+            </li>
+            <li class="item item-see-detail">
+                <a href="">
+                    <span class="co-ic co-ic-see-detail"></span>
+                    <span class="text">See detail</span>
+                </a>
+            </li>
+            */ ?>
+        <?php if($realatedCount): ?>
+            <li class="item active">
+                <a class="qs-tab-group" href="#product_related" aria-controls="product_related">
+                    <span class="co-ic co-ic-product"></span>
+                    <span class="text">Product</span>
+                    <?php /*
+                    <span class="qs-tab-product"></span><span class="qs-title-tab-control">Product</span>
+                    */?>
+                </a>
+            </li>
+        <?php endif;?>
+            <?php $i=0; foreach($optionsTabs as $optionsTab): ?>
+                <?php if(count($optionsTab['options'])):?>
+                <li class="item<?php if($i==0 && $realatedCount==0):?> avtive<?php endif;?>" role="presentation">
+                    <a class="qs-tab-group" href="#option-tab-<?php echo $optionsTab['group']['id']?>" aria-controls="option-tab-<?php echo $optionsTab['group']['id']?>">
+                        <span class="co-ic co-ic-<?php echo strtolower($optionsTab['group']['name']) ?>"></span>
+                        <span class="text"><?php echo $optionsTab['group']['name']?></span>
+                        <?php /*
+                        <span <?php if($bg=$optionsTab['group']['icon']):?> style="background-image: url('<?php echo $bg; ?>');" <?php endif;?> class="<?php echo $optionsTab['group']['class_html']?>"></span>
+                        <span class="qs-title-tab-control <?php echo 'qs_group_' . $optionsTab['group']['type'] ?>"><?php echo $optionsTab['group']['name']?></span>
+                        */ ?>
+                    </a>
+                    <input type="hidden" value="0" class="qs-validate-<?php echo $optionsTab['group']['type'] ?>" />
+                </li>
+                <?php $i++; endif;?>
+            <?php endforeach; ?>
+
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="qs-tab-content">
+            <?php if($realatedCount): ?>
+            <div class="qs-tab-pane active" id="product_related">
+                <div class="qs-name-tab-control">Product</div>
+                <div class="qs-tab-control-wrapper qs-tab-product-panel">
+                    <div id="owl-product-tab" class="owl-carousel">
+            <?php $m=0; foreach ($relatedProducts as $_item): ?>
+            <?php if ($m++%$_columnCount==0): ?>
+                        <div class="item">
+                            <div class="row">
+                <?php endif;?>
+                                    <div class="col-xs-6 col-sm-3 col-md-3 qs-col-slider-tab">
+                                        <div class="qs-item-product-tab">
+                                            <a title="<?php echo $this->escapeHtml($_item->getName()) ?>" href="<?php echo $_item->getProductUrl() ?>"><img src="<?php echo $this->helper('catalog/image')->init($_item, 'thumbnail')->resize(125, 165) ?>" alt=""/></a>
+                                        </div>
+                                    </div>
+                    <?php if ($m%$_columnCount==0 || $m==$realatedCount): ?>
+                            </div>
+                        </div>
+                    <?php endif;?>
+                    <?php endforeach ?>
+                    </div>
+                </div>
+            </div>
+            <?php endif;?>
+            <?php $j=0; foreach($optionsTabs as $optionsTab): ?>
+                <?php if(count($optionsTab['options'])):?>
+                    <?php $class = ""; if ($j==0 && $realatedCount==0) $class = 'active';?>
+                    <?php echo $this->getOptionTabContent($optionsTab, $class) ?>
+                <?php $j++; endif;?>
+            <?php endforeach; ?>
+        </div>
+    </div>
+
+    <?php
+    $colorGroup = explode(',', Mage::getStoreConfig('productdesign/group_type/color'));
+    $sizeGroup = explode(',', Mage::getStoreConfig('productdesign/group_type/size'));
+    $givingGroup = explode(',', Mage::getStoreConfig('productdesign/group_type/giving_name'));
+    ?>
+<!--    see detail options-->
+    <div class="qs-see-detail-wrapper hidden-sm hidden-xs">
+        <div class="qs-header-see-detail">
+            <div class="qs-back-see-detail" onclick="return showDetail();"><i class="fa fa-reply" aria-hidden="true"></i><span><?php echo $this->__('Back') ?></span></div>
+            <div class="qs-title-see-detail">Detail</div>
+        </div>
+
+        <div class="qs-content-see-detail">
+            <?php $j=0; foreach($optionsTabs as $optionsTab): ?>
+                <?php if(in_array($optionsTab['group']['id'], $colorGroup)):?>
+            <div class="qs-option-detail">
+                <div class="qs-title-content-detail">Options</div>
+                <div class="qs-option-content-detail">
+                    <?php foreach ($optionsTab['options'] as $_option):?>
+                    <div class="qs-row-option-detail">
+                        <span class="qs-name-option-detail"><?php echo $_option->getTitle()?> / <span id="option-<?php echo $_option->getId()?>-label"></span></span>
+                        <span id="option-<?php echo $_option->getId()?>-price" class="qs-price-option"></span>
+                    </div>
+                    <?php endforeach;?>
+                </div>
+            </div>
+                <?php endif;?>
+            <?php if(in_array($optionsTab['group']['id'], $givingGroup)):?>
+            <div class="qs-engraving-name-detail">
+                <div class="qs-title-content-detail">Engraving Name</div>
+                <div class="qs-engraving-content">
+                    <?php foreach ($optionsTab['options'] as $_option):?>
+                    <div class="qs-row-option-detail">
+                        <span class="qs-name-option-detail"><?php echo $_option->getTitle()?> : <span id="option-<?php echo $_option->getId()?>-label" class="qs-label-color"></span></span>
+                        <span id="option-<?php echo $_option->getId()?>-price" class="qs-price-option qs-price-color"></span>
+                    </div>
+                    <?php endforeach;?>
+                </div>
+            </div>
+            <?php endif;?>
+
+            <?php if(in_array($optionsTab['group']['id'], $sizeGroup)):?>
+            <div class="qs-size-detail">
+                    <?php foreach ($optionsTab['options'] as $_option):?>
+                <div class="qs-row-size-detail">
+                    <span class="qs-name-size-detail"><?php echo $_option->getTitle()?></span>
+                    <span id="option-<?php echo $_option->getId()?>-label" class="qs-option-size-detail"></span>
+                </div>
+                    <?php endforeach;?>
+            </div>
+                <?php endif;?>
+            <?php endforeach;?>
+        </div>
+    </div>
+</div>
+
+    <?php else:?>
+        <dl>
+            <?php foreach($_options as $_option): ?>
+                <?php echo $this->getOptionHtml($_option) ?>
+            <?php endforeach; ?>
+        </dl>
+    <?php endif;?>
+    
+<?php endif; ?>

@@ -1,0 +1,228 @@
+<script src="//maps.googleapis.com/maps/api/js?v=3.exp&key=<?php echo $this->getGmapKey()?>" type="text/javascript"></script>
+
+<?php 
+	$_storeCollection = $this->getStoreCollection();
+	$searchFields = $this->helper('storelocator')->getSearchFields();
+?>
+<div class="page-title">
+	<h1><?php echo $this->__('Our Store Locations') ?></h1>
+</div>
+<div class=" account-login store-search">
+<form method="get" action="<?php echo(Mage::getBaseUrl() . "storelocator/index/index/"); ?>" name="storelocatorsearch">
+	<div id="list-storelocator" class="left-content" style="float:left;overflow:hidden;width:450px;">
+		<ul class="form-list">
+		<?php if(in_array('name', $searchFields)): ?>
+				<li class="fields">
+					<div class="field">
+						<label for="name"><?php echo $this->__('Store Name')?></label>
+						<input class="input-text" id="search_name" name="name" type="text" value="<?php echo $this->getRequest()->getParam('name') ?>" style="width:290px" />
+					</div>
+				</li>
+		<?php endif; ?>	
+		<?php if(in_array('city', $searchFields)): ?>
+				<li class="fields">
+					<div class="field">
+						<label for="city"><?php echo $this->__('City')?></label>
+						<input class="input-text" id="search_city" name="city" type="text" value="<?php echo $this->getRequest()->getParam('city') ?>" style="width:290px" />
+					</div>
+				</li>
+		<?php endif;?>
+		<?php if(in_array('state', $searchFields)): ?>
+				<li class="fields">
+					<div class="field">
+						<label for="state"><?php echo $this->__('State/Province')?></label>
+						<input class="input-text" id="search_state" name="state" type="text" value="<?php echo $this->getRequest()->getParam('state') ?>" style="width:290px"/>
+					</div>
+				</li>
+		<?php endif;?>
+		<?php if(in_array('country', $searchFields)): ?>
+				<li class="fields">
+					<div class="field">
+						<label for="country"><?php echo $this->__('Country') ?></label>
+						<select id="search_country" name="country" style="width:295px;">
+							<option value=""><?php echo $this->__('Select country')?></option>
+							<?php 
+							$countries = Mage::helper('storelocator')->getOptionCountry();
+							
+							foreach($countries as $country) { 
+								$selected = '';
+								if ($country['value'] == $this->getRequest()->getParam('country')){ 
+									$selected = 'selected';
+								}
+							?>
+								<option value="<?php echo $country['value']; ?>" <?php echo $selected;?>><?php echo $country['label'];?></option>
+							<?php } ?>	
+						</select>
+					</div>
+				</li>		
+		<?php endif;?>
+		</ul>
+	</div>
+</form>
+<?php if((in_array('name', $searchFields)) || (in_array('city', $searchFields)) || (in_array('state', $searchFields)) || (in_array('country', $searchFields))) {?>
+<div class="search-button">
+	<button onclick="setLocation('<?php echo $this->getUrl('storelocator/index/index') ?>');" class="button" title="reset"><span><span><?php echo $this->__('Reset')?></span></span></button>
+	<button onclick="document.storelocatorsearch.submit();" class="button" title="search"><span><span><?php echo $this->__('Search')?></span></span></button>
+</div>
+<?php } ?>
+<div>
+	<ul class="form-list">
+		<li>
+			<div id="store-details">
+		<?php if(count($_storeCollection)):?>
+			<?php
+				if ($this->getRequest()->getParam('store') != null) {
+					$display = '';
+				} else {
+					$display = 'display:none';	
+				}
+			?>
+			<?php foreach($_storeCollection as $_store): ?> 
+				<div id="store_<?php echo $_store->getId()?>" style="<?php echo $display?>;" >
+					<div class="info-left">
+						<strong><?php echo $_store->getStoreName();?></strong>
+						<br><?php echo $_store->getAddress();?>
+						<br><?php echo $_store->getCity().', ';?>
+						<?php echo $_store->getState().', ';?>
+						<?php echo $_store->getZipcode();?>
+						<br><?php echo $this->getCountryName($_store->getCountry());?>
+						<br><?php echo $_store->getStorePhone();?>
+					</div>
+					<div class="info-right">
+						<strong><?php echo $this->__('Open Hours');?></strong>
+						<br><?php if($_store->getSundayOpen()!=null) echo $this->__('Sun ').$_store->getSundayOpen().$this->__('AM-').$_store->getSundayClose().$this->__('PM'); else echo $this->__('Sun Closed')?>
+						<br><?php if($_store->getMondayOpen()!=null) echo $this->__('Mon ').$_store->getMondayOpen().$this->__('AM-').$_store->getMondayClose().$this->__('PM'); else echo $this->__('Mon Closed')?>
+						<br><?php if($_store->getTuesdayOpen()!=null) echo $this->__('Tue ').$_store->getTuesdayOpen().$this->__('AM-').$_store->getTuesdayClose().$this->__('PM'); else echo $this->__('Tue Closed')?>
+						<br><?php if($_store->getWednesdayOpen()!=null) echo $this->__('Wed ').$_store->getWednesdayOpen().$this->__('AM-').$_store->getWednesdayClose().$this->__('PM'); else echo $this->__('Wed Closed')?>
+						<br><?php if($_store->getThursdayOpen()!=null) echo $this->__('Thu ').$_store->getThursdayOpen().$this->__('AM-').$_store->getThursdayClose().$this->__('PM'); else echo $this->__('Thu Closed')?>
+						<br><?php if($_store->getFridayOpen()!=null) echo $this->__('Fri ').$_store->getFridayOpen().$this->__('AM-').$_store->getFridayClose().$this->__('PM'); else echo $this->__('Fri Closed')?>
+						<br><?php if($_store->getSaturdayOpen()!=null) echo $this->__('Sat ').$_store->getSaturdayOpen().$this->__('AM-').$_store->getSaturdayClose().$this->__('PM'); else echo $this->__('Sat Closed')?>
+					</div>
+				</div>
+				<?php endforeach;?>
+			<?php endif; ?>
+				<input type="hidden" id="selectedStore" name="selectedStore" value="" />
+				<input type="hidden" name="storeId" id="storeId" value="" />
+			</div>					
+		</li>
+	</ul>	
+</div>
+<?php if (count($_storeCollection) &&!$this->getRequest()->getParam('store')): ?>
+<div class="store-list">
+	<ul>
+		<?php foreach ($_storeCollection as $_store): ?>
+			<li>
+				<div>
+					<a href="<?php echo $this->getUrl('storelocator/index/index',array('store'=>$_store->getId()))?>"><strong><?php echo $_store->getStoreName();?></strong></a><br><?php echo $_store->getAddress();?> <?php echo  $_store->getCity() ? ', '.$_store->getCity() :'';?><?php echo $_store->getState() ? ', '.$_store->getState():'';?>, <?php echo $this->getCountryName($_store->getCountry());?><?php echo $_store->getStorePhone() ? ', '.$_store->getStorePhone():'';?>
+				</div>
+			</li>
+		<?php endforeach; ?>
+	</tbody>
+	</ul>
+
+</div>
+
+<?php else:?>
+	<?php if(!count($_storeCollection)):?>
+	<p> <?php echo $this->__('There is no store found') ?> </p>
+	<?php endif ?>
+<?php endif ?>
+</div>
+<div id="map"></div>
+
+<script type="text/javascript">
+//<![CDATA[
+	var mapOptions = {
+      center: { lat: -34.397, lng: 150.644},
+      zoom: 16
+    };
+    var map = new google.maps.Map(document.getElementById('map'),
+        mapOptions);
+	var markers = [];
+	var marker = new google.maps.Marker({
+            map: map
+      });
+	var infoWindow = new google.maps.InfoWindow();
+
+	var bounds = new google.maps.LatLngBounds();
+
+
+<?php foreach($_storeCollection as $_store):?>
+<?php
+		$coordinates['lat'] = $_store->getStoreLatitude();
+		$coordinates['lng'] = $_store->getStoreLongitude();
+		if($coordinates['lat'] == '0.000' && $coordinates['lat'] == '0.000')
+			$coordinates = $this->getCoordinates($_store);
+		$address = $_store->getFormatedAddressforMap();	
+?>
+	var lat = <?php echo $coordinates['lat'] ?>;
+	var lng = <?php echo $coordinates['lng'] ?>; 
+	var storeId = <?php echo $_store->getId();?>;
+	var name = "<?php echo $_store->getStoreName() ?>";
+	var address = "<?php echo $address?>";
+	var latlng = new google.maps.LatLng(
+	  parseFloat(lat),
+	  parseFloat(lng)
+	);
+	createMarker(latlng, name, address, storeId);
+	bounds.extend(latlng);
+	google.maps.event.addListenerOnce(map, 'bounds_changed', function(event) {
+	  if (this.getZoom() > 15) {
+		this.setZoom(15);
+	  }
+	});
+<?php endforeach; ?>
+
+	map.fitBounds(bounds);
+	
+	
+	function createMarker(latlng, name, address, storeId) {
+		var html = "<b>" + name + "</b> <br/>" + address;
+		var marker = new google.maps.Marker({
+			map: map,
+			position: latlng
+		});
+		
+		google.maps.event.addListener(marker, 'click', function() {
+			infoWindow.setContent(html);
+			infoWindow.open(map, marker);
+			$('storeId').value = storeId;
+			updateStoreLocation();
+		});
+		markers.push(marker);
+		
+	}
+
+	function updateStoreLocation()
+	{
+		var storeId;
+		
+		storeId = $('storeId').value;
+		
+		var url = '<?php echo $this->getUrl('storelocator/index/updatestore', array('_secure'=>true)); ?>' ;
+		
+		url = url + 'store_id/' + storeId;
+	   
+		var request = new Ajax.Request(url,{method: 'get', onFailure: ""}); 
+		
+		if($('storelocator-method') != null){
+			$('storelocator-method').style.display = 'block';
+		}
+		if($('selectedStore') != null)
+		{
+			var selected_store = $('selectedStore').value;
+			
+			if($('store_'+ selected_store) != null)
+			{
+				$('store_'+ selected_store).style.display = 'none';
+			}		
+			if($('store_'+ storeId) != null)
+			{
+				$('store_'+ storeId).style.display = 'block';
+				$('selectedStore').value = storeId;
+			}		
+		}
+	}
+//]]>
+</script> 
+

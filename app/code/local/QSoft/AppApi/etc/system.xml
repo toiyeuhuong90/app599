@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<config>
+    <sections>
+        <qsoft_appapi translate="label" module="qsoft_appapi">
+            <label>App Api Settings</label>
+            <sort_order>2</sort_order>
+            <class>superclass</class>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <tab>qsoft</tab>
+            <groups>
+                <group_setting translate="label" module="qsoft_appapi">
+                    <label>Group Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>100</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <group_factory translate="label" module="qsoft_appapi">
+                            <label>Group Factory ID</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </group_factory>
+                        <group_merchant translate="label" module="qsoft_appapi">
+                            <label>Group Merchant ID</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </group_merchant>
+                        <group_url translate="label" module="qsoft_appapi">
+                            <label>Base Link URL</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </group_url>
+                    </fields>
+                </group_setting>
+            </groups>
+        </qsoft_appapi>
+    </sections>
+</config>

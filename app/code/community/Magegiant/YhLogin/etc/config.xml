@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Magegiant
+ * 
+ * NOTICE OF LICENSE
+ * 
+ * This source file is subject to the magegiant.com license that is
+ * available through the world-wide-web at this URL:
+ * http://magegiant.com/license-agreement/
+ * 
+ * DISCLAIMER
+ * 
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ * 
+ * @category    Magegiant
+ * @package     Magegiant_YhLogin
+ * @copyright   Copyright (c) 2014 Magegiant (http://magegiant.com/)
+ * @license     http://magegiant.com/license-agreement/
+ */
+-->
+<config>
+    <modules>
+        <Magegiant_YhLogin>
+            <version>0.1.0</version>
+        </Magegiant_YhLogin>
+    </modules>
+    <frontend>
+        <routers>
+            <yhlogin>
+                <use>standard</use>
+                <args>
+                    <module>Magegiant_YhLogin</module>
+                    <frontName>yhlogin</frontName>
+                </args>
+            </yhlogin>
+        </routers>
+        <layout>
+            <updates>
+                <yhlogin>
+                    <file>magegiant/yhlogin.xml</file>
+                </yhlogin>
+            </updates>
+        </layout>
+        <translate>
+            <modules>
+                <Magegiant_YhLogin>
+                    <files>
+                        <default>Magegiant_YhLogin.csv</default>
+                    </files>
+                </Magegiant_YhLogin>
+            </modules>
+        </translate>
+        <events>
+            <social_button_create_before>
+                <observers>
+                    <yalogin_observers>
+                        <class>yhlogin/frontend_observer</class>
+                        <method>addYhButton</method>
+                    </yalogin_observers>
+                </observers>
+            </social_button_create_before>
+        </events>
+    </frontend>
+    <adminhtml>
+        <translate>
+            <modules>
+                <Magegiant_YhLogin>
+                    <files>
+                        <default>Magegiant_YhLogin.csv</default>
+                    </files>
+                </Magegiant_YhLogin>
+            </modules>
+        </translate>
+    </adminhtml>
+    <global>
+        <models>
+            <yhlogin>
+                <class>Magegiant_YhLogin_Model</class>
+            </yhlogin>
+        </models>
+        <blocks>
+            <yhlogin>
+                <class>Magegiant_YhLogin_Block</class>
+            </yhlogin>
+        </blocks>
+        <helpers>
+            <yhlogin>
+                <class>Magegiant_YhLogin_Helper</class>
+            </yhlogin>
+        </helpers>
+    </global>
+    <default>
+        <sociallogin>
+            <yh>
+                <enable>0</enable>
+                <yh_image>default/yh.png</yh_image>
+                <yh_image_label>Yahoo</yh_image_label>
+                <sort_order>4</sort_order>
+            </yh>
+        </sociallogin>
+    </default>
+</config>

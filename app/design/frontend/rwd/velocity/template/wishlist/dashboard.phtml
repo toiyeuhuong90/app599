@@ -1,0 +1,49 @@
+<div class="qs-account-recent-designs">
+    <div class="section-title"><?php echo $this->__('Recent Projects') ?></div>
+    <?php if ($this->hasWishlistItems()): ?>
+        <?php $items= $this->getWishlistItems(); ?>
+        <div class="qs-recent-designs-slider">
+            <div class="owl-recent-designs">
+                <?php foreach ($items as $item): ?>
+                    <?php /* @var Mage_Wishlist_Model_Item $item */
+                    $product = $item->getProduct();
+                    $image = $this->helper('catalog/image')->init($product, 'small_image')->resize(66, 152);
+                    if($item->getImageDesign()){
+                        $image = $item->getImageDesign();
+                    }
+                    ?>
+                <div class="item">
+                    <a href="<?php echo $product->getProductUrl()?>"><img height="170" src="<?php echo $image; ?>" alt="" /></a>
+                    <h4 class="product-title"><a href="<?php echo $this->helper('core/url')->addRequestParam($this->getProductUrl($item), array('wishlist'=>$item->getId())); ?>" title="<?php echo $this->escapeHtml($product->getName()) ?>"><?php echo $this->escapeHtml($product->getName()) ?></a></h4>
+                </div>
+                <?php endforeach;?>
+            </div>
+        </div>
+        <script>
+            jQuery(document).ready(function() {
+                jQuery('.owl-recent-designs').owlCarousel({
+                    loop: true,
+                    margin: 20,
+                    nav: true,
+                    responsive: {
+                        992: {
+                            items: 4
+                        },
+                        768: {
+                            items: 4
+                        },
+                        0: {
+                            items: 2
+                        }
+                    }
+                });
+            });
+        </script>
+        <div class="action text-center">
+            <button onclick="setLocation('<?php echo $this->getUrl('wishlist')?>');" class="button btn-blue"><span><span>Manage My Projects</span></span></button>
+        </div>
+    <?php else: ?>
+        <p class="wishlist-empty"><?php echo $this->__('You have no items in your wishlist.') ?></p>
+    <?php endif ?>
+
+</div>

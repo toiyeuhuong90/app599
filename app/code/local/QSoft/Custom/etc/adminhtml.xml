@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<config>
+    <menu>
+        <qsoft_customermeasure>
+            <children>
+                <qslocation module="qsoft_custom">
+                    <title>Location</title>
+                    <sort_order>100</sort_order>
+                    <action>qscustomadmin/adminhtml_location</action>
+                </qslocation>
+            </children>
+        </qsoft_customermeasure>
+    </menu>
+    <acl>
+        <resources>
+            <all>
+                <title>Allow Everything</title>
+            </all>
+            <admin>
+                <children>
+                    <qsoft_customermeasure>
+                        <children>
+                            <qslocation>
+                                <title>Location</title>
+                                <sort_order>0</sort_order>
+                            </qslocation>
+                        </children>
+                    </qsoft_customermeasure>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+
+</config>

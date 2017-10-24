@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+  <sizechart_adminhtml_sizechart_index>
+	<reference name="content">
+	  <block type="sizechart/adminhtml_sizechart" name="sizechart" />
+	</reference>
+  </sizechart_adminhtml_sizechart_index>
+
+	<sizechart_adminhtml_sizechart_new>
+		<reference name="head">
+			<action method="addJs"><js>lib/flex.js</js></action>
+			<action method="addJs"><js>lib/FABridge.js</js></action>
+			<action method="addJs"><js>mage/adminhtml/flexuploader.js</js></action>
+			<action method="addJs"><js>qsoft/extensions/browser.js</js></action>
+			<action method="addJs"><js>prototype/window.js</js></action>
+			<action method="addItem"><type>js_css</type><js>prototype/windows/themes/default.css</js></action>
+			<action method="addItem"><type>skin_css</type><js>lib/prototype/windows/themes/magento.css</js></action>
+		</reference>
+	</sizechart_adminhtml_sizechart_new>
+	<sizechart_adminhtml_sizechart_edit>
+		<reference name="head">
+			<reference name="head">
+				<action method="addJs"><js>lib/flex.js</js></action>
+				<action method="addJs"><js>lib/FABridge.js</js></action>
+				<action method="addJs"><js>mage/adminhtml/flexuploader.js</js></action>
+				<action method="addJs"><js>qsoft/extensions/browser.js</js></action>
+				<action method="addJs"><js>prototype/window.js</js></action>
+				<action method="addItem"><type>js_css</type><js>prototype/windows/themes/default.css</js></action>
+				<action method="addItem"><type>skin_css</type><js>lib/prototype/windows/themes/magento.css</js></action>
+			</reference>
+		</reference>
+	</sizechart_adminhtml_sizechart_edit>
+</layout>

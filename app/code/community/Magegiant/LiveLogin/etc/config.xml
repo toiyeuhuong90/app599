@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Magegiant
+ * 
+ * NOTICE OF LICENSE
+ * 
+ * This source file is subject to the magegiant.com license that is
+ * available through the world-wide-web at this URL:
+ * http://magegiant.com/license-agreement/
+ * 
+ * DISCLAIMER
+ * 
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ * 
+ * @category    Magegiant
+ * @package     Magegiant_LiveLogin
+ * @copyright   Copyright (c) 2014 Magegiant (http://magegiant.com/)
+ * @license     http://magegiant.com/license-agreement/
+ */
+-->
+<config>
+    <modules>
+        <Magegiant_LiveLogin>
+            <version>0.1.0</version>
+        </Magegiant_LiveLogin>
+    </modules>
+    <frontend>
+        <routers>
+            <livelogin>
+                <use>standard</use>
+                <args>
+                    <module>Magegiant_LiveLogin</module>
+                    <frontName>livelogin</frontName>
+                </args>
+            </livelogin>
+        </routers>
+        <layout>
+            <updates>
+                <livelogin>
+                    <file>magegiant/livelogin.xml</file>
+                </livelogin>
+            </updates>
+        </layout>
+        <translate>
+            <modules>
+                <Magegiant_LiveLogin>
+                    <files>
+                        <default>Magegiant_LiveLogin.csv</default>
+                    </files>
+                </Magegiant_LiveLogin>
+            </modules>
+        </translate>
+        <events>
+            <social_button_create_before>
+                <observers>
+                    <livelogin_observers>
+                        <class>livelogin/frontend_observer</class>
+                        <method>addLiveButton</method>
+                    </livelogin_observers>
+                </observers>
+            </social_button_create_before>
+        </events>
+    </frontend>
+    <adminhtml>
+        <translate>
+            <modules>
+                <Magegiant_LiveLogin>
+                    <files>
+                        <default>Magegiant_LiveLogin.csv</default>
+                    </files>
+                </Magegiant_LiveLogin>
+            </modules>
+        </translate>
+    </adminhtml>
+    <global>
+        <models>
+            <livelogin>
+                <class>Magegiant_LiveLogin_Model</class>
+            </livelogin>
+        </models>
+        <blocks>
+            <livelogin>
+                <class>Magegiant_LiveLogin_Block</class>
+            </livelogin>
+        </blocks>
+        <helpers>
+            <livelogin>
+                <class>Magegiant_LiveLogin_Helper</class>
+            </livelogin>
+        </helpers>
+    </global>
+    <default>
+        <sociallogin>
+            <live>
+                <enable>0</enable>
+                <sort_order>6</sort_order>
+                <live_image>default/live.png</live_image>
+                <live_image_label>Live</live_image_label>
+            </live>
+        </sociallogin>
+    </default>
+</config>

@@ -1,0 +1,68 @@
+<?php
+/**
+ * Evince_Testimony extension
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the MIT License
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/mit-license.php
+ *
+ * @category    Evince
+ * @package        Evince_Testimony
+ * @copyright    Copyright (c) 2014
+ * @license        http://opensource.org/licenses/mit-license.php MIT License
+ */
+/**
+ * Testimonial list template
+ *
+ * @category    Evince
+ * @package        Evince_Testimony
+ * @author Ultimate Module Creator
+ */
+?>
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+<?php /* @var $_testimonials Evince_Testimony_Model_Resource_Testimonial_Collection */ ?>
+<?php $_testimonials = $this->getTestimonials(); ?>
+
+<?php if ($_testimonials->getSize() > 0) : ?>
+    <div class="qs-testimonial">
+        <div class="container">
+            <div class="qs-desc-50"><?php echo $this->__('Testimonial') ?></div>
+            <div class="qs-testimonial-slider">
+                <?php foreach ($_testimonials as $_testimonial): ?>
+                    <?php /* @var $_testimonial Evince_Testimony_Model_Testimonial */ ?>
+                    <div class="item">
+                        <?php $image_path = Mage::helper('testimony/testimonial_image')->getTestimonialImagePath($_testimonial->getData('client_image'))?>
+                        <div class="qs-col-testimonial">
+                            <div class="qs-img-testimonial">
+                                <?php if(isset($image_path)):?>
+                                <img src="<?php echo Mage::helper('testimony/resizer')->init($image_path)->adaptiveResize(520,520)?>" alt="<?php $this->escapeHtml($this->getData('title'))?>" width="270" height="270"/>
+                                <?php endif;?>
+                            </div>
+                            <div class="qs-title-testimonial">
+                                <?php echo $_testimonial->getData('client_name'); ?>
+                            </div>
+                            <div class="qs-desc-normal-16"><?php echo mb_substr($_testimonial->getData('content'), 0, 70, 'UTF-8'); ?></div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        jQuery(document).ready(function(){
+            jQuery('.qs-testimonial-slider').owlCarousel({
+                loop: true,
+                margin: 30,
+                nav: true,
+                responsive:{
+                    992:{
+                        items: 3
+                    }
+                }
+            })
+        });
+    </script>
+<?php endif; ?>

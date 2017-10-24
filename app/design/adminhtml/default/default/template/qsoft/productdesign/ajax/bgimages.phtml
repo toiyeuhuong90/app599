@@ -1,0 +1,46 @@
+<?php $_options = $this->getOptions(); 
+
+?>
+
+<?php foreach($_options as $_option):?>
+    <tr class="product-bg-image">
+        <td class="label"><label><?php echo 'Background ' . $_option['name'] ?><span class="required"> * </span></label></td>
+        <td class="value">
+            <img src="<?php echo $_option['image']?>" width="100" id="preview_<?php echo $_option['id'] ?>"/>
+            <input
+                id="bg<?php echo $_option['id']?>"
+                name="bg[<?php echo $_option['id']?>][image]"
+                value="<?php echo $_option['image']?>"
+                onchange="updateCurrentImg(this,<?php echo $_option['id'] ?>);"
+                type="hidden"
+                class="input-text"
+                style="width:220px;vertical-align:top;"/>
+            <?php
+            $browserBtn = $this->getLayout()->createBlock('adminhtml/widget_button', 'button',  array(
+                'label'     => '...',
+                'title'     => 'Click to browser media',
+                'type'      => 'button',
+                'onclick'   => sprintf('MT.MediabrowserUtility.openDialog(\'%s\')',
+                    Mage::getSingleton('adminhtml/url')->getUrl('adminhtml/cms_wysiwyg_images/index', array(
+                        'static_urls_allowed'   => 1,
+                        'target_element_id'     => 'bg'.$_option['id']
+                    ))
+                )
+            ));
+            ?>
+            <?php echo $browserBtn->toHtml() ?></td>
+    </tr>
+    <tr class="product-bg-image">
+        <td class="label"><label><?php echo 'Is Default '?></label></td>
+        <td class="value"><input onclick="setIsDefaultBg(this);" <?php if($_option['is_default']) echo ' checked '?> type="radio" class="input-radio" name="bg[<?php echo $_option['id']?>][is_default]" value="1"></td>
+    </tr>
+    <tr class="product-bg-image">
+        <td class="label"><label><?php echo 'Width ' . $_option['name'] ?><span class="required"> * </span></label></td>
+        <td class="value"><input type="text" class="required-entry input-text validate-digits" name="bg[<?php echo $_option['id']?>][width]" value="<?php echo $_option['width']?>"></td>
+    </tr>
+    <tr class="product-bg-image">
+        <td class="label"><label><?php echo 'Height ' . $_option['name'] ?><span class="required"> * </span></label></td>
+        <td class="value"><input type="text" class="required-entry input-text validate-digits" name="bg[<?php echo $_option['id']?>][height]" value="<?php echo $_option['height']?>"></td>
+    </tr>
+<?php endforeach; ?>
+

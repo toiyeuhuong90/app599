@@ -1,0 +1,284 @@
+<?php
+/* @var QSoft_ProductDesign_Block_Catalog_Product_View_Options $this */
+$product = $this->getProduct();
+$groupsDesign = $this->helper('productdesign')->getProductGroupDesign($product);
+?>
+
+<script type="text/javascript">
+
+    var opConfigDesign = <?php echo $this->getJsonConfigDesign() ?>;
+    var opGroupDesign = <?php echo Mage::helper('core')->jsonEncode($groupsDesign) ?>;
+
+    var opTextDesign = <?php echo $this->getJsonTextDesign() ?>;
+    var opGivingNameColor = '<?php echo $this->getColorForTextDesign()?>'.split(',');
+
+    var DesignProduct = Class.create();
+    DesignProduct.prototype = {
+        initialize: function (config, background, textDesign) {
+            this.colorGroup = opGivingNameColor;
+            this.config = config;
+            this.bgs = background;
+            this.textDesign = textDesign;
+            this.countScale = 0;
+            this.imageHover = '';
+            //document.observe("dom:loaded", this.hoverCanvas.bind(this));
+        },
+        buildDesign: function (el) {
+            zoomControl.updateZoomContent(this.config[el.value]);
+        },
+        getOptionSelected: function () {
+            var options = [];
+            var d = 0;
+            $$('.option_image_design').each(function (elm) {
+                if (elm.checked) {
+                    options[d] = elm.value;
+                    d++;
+                }
+            });
+            return options;
+        },
+
+        setImageDesignToCart: function () {
+            var bg = this.getCurrentGroupActive();
+            var canvas = document.getElementById('canvas_design');
+            var pngUrl = canvas.toDataURL();
+            $('design_image').value = pngUrl;
+        },
+
+        getCurrentGroupActive: function () {
+            var currentGroupActive = $$('.swiper-pagination-bullet-active')[0].getAttribute('group');
+            for (var i = 0; i < this.bgs.length; i++) {
+                if (this.bgs[i].id == currentGroupActive) {
+                    return this.bgs[i];
+                }
+            }
+        },
+        resetDefault: function () {
+            jQuery('.size-active').removeClass('size-active');
+            jQuery('.qs-choose-wrapper').find('span.active').removeClass('active');
+            jQuery('#measurement').attr('checked', false);
+            jQuery('.body-size').attr('checked', false);
+            jQuery('#bodyscan').attr('checked', false);
+            jQuery('.qs-option-size-detail').html('');
+            //reset color
+            jQuery('.span-color-giving-text').removeClass('active')
+                .find('span.active').removeClass('active');
+            jQuery('.qs-price-color').html('');
+            jQuery('.qs-label-color').html('');
+            jQuery('.color-for-giving-text').attr('checked', false);
+            //reset related product
+            jQuery('input[name="related_products[]"]').attr('checked', false);
+            jQuery('.product-active').removeClass('product-active');
+            jQuery('#option-product-label').html('');
+            
+            $$('.option_image_design').each(function (elm) {
+                if (elm.getAttribute('is_default')) {
+                    elm.checked = true;
+                    jQuery(elm).trigger('click');
+                    jQuery(elm).next('span').addClass('active');
+                    var onclicks = elm.getAttribute('onclick').split('updateTabInfo');
+                    eval('updateTabInfo' + onclicks[1]);
+
+                }
+            });
+
+            jQuery('.qs-option-text').each(function () {
+                jQuery(this).val('');
+                eval(jQuery(this).attr('onchange'));
+            });
+            //this.applyDesign();
+        },
+
+        applyShareData: function () {
+            var currentGroupActive = $$('.swiper-pagination-bullet-active')[0].getAttribute('group');
+            jQuery('.qs-choose-wrapper').find('span.active').removeClass('active');
+
+            jQuery('#qs-ds-' + currentGroupActive).trigger('click');
+            for (var k in shareData) {
+                var option = $('options_' + k + '_' + shareData[k]);
+                option.next('span').addClassName('active');
+                option.checked = true;
+                var onclicks = option.getAttribute('onclick').split('updateTabInfo');
+                eval('updateTabInfo' + onclicks[1]);
+            }
+            //this.buildDesign();
+
+        },
+
+
+    };
+
+    var design = new DesignProduct(opConfigDesign, opGroupDesign, opTextDesign);
+    <?php if($shareImage = $this->helper('productdesign')->getShareImage($product, Mage::app()->getRequest()->getParam('share'))):?>
+    var shareData = <?php echo $shareImage->getProductOptions()?>;
+    <?php endif;?>
+    document.observe("dom:loaded", function () {
+        setTimeout(function () {
+            jQuery('.option_image_design').each(function () {
+                if (jQuery(this).is(':checked')) {
+                    jQuery(this).trigger('click');
+                }
+            });
+        }, 500);
+
+        var scriptRunOnStart = '';
+        $$('.option_image_design').each(function (elm) {
+            if (elm.getAttribute('is_default')) {
+                scriptRunOnStart += elm.getAttribute('run-on-start');
+            }
+        });
+        if (scriptRunOnStart != '') {
+            eval(scriptRunOnStart);
+            jQuery('.label-active').removeClass('label-active');
+        }
+        jQuery('#goToBoxLogin, #goToMeasure').fancybox();
+
+        <?php if($wishlistId = Mage::app()->getRequest()->getParam('wishlist')):?>
+        design.applyWishlist(<?php echo $wishlistId ?>);
+        jQuery('.qs-inspire-wrapper').toggleClass('inspire-show');
+        <?php endif;?>
+
+        <?php if($shareImage = $this->helper('productdesign')->getShareImage($product, Mage::app()->getRequest()->getParam('share'))):?>
+        design.applyShareData();
+        <?php endif;?>
+    });
+
+    function in_array(needle, haystack) {
+        for (var key = 0; key < haystack.length; key++) {
+            if (needle == haystack[key]) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    function updateTabInfo(optionId, type, priceId, title) {
+        var price = jQuery('#' + priceId).html();
+        jQuery('#info-' + type + '-' + optionId).show().html(title);
+
+        jQuery('#price-' + type + '-' + optionId).html(price);
+
+        if (type == 'product') {
+            title = '';
+            jQuery('.op-product-' + optionId).each(function () {
+                if (jQuery(this).is(':checked')) {
+                    if (title == '') {
+                        title = jQuery(this).attr('title');
+                    } else {
+                        title += ', ' + jQuery(this).attr('title');
+                    }
+                }
+            })
+        }
+
+        if(type=='Pattern' || type=='Color'){
+            jQuery('#option-label-' + optionId).html(type);
+        }
+
+        jQuery('#option-' + optionId + '-label').addClass('label-active').html(title);
+
+        jQuery('#option-' + optionId + '-price').html(price);
+        if (price != '') {
+            jQuery('#price-' + type + '-' + optionId).show();
+        } else {
+            jQuery('#price-' + type + '-' + optionId).hide();
+        }
+
+        if (type == 'color') {
+            jQuery('#info-pattern-' + optionId).hide().html('');
+            jQuery('#price-pattern-' + optionId).hide().html('');
+        } else {
+            jQuery('#info-color-' + optionId).hide().html('');
+            jQuery('#price-color-' + optionId).hide().html('');
+        }
+    }
+
+    function applyGivingName(tag, optionId) {
+        var text = tag.value;
+        jQuery('#giving-name-text-' + optionId).html('<font>' + text + '</font>');
+        jQuery('#giving-name-price-' + optionId).show();
+        jQuery('#option-' + optionId + '-label').html(text);
+        var price = jQuery('#giving-name-price-' + optionId).html();
+        jQuery('#option-' + optionId + '-price').html(price).show();
+        if (text == '') {
+            jQuery('#giving-name-price-' + optionId).hide();
+            jQuery('#option-' + optionId + '-price').hide()
+        }
+    }
+
+    <?php $customerInfo = $this->helper('productdesign')->getCustomerMeasureValues(); ?>
+    var isLogged = <?php echo $customerInfo['isLogged']?>;
+    var hasMeasure = <?php echo $customerInfo['hasMeasure']?>;
+    var hasBodyScan = <?php echo $customerInfo['hasBodyScan']?>;
+
+    function getCustomerMeasure(tag, parentId) {
+        jQuery('.qs-validate-size').val(0);
+        jQuery('#bnt-login').attr('onclick', 'return dataFormLogin.submit(\'measure\');');
+        jQuery('#bnt-register').attr('onclick', 'return dataFormRegister.submit(\'measure\');');
+
+        jQuery('#' + parentId + '-size').find('.body-size').attr('checked', false);
+        if (isLogged == 0) {
+            tag.checked = false;
+            jQuery('#goToBoxLogin').trigger('click');
+        }
+        if (isLogged == 1 && hasMeasure == 0) {
+            tag.checked = false;
+            jQuery('#goToMeasure').trigger('click');
+        }
+
+        if (isLogged == 1 && hasMeasure == 1) {
+            jQuery('#option-'+parentId+'-label').html('Custom (Manual Measurement)');
+            jQuery('.qs-validate-size').val(1);
+        }
+        jQuery('#qs-notice-bodyscan').hide();
+    }
+    function getCustomerBodyscan(tag, parentId) {
+        jQuery('.qs-validate-size').val(0);
+        jQuery('#bnt-login').attr('onclick', 'return dataFormLogin.submit(\'bodyscan\');');
+        jQuery('#bnt-register').attr('onclick', 'return dataFormRegister.submit(\'bodyscan\');');
+        if (hasBodyScan == 1) {
+            jQuery('#' + parentId + '-size').find('.body-size').attr('checked', false);
+        }
+
+        if (isLogged == 0) {
+            tag.checked = false;
+            jQuery('#goToBoxLogin').trigger('click');
+        }
+        if (isLogged == 1 && hasBodyScan == 0) {
+            tag.checked = false;
+            jQuery('#qs-notice-bodyscan').show();
+        }
+
+        if (hasBodyScan == 1) {
+            jQuery('.qs-validate-size').val(1);
+            jQuery('#qs-notice-bodyscan').hide();
+            jQuery('#option-'+parentId+'-label').html('Custom (3D Body Scan)');
+        }
+    }
+
+    function uncheckMeasurement() {
+        jQuery('input[name=measurement]').attr('checked', false);
+        jQuery('.qs-validate-size').val(1);
+    }
+
+    function goToRegisterForm() {
+        jQuery('.qs-create-page-warpper').show();
+        jQuery('.qs-login-page-warpper').hide();
+        return false;
+    }
+    function goToForgotPwdForm(){
+        jQuery('.qs-forgot-pwd-page-warpper').show();
+        jQuery('.qs-login-page-warpper').hide();
+        return false;
+    }
+    function goToLoginForm() {
+        jQuery('.qs-create-page-warpper').hide();
+        jQuery('.qs-forgot-pwd-page-warpper').hide();
+        jQuery('.qs-login-page-warpper').show();
+        return false;
+    }
+
+</script>
+
+<input type="hidden" name="design_image" id="design_image"/>

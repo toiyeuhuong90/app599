@@ -1,0 +1,24 @@
+<?php
+$item = $this->getProductDesign();
+?>
+<div class="entry-edit">
+    <div class="entry-edit-head">
+        <h4 class="icon-head head-edit-form fieldset-legend">Select Attributes</h4>
+    </div>
+    <div id="group_fields128" class="fieldset fieldset-wide">
+        <div class="hor-scroll">
+            <table cellspacing="0" class="form-list">
+                <tbody>
+
+                <tr>
+                    <td class="label"><label><strong><?php echo $this->__('Image background Front')?></strong></label></td>
+                    <td class="value">
+                        <input name="bg_front" value="<?php echo $item->getBgFront()?>" type="text"/>
+                    </td>
+                    <td class="scope-label"><span class="nobr">[GLOBAL]</span></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

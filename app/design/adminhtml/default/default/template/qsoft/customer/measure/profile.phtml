@@ -1,0 +1,152 @@
+<?php
+/* @var $this QSoft_CustomerMeasure_Block_Adminhtml_Customer_Edit_Tab_Measure */
+$helper = Mage::helper('core');
+$measures = $this->getMeasures();
+$measureValues = $this->getMeasureValues();
+$units = $helper->jsonDecode($measureValues->getUnit());
+$items = $helper->jsonDecode($measureValues->getMeasures());
+$customer = Mage::registry('current_customer');
+?>
+
+<div id="customer_info_tabs_account_measure">
+    <div class="entry-edit">
+        <div class="entry-edit-head">
+            <h4 class="icon-head head-edit-form fieldset-legend">Account Measurement</h4>
+            <div class="form-buttons"></div>
+        </div>
+        <div id="_accountbase_fieldset" class="fieldset ">
+            <div class="hor-scroll">
+                <table cellspacing="0" class="form-list">
+                    <tbody>
+                    <tr>
+                        <td class="label"><label>Unit</label></td>
+                        <td class="value">
+                            <div class="store-scope">
+                                <input
+                                    class="validate-one-required-by-name" <?php if ($units['weight'] == 1): ?> checked <?php endif; ?>
+                                    type="radio" name="measure[unit][weight]" value="1" id="weightunit1"/>
+                                <label for="weightunit1">Kg</label>
+
+                                <input
+                                    class="validate-one-required-by-name"<?php if ($units['weight'] == 2): ?> checked <?php endif; ?>
+                                    type="radio" name="measure[unit][weight]" value="2" id="weightunit2"/>
+                                <label for="weightunit2">Lbs</label>
+
+                                <span>|</span>
+
+                                <input
+                                    class="validate-one-required-by-name" <?php if ($units['height'] == 1): ?> checked <?php endif; ?>
+                                    type="radio" name="measure[unit][height]" value="1" id="heightunit1"/>
+                                <label for="heightunit1">Cm</label>
+
+                                <input
+                                    class="validate-one-required-by-name" <?php if ($units['height'] == 2): ?> checked <?php endif; ?>
+                                    type="radio" name="measure[unit][height]" value="2" id="heightunit2"/>
+                                <label for="heightunit2">Inch</label>
+
+                            </div>
+                        </td>
+                    </tr>
+                    <?php foreach ($measures as $measure): ?>
+                        <tr>
+                            <td class="label">
+                                <label
+                                    for="__<?php echo $measure->getId() ?>"><?php echo $measure->getTitle() ?> </label>
+                            </td>
+                            <td class="value">
+                                <input id="__<?php echo $measure->getId() ?>" type="text" class=" input-text"
+                                       value="<?php echo $items[$measure->getId()] ?>"
+                                       name="measure[item][<?php echo $measure->getId() ?>]">
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!--        upload csv-->
+        <div class="entry-edit-head">
+            <h4 class="icon-head head-edit-form fieldset-legend">Upload Measurement (csv)</h4>
+            <div class="form-buttons"></div>
+        </div>
+        <div id="_accountpassword_fieldset" class="fieldset ">
+            <div class="hor-scroll">
+                <table cellspacing="0" class="form-list" width="1000" style="width: 100%">
+                    <tbody>
+                    <tr>
+                        <td style="width: 10%" class="label"><label>Select file </label></td>
+                        <td class="value">
+                            <input id="url_mapping" type="hidden" value="<?php echo $this->getUrl('admin_customer_measure/adminhtml_measurement/getMapping/', array('customer'=>$customer->getId(),'form_key'=>Mage::getSingleton('core/session')->getFormKey()))?>">
+                            <input type="file" id="measure-csv" onchange="getDataFile();" name="measure_csv">
+                            <p><i>Only CSV acceptable</i></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 10%" class="label"><label>Mapping fields </label></td>
+                        <td class="value" id="mapping-fields">
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!--        upload pdf-->
+        <div class="entry-edit-head">
+            <h4 class="icon-head head-edit-form fieldset-legend">Upload Body scan (pdf)</h4>
+            <div class="form-buttons"></div>
+        </div>
+        <div id="_accountpassword_fieldset" class="fieldset ">
+            <div class="hor-scroll">
+                <table cellspacing="0" class="form-list" width="1000" style="width: 100%">
+                    <tbody>
+                    <tr>
+                        <td style="width: 10%" class="label"><label>Select file </label></td>
+                        <td class="value">
+                            <input type="file" name="body_scan">
+                            <p><i>Only PDF acceptable</i></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 10%" class="label"><label>Description </label></td>
+                        <td class="value">
+                            <input type="text" name="body_description"/>
+                        </td>
+                    </tr>
+                    <?php if($bodyScan=$measureValues->getBodyScan()):?>
+                        <?php $bodyScanData = Mage::helper('core')->jsonDecode($bodyScan)
+                        ?>
+
+                    <tr>
+                        <td class="label">Body scan Gallery </td>
+                        <td class="value">
+                            <p>
+                                <label>Select time</label>
+                                <select onchange="showGallery(this.value);">
+                                    <?php foreach ($bodyScanData as $time=>$data):?>
+                                    <option value="<?php echo $time?>"><?php echo date('g:i A m/d/Y',$time)?></option>
+                                    <?php endforeach;?>
+                                </select>
+                            </p>
+                            <?php $i=0;foreach ($bodyScanData as $time=>$data):?>
+                                <div class="image-gallery" id="<?php echo $time?>" <?php if($i>0):?>style="display: none;"<?php endif;?>>
+                                    <p>
+                                        <label>Uploaded File</label>
+                                        <a href="<?php echo $data['url'] ?>">Download</a>
+                                    </p>
+                                    <?php $j=1; foreach ($data['images'] as $image):?>
+                                        <img title="page <?php echo $i?>" style="border:1px solid #d7d7d7; display: inline-block; width: 32%;" src="<?php echo $image ?>" width="400"/>
+                                        <?php $j++; endforeach;?>
+
+                                </div>
+                            <?php $i++; endforeach;?>
+
+                        </td>
+                    </tr>
+                    <?php endif;?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

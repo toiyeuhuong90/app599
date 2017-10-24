@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Magegiant
+ * 
+ * NOTICE OF LICENSE
+ * 
+ * This source file is subject to the magegiant.com license that is
+ * available through the world-wide-web at this URL:
+ * http://magegiant.com/license-agreement/
+ * 
+ * DISCLAIMER
+ * 
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ * 
+ * @category    Magegiant
+ * @package     Magegiant_LinkedInLogin
+ * @copyright   Copyright (c) 2014 Magegiant (http://magegiant.com/)
+ * @license     http://magegiant.com/license-agreement/
+ */
+-->
+<config>
+    <sections>
+        <sociallogin translate="label" module="linkedinlogin">
+            <groups>
+                <linkedin translate="label">
+                    <label>LinkedIn Login</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>100</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <is_enabled translate="label">
+                            <label>Enable</label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>1</sort_order>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment></comment>
+                        </is_enabled>
+                        <api_key translate="label">
+                            <label>Your API Key</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>2</sort_order>
+                            <show_in_default>2</show_in_default>
+                            <show_in_website>2</show_in_website>
+                            <show_in_store>2</show_in_store>
+                            <comment><![CDATA[<a href="https://www.linkedin.com/secure/developer" target="_blank">Get your API key</a>]]></comment>
+                        </api_key>
+                        <client_key translate="label">
+                            <label>Your Client Key</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>3</sort_order>
+                            <show_in_default>3</show_in_default>
+                            <show_in_website>3</show_in_website>
+                            <show_in_store>3</show_in_store>
+                            <comment><![CDATA[<a href="https://www.linkedin.com/secure/developer" target="_blank">Get your client key</a>]]></comment>
+                        </client_key>
+                        <li_image>
+                            <label>Button Image</label>
+                            <frontend_type>image</frontend_type>
+                            <backend_model>adminhtml/system_config_backend_image</backend_model>
+                            <upload_dir config="system/filesystem/media" scope_info="1">sociallogin/img</upload_dir>
+                            <base_url type="media" scope_info="1">sociallogin/img</base_url>
+                            <sort_order>4</sort_order>
+                            <show_in_default>4</show_in_default>
+                            <show_in_website>4</show_in_website>
+                            <show_in_store>4</show_in_store>
+                        </li_image>
+                        <linkedin_image_label>
+                            <label>Button image label</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>5</sort_order>
+                            <show_in_default>5</show_in_default>
+                            <show_in_website>5</show_in_website>
+                            <show_in_store>5</show_in_store>
+                        </linkedin_image_label>
+                        <position translate="label">
+                            <label>Position Number</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>6</sort_order>
+                            <show_in_default>6</show_in_default>
+                            <show_in_website>6</show_in_website>
+                            <show_in_store>6</show_in_store>
+                        </position>
+                    </fields>
+                </linkedin>
+            </groups>
+        </sociallogin>
+    </sections>
+</config>

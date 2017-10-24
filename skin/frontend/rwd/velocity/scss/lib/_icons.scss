@@ -1,0 +1,67 @@
+%icons {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+[class^='icon-'],
+[class*=' icon-'] {
+  &:before {
+    @extend %icons;
+  }
+}
+
+.icon-accessories:before {
+  content: "\e900";
+}
+.icon-newletter:before {
+  content: "\e901";
+  color: #58595b;
+}
+.icon-measurement:before {
+  content: "\e902";
+  color: #58595b;
+}
+.icon-project:before {
+  content: "\e903";
+  color: #58595b;
+}
+.icon-order:before {
+  content: "\e904";
+  color: #58595b;
+}
+.icon-profile:before {
+  content: "\e905";
+  color: #58595b;
+}
+.icon-dashbroad:before {
+  content: "\e906";
+  color: #58595b;
+}
+.icon-color:before {
+  content: "\e907";
+}
+.icon-option:before {
+  content: "\e908";
+}
+.icon-product:before {
+  content: "\e909";
+}
+.icon-see-detail:before {
+  content: "\e90a";
+}
+.icon-size:before {
+  content: "\e90b";
+}
+.icon-pattern:before {
+  content: "\e90c";
+}

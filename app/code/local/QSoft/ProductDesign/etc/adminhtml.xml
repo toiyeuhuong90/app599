@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<config>
+    <menu>
+        <qsoft_customermeasure>
+            <children>
+                <productoptions module="productdesign">
+                    <title>ProductOptions</title>
+                    <sort_order>100</sort_order>
+                    <children>
+                        <group_option module="productdesign">
+                            <title>Frontend group</title>
+                            <sort_order>10</sort_order>
+                            <action>qsproductdesign/adminhtml_frontendGroup</action>
+                        </group_option>
+                        <inspire_me module="productdesign">
+                            <title>Inspire Me Management</title>
+                            <sort_order>20</sort_order>
+                            <action>qsproductdesign/adminhtml_inspireme</action>
+                        </inspire_me>
+                    </children>
+                </productoptions>
+            </children>
+        </qsoft_customermeasure>
+    </menu>
+    <acl>
+        <resources>
+            <all>
+                <title>Allow Everything</title>
+            </all>
+            <admin>
+                <children>
+                    <qsoft_customermeasure>
+                        <children>
+                            <productoptions>
+                                <title>Qsoft</title>
+                                <sort_order>0</sort_order>
+                                <children>
+                                    <productoptions>
+                                        <title>ProductOptions</title>
+                                        <sort_order>0</sort_order>
+                                        <children>
+                                            <group_option translate="title">
+                                                <title>Frontend Group</title>
+                                                <sort_order>10</sort_order>
+                                            </group_option>
+                                            <inspire_me translate="title">
+                                                <title>Inspire Me Management</title>
+                                                <sort_order>20</sort_order>
+                                            </inspire_me>
+                                        </children>
+                                    </productoptions>
+                                </children>
+                            </productoptions>
+                        </children>
+                    </qsoft_customermeasure>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <productdesign translate="title" module="productdesign">
+                                        <title>Product Design</title>
+                                        <sort_order>0</sort_order>
+                                    </productdesign>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+
+</config>

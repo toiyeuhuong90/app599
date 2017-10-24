@@ -1,0 +1,19 @@
+
+    <div class="qs-name-tab-control">Product</div>
+    <div class="qs-tab-control-wrapper qs-tab-product-panel">
+        <div id="owl-product-tab" class="owl-carouse">
+            <div class="item">
+                <div class="row">
+                    <?php foreach ($this->getItems() as $_item): ?>
+                    <div class="col-md-3 qs-col-slider-tab">
+                        <div class="qs-item-product-tab">
+                            <a title="<?php echo $this->escapeHtml($_item->getName()) ?>" href="<?php echo $_item->getProductUrl() ?>"><img src="<?php echo $this->helper('catalog/image')->init($_item, 'thumbnail')->resize(125, 165) ?>" alt=""/></a>
+                        </div>
+                    </div>
+                    <?php endforeach ?>
+                </div>
+            </div>
+        </div>
+    </div>
+
+

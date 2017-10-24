@@ -1,0 +1,18 @@
+<div class="container">
+    <div class="qs-logo-footer">
+        <a href="#">
+            <img src="<?php echo str_replace('index.php/','', $this->getUrl() . 'media/uploaddir/' . Mage::getStoreConfig('design/footer/logo'))?>" alt="Velocity" />
+        </a>
+    </div>
+
+    <div class="qs-footer-social">
+        <?php echo $this->getLayout()->getBlock('social.links')->toHtml() ?>
+    </div>
+
+    <div class="qs-nav-footer">
+        <?php echo $this->getChildHtml('footer.links') ?>
+    </div>
+
+    <div class="qs-copyrights"><span><?php echo $this->getCopyright() ?></span></div>
+
+</div>

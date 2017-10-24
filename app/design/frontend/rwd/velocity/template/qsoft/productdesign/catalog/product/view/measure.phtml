@@ -1,0 +1,222 @@
+<?php
+$helper = Mage::helper('core');
+$measures = $this->getMeasures();
+$measureValues = $this->getMeasureValues();
+$units = $helper->jsonDecode($measureValues->getUnit());
+$weightUnit = Mage::getStoreConfig('customer_measure/files/default_weight');
+$heightUnit = Mage::getStoreConfig('customer_measure/files/default_height');
+if ($units) {
+    $weightUnit = $units['weight'];
+    $heightUnit = $units['height'];
+}
+$items = $helper->jsonDecode($measureValues->getMeasures());
+?>
+
+<div id="measureBox" style="width: 600px; " class="qs-measurement-profile">
+
+    <div class="qs-title-page-account"><?php echo $this->__('My Measurement Profile') ?></div>
+    <div class="qs-desc-page-account"><?php echo $this->__('You can change your measurement below.') ?></div>
+    <div class="qs-measurement-profile-container">
+        <form action="#" method="post" id="form-measure">
+            <div class="qs-row-measurement qs-check-hweight">
+                <input name="hweight" type="radio" <?php if ($weightUnit == 1 && $heightUnit == 1): ?> checked="checked" <?php endif; ?> id="hweight1" value="1">
+                <label for="hweight1">kg/cm</label>
+                <span>|</span>
+                <input name="hweight" type="radio" <?php if ($weightUnit == 2 && $heightUnit == 2): ?> checked="checked" <?php endif; ?> id="hweight2" value="2">
+                <label for="hweight2">lbs/inch</label>
+            </div>
+
+            <!--            weight-->
+            <div class="qs-row-measurement qs-check-hweight-hidden">
+                <input onclick="updateUnitValue(1, this.value);" id="weight1" <?php if ($weightUnit == 1): ?> checked="checked" <?php endif; ?> value="1" type="radio"
+                       name="measure[unit][weight]"/>
+                <input onclick="updateUnitValue(1, this.value);" id="weight2" <?php if ($weightUnit == 2): ?> checked="checked" <?php endif; ?> value="2" type="radio"
+                       name="measure[unit][weight]"/>
+                <input onclick="updateUnitValue(2, this.value);" id="height1" <?php if ($heightUnit == 1): ?> checked="checked" <?php endif; ?> value="1" type="radio"
+                       name="measure[unit][height]"/>
+                <input onclick="updateUnitValue(2, this.value);" id="height2" <?php if ($heightUnit == 2): ?> checked="checked" <?php endif; ?> value="2" type="radio"
+                       name="measure[unit][height]"/>
+            </div>
+            <?php foreach ($measures as $measure): ?>
+                <?php if ($measure->getUnit() == 1): ?>
+                    <?php
+                    $min = $measure->getMinValue();
+                    $max = $measure->getMaxValue();
+                    if($weightUnit!=1){
+                        $min = round($min * 2.20462);
+                        $max = round($max * 2.20462);
+                    }
+                    ?>
+                    <div class="qs-row-measurement">
+                        <label class="qs-measurement-option"><?php echo $measure->getTitle() ?></label>
+                        <input id="item<?php echo $measure->getId() ?>" unittype="1" name="measure[item][<?php echo $measure->getId() ?>]" class="input-measurement-type" type="text" value="<?php echo $items[$measure->getId()] ?>"/>
+                        <div class="qs-data-slider">
+                            <span id="item<?php echo $measure->getId() ?>-min" class="qs-slider-min"><?php echo $min ?></span>
+                            <input id="item<?php echo $measure->getId() ?>-ranger" type="range" min="<?php echo $min ?>" max="<?php echo $max ?>" step="1" value="<?php echo $items[$measure->getId()] ?>" data-rangeslider/>
+                            <span id="item<?php echo $measure->getId() ?>-max" class="qs-slider-max"><?php echo $max ?></span>
+                        </div>
+                    </div>
+                <?php endif; ?>
+            <?php endforeach; ?>
+
+            <?php foreach ($measures as $measure): ?>
+                <?php if ($measure->getUnit() == 2): ?>
+                    <?php
+                    $min = $measure->getMinValue();
+                    $max = $measure->getMaxValue();
+                    if($heightUnit!=1){
+                        $min = round($min * 0.393701);
+                        $max = round($max * 0.393701);
+                    }
+                    ?>
+                    <div class="qs-row-measurement">
+                        <label class="qs-measurement-option"><?php echo $measure->getTitle() ?></label>
+                        <input unittype="2" id="item<?php echo $measure->getId() ?>" name="measure[item][<?php echo $measure->getId() ?>]" class="input-measurement-type" type="text" value="<?php echo $items[$measure->getId()] ?>"/>
+                        <div class="qs-data-slider">
+                            <span id="item<?php echo $measure->getId() ?>-min" class="qs-slider-min"><?php echo $min ?></span>
+                            <input id="item<?php echo $measure->getId() ?>-ranger" type="range" min="<?php echo $min ?>" max="<?php echo $max ?>" step="1" value="<?php echo $items[$measure->getId()] ?>" data-rangeslider/>
+                            <span id="item<?php echo $measure->getId() ?>-max" class="qs-slider-max"><?php echo $max ?></span>
+                        </div>
+                    </div>
+                <?php endif; ?>
+            <?php endforeach; ?>
+            <div class="qs-row-button">
+                <button onclick="return dataFormMeasure.submit();" type="button">Update</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    var $document = jQuery(document);
+    var selector = '[data-rangeslider]';
+    var $element = jQuery(selector);
+
+    jQuery(document).ready(function () {
+
+        jQuery('.input-measurement-type').keypress(function (e) {
+            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                return false;
+            }
+        });
+
+        $document.on('input', 'input[type="range"], ' + selector, function (e) {
+            valueOutput(e.target, jQuery(this).parent().prev());
+        });
+
+        $document.on('keyup', '.input-measurement-type', function (e) {
+            var $inputRange = jQuery(selector, e.target.parentNode);
+            var value = jQuery(jQuery(this), e.target.parentNode)[0].value;
+            if (value) {
+                if (parseInt(value) > parseInt(jQuery($inputRange).attr('max'))) {
+                    $inputRange.val(jQuery($inputRange).attr('max')).change();
+                    jQuery(this).val(jQuery($inputRange).attr('max'));
+                } else {
+                    $inputRange.val(value).change();
+                }
+            }
+        });
+
+        //Change value
+        $document.on('change', '.input-measurement-type', function (e) {
+            var $inputRange = jQuery(selector, e.target.parentNode);
+
+            if (!jQuery(this).val()) {
+                jQuery(this).val(0);
+                $inputRange.val(0).change();
+            }
+        });
+
+        //Update min, max value
+        $document.on('click', '#js-example-change-attributes button', function(e) {
+            var $inputRange = $(selector, e.target.parentNode);
+            var attributes = {
+                min: $('input[name="min"]', e.target.parentNode)[0].value,
+                max: $('input[name="max"]', e.target.parentNode)[0].value,
+                step: $('input[name="step"]', e.target.parentNode)[0].value
+            };
+            $inputRange.attr(attributes);
+            $inputRange.rangeslider('update', true);
+        });
+
+        $element.rangeslider({
+            polyfill: false
+        });
+
+        //Check
+        jQuery(document).on('click', '.qs-check-hweight input[name="hweight"]', function() {
+            var value = jQuery(this).val();
+
+            updateUnitValue(1, value);
+            updateUnitValue(2, value);
+
+            document.getElementById('weight' + value).checked = true;
+            document.getElementById('height' + value).checked = true;
+        });
+
+    });
+
+    function valueOutput(element, input) {
+        var value = element.value;
+        jQuery(input).val(value);
+    }
+    var defaultWeight = <?php echo $weightUnit?>;
+    var defaultHeight = <?php echo $heightUnit?>;
+    var cmToInch = 0.393701;
+    var kgToLbs = 2.20462;
+
+    function updateUnitValue(unitType, unitValue) {
+        //weight
+        if(unitType==1 && unitValue!=defaultWeight){
+            defaultWeight = unitValue;
+            jQuery('input[unittype="1"]').each(function () {
+                var id = jQuery(this).attr('id');
+                var rate = kgToLbs;
+                if(unitValue==1){
+                    rate = 1 / kgToLbs;
+                }
+                var newValue = Math.round(jQuery(this).val() * rate);
+                var minValue = Math.round(jQuery('#' + id + '-ranger').attr('min') * rate);
+                var maxValue = Math.round(jQuery('#' + id + '-ranger').attr('max') * rate);
+                var newRangerFill = jQuery('#' + id + '-ranger').parent().find('.rangeslider__fill').width();
+                var newRangerHandle = jQuery('#' + id + '-ranger').parent().find('.rangeslider__handle').css('left');
+
+                jQuery(this).val(newValue);
+                jQuery('#' + id + '-ranger').attr('max', maxValue);
+                jQuery('#' + id + '-ranger').attr('min', minValue);
+                jQuery('#' + id + '-max').html( maxValue);
+                jQuery('#' + id + '-min').html( minValue);
+                jQuery('#' + id + '-ranger').attr('value', newValue);
+                jQuery('#' + id + '-ranger').rangeslider('update', true);
+                jQuery('#' + id + '-ranger').parent().find('.rangeslider__fill').width(newRangerFill);
+                jQuery('#' + id + '-ranger').parent().find('.rangeslider__handle').css('left',newRangerHandle);
+            });
+        }
+        //height
+        if(unitType==2 && unitValue!=defaultHeight){
+            defaultHeight = unitValue;
+            jQuery('input[unittype="2"]').each(function () {
+                var id = jQuery(this).attr('id');
+                var rate = cmToInch;
+                if(unitValue==1){
+                    rate = 2.54;
+                }
+                var newValue = Math.round(jQuery(this).val() * rate);
+                var minValue = Math.round(jQuery('#' + id + '-ranger').attr('min') * rate);
+                var maxValue = Math.round(jQuery('#' + id + '-ranger').attr('max') * rate);
+                var newRangerFill = jQuery('#' + id + '-ranger').parent().find('.rangeslider__fill').width();
+                var newRangerHandle = jQuery('#' + id + '-ranger').parent().find('.rangeslider__handle').css('left');
+
+                jQuery(this).val(newValue);
+                jQuery('#' + id + '-ranger').attr('max', maxValue);
+                jQuery('#' + id + '-ranger').attr('min', minValue);
+                jQuery('#' + id + '-max').html( maxValue);
+                jQuery('#' + id + '-min').html( minValue);
+                jQuery('#' + id + '-ranger').attr('value', newValue);
+                jQuery('#' + id + '-ranger').rangeslider('update', true);
+                jQuery('#' + id + '-ranger').parent().find('.rangeslider__fill').width(newRangerFill);
+                jQuery('#' + id + '-ranger').parent().find('.rangeslider__handle').css('left',newRangerHandle);
+            });
+        }
+    }
+</script>

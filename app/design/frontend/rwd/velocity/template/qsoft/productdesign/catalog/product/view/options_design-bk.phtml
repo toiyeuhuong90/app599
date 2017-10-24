@@ -1,0 +1,530 @@
+<?php
+/* @var QSoft_ProductDesign_Block_Catalog_Product_View_Options $this*/
+$product = $this->getProduct();
+$groupsDesign = $this->helper('productdesign')->getProductGroupDesign($product);
+?>
+
+<script type="text/javascript">
+    var count = 0;
+    var loaded = [];
+    var opConfigDesign = <?php echo $this->getJsonConfigDesign() ?>;
+    var opGroupDesign = <?php echo Mage::helper('core')->jsonEncode($groupsDesign) ?>;
+
+    var opTextDesign = <?php echo $this->getJsonTextDesign() ?>;
+    var opGivingNameColor = '<?php echo $this->getColorForTextDesign()?>'.split(',');
+
+    var DesignProduct = Class.create();
+    DesignProduct.prototype = {
+        initialize: function (config, background, textDesign) {
+            this.colorGroup = opGivingNameColor;
+            this.config = config;
+            this.bgs = background;
+            this.textDesign = textDesign;
+            this.countScale = 0;
+            this.imageHover = '';
+            //document.observe("dom:loaded", this.hoverCanvas.bind(this));
+        },
+        buildDesign: function () {
+            var currentGroupActive = $$('.swiper-pagination-bullet-active')[0].getAttribute('group');
+            var destroyDrag = 0;
+            var currentCanvasActive = jQuery('#bg-' + currentGroupActive);
+            if (currentCanvasActive.width() < jQuery(currentCanvasActive).parent().width()) {
+                destroyDrag = 1;
+            }
+            this.applyDesign();
+            var cs = this;
+
+            setTimeout(function () {
+                cs.setImageDesignToCart();
+            }, 1000);
+
+        },
+        getOptionSelected: function () {
+            var options = [];
+            var d = 0;
+            $$('.option_image_design').each(function (elm) {
+                if (elm.checked) {
+                    options[d] = elm.value;
+                    d++;
+                }
+            });
+            return options;
+        },
+        applyDesign: function () {
+            var options = this.getOptionSelected();
+            var bg = this.getCurrentGroupActive();
+            var cs = this;
+            var w = bg.realWidth;
+            var h = bg.realHeight;
+            var bgImage = bg.image_resized;
+            var canvas = document.getElementById('canvas_design');
+            canvas.width = w;
+            canvas.height = h;
+            var imgs = {bg: bgImage};
+            var k = 1;
+            for ( var j = 0; j < options.length; j++) {
+                if (this.config[options[j]]['image_' + bg.key] != '') {
+                    jQuery('#image_' + bg.key + '_' + this.config[options[j]]['optionId']).attr('xlink:href', this.config[options[j]]['image_' + bg.key]);
+                    imgs['bg' + k] = this.config[options[j]]['image_' + bg.key];
+                    k++;
+                }
+            }
+            //loading
+
+            var async = false;
+            if (window.chrome && window.chrome.webstore) {
+                async = true;
+            }
+            for (var n in imgs) {
+                if(!in_array(imgs[n], loaded)){
+                    jQuery.ajax({
+                        /* The whisperingforest.org URL is not longer valid, I found a new one that is similar... */
+                        url: imgs[n],
+                        async: async,
+                        dataType: 'html',
+                        beforeSend: function(){
+                            jQuery('.design-mark').show();
+                        },
+                        success:function(data){
+                            jQuery('.design-mark').hide();
+                        }
+                    });
+                    loaded[count] = imgs[n];
+                    count++;
+                }
+
+            }
+
+            var context = canvas.getContext("2d");
+            this.loadImages(imgs, function (images) {
+                for (var m in images) {
+                    context.drawImage(images[m], 0, 0, w, h);
+                }
+            });
+
+            if (this.groupHasTextDesign(bg.id)) {
+                setTimeout(function () {
+                    var textDesign = cs.groupHasTextDesign(bg.id);
+                    var optionTextId = textDesign.id;
+                    var textPrint = $('options_' + optionTextId + '_text').value;
+                    if(textDesign!=''){
+
+                        var color = cs.getOptionColor(optionTextId);
+                        context.fillStyle = '#' + color;
+                        context.font = "bold 14px Arial";
+                        context.fillText(textPrint, textDesign.left, textDesign.top, 1000);
+                        jQuery('#text_design_' + optionTextId).html(textPrint)
+                            .attr('fill', '#' + color)
+                            .attr('x', textDesign.left)
+                            .attr('y', textDesign.top);
+                    }
+
+                }, 100);
+            }
+        },
+        loadImages: function (sources, callback) {
+            var images = {};
+            var loadedImages = 0;
+            var numImages = 0;
+            // get num of sources
+            for (var src in sources) {
+                numImages++;
+            }
+            for (var src in sources) {
+                images[src] = new Image();
+                images[src].onload = function () {
+                    if (++loadedImages >= numImages) {
+                        callback(images);
+                    }
+                };
+                images[src].src = sources[src];
+            }
+        },
+        getOptionColor: function (optionId) {
+            var color = '000';
+            for (var i = 0; i < this.colorGroup.length; i++) {
+                var options = document.getElementsByName('options['+this.colorGroup[i]+']');
+                for(var j=0; j<options.length; j++){
+                    if(options[j].checked){
+                        return options[j].getAttribute('color_code');
+                    }
+                }
+            }
+            return color;
+        },
+
+        groupHasTextDesign: function (groupId) {
+            for (var i in this.textDesign) {
+                if (this.textDesign[i].groupId == groupId) {
+                    return this.textDesign[i];
+                }
+            }
+            return false;
+        },
+
+        setImageDesignToCart: function () {
+            var bg = this.getCurrentGroupActive();
+            var canvas = document.getElementById('canvas_design');
+            var pngUrl = canvas.toDataURL();
+            $('design_image').value = pngUrl;
+        },
+        showGroupDesign: function (id, groupIds) {
+            $$('.qs-option-design').each(function (elm) {
+                $(elm).hide();
+                $('qs-option-' + id).show();
+
+            });
+            var currentGroupActive = $$('.swiper-pagination-bullet-active')[0].getAttribute('group');
+            var groups = groupIds.split(',');
+            if (!in_array(currentGroupActive, groups)) {
+                $('qs-ds-' + groups[0]).click();
+            }
+
+        },
+
+        getChildPosition: function (group, x, y, image) {
+            jQuery('#check-image').remove();
+            var canvas = document.createElement('canvas');
+            canvas.setAttribute('width', group.realWidth);
+            canvas.setAttribute('height', group.realHeight);
+
+            canvas.setAttribute('id', 'check-image');
+
+            var context = canvas.getContext("2d");
+            var img = new Image();
+            img.src = image;
+            img.onload = function () {
+                context.drawImage(img, 0, 0, group.realWidth, group.realHeight);
+            };
+            context.drawImage(img, 0, 0, group.realWidth, group.realHeight);
+            var pixel = context.getImageData(x, y, 1, 1);
+            var data = pixel.data;
+            if (data[0] != 0 || data[1] != 0 || data[2] != 0 || data[3] != 0) {
+                return true;
+            }
+
+            return false;
+        },
+
+
+        applyDragCanvas: function (scale, destroy) {
+            var currentGroupActive = $$('.swiper-pagination-bullet-active')[0].getAttribute('group');
+            var currentDesign = this.getCurrentGroupActive();
+            var widthOrigin = currentDesign.realWidth;
+            var heightOrigin = currentDesign.realHeight;
+
+            var currentWidth = widthOrigin * scale;
+            var currentHeight = heightOrigin * scale;
+            jQuery('#bg-' + currentGroupActive).css({
+                width: currentWidth + 'px',
+                height: currentHeight + 'px',
+                top: (currentHeight - heightOrigin) + 'px',
+                left: (currentWidth - widthOrigin) + 'px',
+            });
+            jQuery('#bg-' + currentGroupActive + ' image')
+                .attr('width',currentWidth)
+                .attr('height',currentHeight);
+
+            jQuery('#draggable-' + currentGroupActive).css({
+                width: (currentWidth * 2 - widthOrigin ) + 'px',
+                height: (currentHeight * 2 - heightOrigin) + 'px',
+                top: '-' + (currentHeight - heightOrigin) + 'px',
+                left: '-' + (currentWidth - widthOrigin) + 'px',
+
+            });
+            if (scale > 1) {
+                jQuery('#draggable-' + currentGroupActive).css({
+                    position: 'absolute'
+                });
+                jQuery('#bg-' + currentGroupActive).draggabilly({
+                    containment: true
+                });
+            }
+            if (destroy) {
+                jQuery('#bg-' + currentGroupActive).draggabilly('destroy');
+                jQuery('#draggable-' + currentGroupActive).css({
+                    position: 'static'
+                });
+            }
+
+        },
+
+        getCurrentGroupActive: function () {
+            var currentGroupActive = $$('.swiper-pagination-bullet-active')[0].getAttribute('group');
+            for (var i = 0; i < this.bgs.length; i++) {
+                if (this.bgs[i].id == currentGroupActive) {
+                    return this.bgs[i];
+                }
+            }
+        },
+        resetDefault: function () {
+            jQuery('.qs-choose-wrapper').find('span.active').removeClass('active');
+            jQuery('#measurement').attr('checked', false);
+            jQuery('.body-size').attr('checked', false);
+            jQuery('#bodyscan').attr('checked', false);
+            jQuery('.qs-option-size-detail').html('');
+            //reset color
+            jQuery('.span-color-giving-text').removeClass('active')
+                .find('span.active').removeClass('active');
+            jQuery('.qs-price-color').html('');
+            jQuery('.qs-label-color').html('');
+            jQuery('.color-for-giving-text').attr('checked', false);
+
+            $$('.option_image_design').each(function (elm) {
+                if (elm.getAttribute('is_default')) {
+                    elm.checked = true;
+                    jQuery(elm).next('span').addClass('active');
+                    var onclicks = elm.getAttribute('onclick').split('updateTabInfo');
+                    eval('updateTabInfo' + onclicks[1]);
+                }
+            });
+
+            jQuery('.qs-option-text').each(function () {
+                jQuery(this).val('');
+                eval(jQuery(this).attr('onchange'));
+            });
+            this.applyDesign();
+        },
+        applyInspireMe: function (inspiremeId){
+            for(var i in inspireMes){
+                if(inspireMes[i].id==inspiremeId){
+                    jQuery('.qs-choose-wrapper').find('span.active').removeClass('active');
+                    jQuery('.qs-inspire-wrapper').toggleClass('inspire-show');
+                    jQuery('#qs-ds-' + inspireMes[i].group_id).trigger('click');
+                    var options = inspireMes[i].options;
+                    for(var k in options){
+                        var option = $('options_' + k + '_' + options[k]);
+                        option.next('span').addClassName('active');
+                        option.checked = true;
+                        var onclicks = option.getAttribute('onclick').split('updateTabInfo');
+                        eval('updateTabInfo' + onclicks[1]);
+                    }
+                    this.buildDesign();
+                    break;
+                }
+            }
+        },
+        applyShareData: function (){
+            var currentGroupActive = $$('.swiper-pagination-bullet-active')[0].getAttribute('group');
+            jQuery('.qs-choose-wrapper').find('span.active').removeClass('active');
+
+            jQuery('#qs-ds-' + currentGroupActive).trigger('click');
+            for(var k in shareData){
+                var option = $('options_' + k + '_' + shareData[k]);
+                option.next('span').addClassName('active');
+                option.checked = true;
+                var onclicks = option.getAttribute('onclick').split('updateTabInfo');
+                eval('updateTabInfo' + onclicks[1]);
+            }
+            this.buildDesign();
+
+        },
+
+        applyWishlist: function (wishlistId){
+
+            for(var i in wishlists){
+                if(wishlists[i].id==wishlistId){
+                    jQuery('.qs-inspire-wrapper').toggleClass('inspire-show');
+                    jQuery('.qs-choose-wrapper').find('span.active').removeClass('active');
+                    var options = wishlists[i].datas;
+
+                    for(var k=0; k<options.length; k++){
+                        if(options[k].type=='field'){
+                            $('options_' + options[k].optionId + '_text').value = options[k].value;
+                        }
+                        //for option is radio
+                        if(in_array(options[k].type, ['image','radio'])){
+                            var option = $('options_' + options[k].optionId + '_' + options[k].value);
+                            if(jQuery(option).parent().find('span').length){
+                                option.next('span').addClassName('active');
+                            }
+                            var onclicks = option.getAttribute('onclick').split('updateTabInfo');
+                            eval('updateTabInfo' + onclicks[1]);
+                            option.checked = true;
+                        }
+
+                    }
+                    this.buildDesign();
+                    break;
+                }
+            }
+        }
+    };
+
+    var design = new DesignProduct(opConfigDesign, opGroupDesign, opTextDesign);
+    <?php if($shareImage = $this->helper('productdesign')->getShareImage($product, Mage::app()->getRequest()->getParam('share'))):?>
+    var shareData = <?php echo $shareImage->getProductOptions()?>;
+    <?php endif;?>
+    document.observe("dom:loaded", function () {
+        design.buildDesign();
+        var scriptRunOnStart = '';
+        $$('.option_image_design').each(function (elm) {
+            if (elm.getAttribute('is_default')) {
+                scriptRunOnStart += elm.getAttribute('run-on-start');
+            }
+        });
+        if(scriptRunOnStart!=''){
+            eval(scriptRunOnStart);
+            jQuery('.label-active').removeClass('label-active');
+        }
+        jQuery('#goToBoxLogin, #goToMeasure').fancybox();
+
+        <?php if($wishlistId = Mage::app()->getRequest()->getParam('wishlist')):?>
+            design.applyWishlist(<?php echo $wishlistId ?>);
+            jQuery('.qs-inspire-wrapper').toggleClass('inspire-show');
+        <?php endif;?>
+
+        <?php if($shareImage = $this->helper('productdesign')->getShareImage($product, Mage::app()->getRequest()->getParam('share'))):?>
+        design.applyShareData();
+        <?php endif;?>
+    });
+
+    var swiper = new Swiper('.swiper-container', {
+        pagination: '.swiper-pagination',
+        paginationClickable: true,
+        prevButton: '.swiper-button-prev',
+        nextButton: '.swiper-button-next',
+	paginationType:'bullets',
+        paginationBulletRender: function (index, className) {
+            return '<span group="' + opGroupDesign[index].id + '" id="qs-ds-' + opGroupDesign[index].id + '" class="' + className + '"><img src="' + opGroupDesign[index].thumbnail + '" height="65"/></span>';
+        },
+        onSlideNextStart: function (swiper) {
+            design.buildDesign();
+        },
+        onSlidePrevStart: function (swiper) {
+            design.buildDesign();
+        }
+    });
+
+    function in_array(needle, haystack) {
+        for (var key = 0; key < haystack.length; key++) {
+            if (needle == haystack[key]) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    function updateTabInfo(optionId, type, priceId, title){
+        var price = jQuery('#' + priceId).html();
+        jQuery('#info-' + type + '-' + optionId).show().html(title);
+
+        jQuery('#price-' + type + '-' + optionId).html(price);
+
+        jQuery('#option-' + optionId + '-label' ).addClass('label-active').html(title);
+
+        jQuery('#option-' + optionId + '-price').html(price);
+        if(price!=''){
+            jQuery('#price-' + type + '-' + optionId).show();
+        } else {
+            jQuery('#price-' + type + '-' + optionId).hide();
+        }
+
+        if(type=='color'){
+            jQuery('#info-pattern-' + optionId).hide().html('');
+            jQuery('#price-pattern-' + optionId).hide().html('');
+        }else{
+            jQuery('#info-color-' + optionId).hide().html('');
+            jQuery('#price-color-' + optionId).hide().html('');
+        }
+    }
+
+    function updateOptionActive(el){
+        var optionId = el.getAttribute('optionid');
+        var input = document.getElementById(el.getAttribute('for'));
+
+        if(input.checked){
+            console.log(jQuery('input[optionselected="'+optionId+'"]').val());
+            jQuery(jQuery('input[optionselected="'+optionId+'"]')).trigger('click');
+            setTimeout(function () {
+                jQuery(el).removeClass('active');
+                jQuery('span[optionselected="'+optionId+'"]').addClass('active');
+            },100);
+
+            design.buildDesign();
+        }
+        console.log(optionId);
+    }
+
+    function applyGivingName(tag, optionId) {
+        var text = tag.value;
+        jQuery('#giving-name-text-' + optionId).html('<font>' + text + '</font>');
+        jQuery('#giving-name-price-' + optionId).show();
+        jQuery('#option-' + optionId + '-label' ).html(text);
+        var price = jQuery('#giving-name-price-' + optionId).html();
+        jQuery('#option-' + optionId + '-price').html(price).show();
+        if(text==''){
+            jQuery('#giving-name-price-' + optionId).hide();
+            jQuery('#option-' + optionId + '-price').hide()
+        }
+    }
+
+    <?php $customerInfo = $this->helper('productdesign')->getCustomerMeasureValues(); ?>
+    var isLogged = <?php echo $customerInfo['isLogged']?>;
+    var hasMeasure = <?php echo $customerInfo['hasMeasure']?>;
+    var hasBodyScan = <?php echo $customerInfo['hasBodyScan']?>;
+
+    function getCustomerMeasure(tag, parentId){
+        jQuery('.qs-validate-size').val(0);
+        jQuery('#bnt-login').attr('onclick', 'return dataFormLogin.submit(\'measure\');');
+        jQuery('#bnt-register').attr('onclick', 'return dataFormRegister.submit(\'measure\');');
+
+        jQuery('#size' + parentId ).find('.body-size').attr('checked', false);
+        if(isLogged==0){
+            tag.checked = false;
+            jQuery('#goToBoxLogin').trigger('click');
+        }
+        if(isLogged==1 && hasMeasure==0){
+            tag.checked = false;
+            jQuery('#goToMeasure').trigger('click');
+        }
+        if(isLogged==1 && hasMeasure==1){
+            jQuery('.qs-option-size-detail').html('Use my measurement');
+            jQuery('.qs-validate-size').val(1);
+        }
+        jQuery('#qs-notice-bodyscan').hide();
+    }
+    function getCustomerBodyscan(tag, parentId){
+        jQuery('.qs-validate-size').val(0);
+        jQuery('#bnt-login').attr('onclick', 'return dataFormLogin.submit(\'bodyscan\');');
+        jQuery('#bnt-register').attr('onclick', 'return dataFormRegister.submit(\'bodyscan\');');
+        if(hasBodyScan==1){
+            jQuery('#size' + parentId ).find('.body-size').attr('checked', false);
+        }
+
+        if(isLogged==0){
+            tag.checked = false;
+            jQuery('#goToBoxLogin').trigger('click');
+        }
+        if(isLogged==1 && hasBodyScan==0){
+            tag.checked = false;
+            jQuery('#qs-notice-bodyscan').show();
+        }
+        if(hasBodyScan==1){
+            jQuery('.qs-validate-size').val(1);
+            jQuery('#qs-notice-bodyscan').hide();
+            jQuery('.qs-option-size-detail').html('Use my Body scan file');
+        }
+    }
+
+    function uncheckMeasurement() {
+        jQuery('input[name=measurement]').attr('checked', false);
+        jQuery('.qs-validate-size').val(1);
+    }
+
+    function goToRegisterForm() {
+        jQuery('.qs-create-page-warpper').show();
+        jQuery('.qs-login-page-warpper').hide();
+        return false;
+    }
+    function goToLoginForm() {
+        jQuery('.qs-create-page-warpper').hide();
+        jQuery('.qs-login-page-warpper').show();
+        return false;
+    }
+
+
+</script>
+
+<input type="hidden" name="design_image" id="design_image"/>

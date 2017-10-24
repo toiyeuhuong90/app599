@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <adminhtml_schedulebodyscan_index>
+        <reference name="content">
+            <block type="qsoft_customer/adminhtml_schedulebodyscan" name="schedulefitting"/>
+        </reference>
+    </adminhtml_schedulebodyscan_index>
+
+
+</layout>

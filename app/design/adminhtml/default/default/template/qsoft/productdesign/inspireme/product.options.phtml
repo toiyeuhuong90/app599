@@ -1,0 +1,68 @@
+<?php
+$product = $this->getProduct();
+$inspireme = $this->getInspireme();
+$options = $this->getOptions();
+$colorGroup = explode(',', Mage::getStoreConfig('productdesign/group_type/color'));
+$groupsDesign = $this->helper('productdesign')->getProductGroupDesign($product);
+
+$frontendGroupId = $this->getfrontendGroupId();
+?>
+
+<div class="hor-scroll">
+    <table cellspacing="0" class="form-list">
+        <tr>
+            <td>
+                <table cellspacing="0" class="form-list">
+                    <tbody>
+                    <?php foreach ($options as $option): ?>
+                        <?php $hasSelected = false; ?>
+                        <?php if (in_array($option->getFrontendGroupId(), $colorGroup)): ?>
+                            <tr>
+                                <td class="label"><label><?php echo $option->getTitle() ?></label></td>
+                                <td class="value">
+                                    <select class=" option_image_design select"
+                                            name="options[<?php echo $option->getId() ?>]" onchange="design.buildDesign();"
+                                            id="<?php echo $option->getFrontendGroupId(); ?>">
+                                        <option value="">- Please select one -</option>
+                                        <?php foreach ($option->getValues() as $_value): ?>
+                                            <?php
+
+                                            if (@$inspireme[$option->getId()] == $_value->getId()) {
+                                                $selected = ' selected ';
+                                                $hasSelected = true;
+                                            } elseif ($hasSelected == false && $_value->getIsDefault()) {
+                                                $selected = ' selected ';
+                                            } else {
+                                                $selected = '';
+                                            }
+                                            ?>
+                                            <option <?php echo $selected; ?>
+                                                value="<?php echo $_value->getId() ?>"><?php echo $_value->getTitle() ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </td>
+                            </tr>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+
+                    </tbody>
+                </table>
+            </td>
+            <td>
+                <input type="hidden" value="" name="avartar_image" id="avartar_image">
+                <?php foreach ($groupsDesign as $groupDesign): ?>
+                    <div style="width: <?php echo $groupDesign['realWidth'] ?>px;display: inline-block;">
+                        <canvas class="qs-canvas-design" group="<?php echo $groupDesign['id'] ?>"
+                                style="width: <?php echo $groupDesign['realWidth'] ?>px;height: <?php echo $groupDesign['realHeight'] ?>px;"
+                                id="bg-<?php echo $groupDesign['id'] ?>">
+                            <p>No Canvas Support in Browser</p>
+                        </canvas>
+                        <input class="validate-one-required-by-name" <?php if($groupDesign['id']==$frontendGroupId):?> checked <?php endif;?> onclick="design.setImageDesignToCart();" id="group<?php echo $groupDesign['id'] ?>" name="frontend_group_id" type="radio" value="<?php echo $groupDesign['id'] ?>"/>
+                        <label for="group<?php echo $groupDesign['id'] ?>"><?php echo $groupDesign['name'] ?> ( is default? )</label>
+                    </div>
+                <?php endforeach; ?>
+            </td>
+        </tr>
+    </table>
+
+</div>

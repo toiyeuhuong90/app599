@@ -1,0 +1,218 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2006-2016 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+/**
+ * @var Mage_Page_Block_Html_Header $this
+ */
+
+$currentUrl = Mage::helper('core/url')->getCurrentUrl();
+$url = Mage::getSingleton('core/url')->parseUrl($currentUrl);
+$path = $url->getPath();
+$baseurl = Mage::getBaseUrl();
+?>
+
+<script>
+    jQuery(document).ready(function() {
+        var path = '<?php echo $path ?>';
+        var base = '<?php echo $baseurl ?>';
+
+        var arrMenu1 = [];
+        var count = 0;
+
+        jQuery('.megamenu-pc > ul > li > a').each(function() {
+            arrMenu1[count] = [];
+            var m = 0;
+            var parLink = jQuery(this).attr('href').replace(base, '/');
+            arrMenu1[count][0] = parLink;
+
+            jQuery(this).parent().find('a').each(function() {
+                if(jQuery(this).attr('href') != parLink) {
+                    m++;
+                    arrMenu1[count][m] = jQuery(this).attr('href').replace(base, '/');
+                }
+            });
+
+            count++;
+        });
+
+        for(var i = 0; i < arrMenu1.length; i++) {
+            if(jQuery.inArray(path, arrMenu1[i]) != -1) {
+                if(jQuery('a[href="'+path+'"]').length) {
+                    jQuery('a[href="'+path+'"]').addClass('amia-active');
+                } else {
+                    if(jQuery('a[href="<?php echo $currentUrl ?>"]').length) {
+                        jQuery('a[href="<?php echo $currentUrl ?>"]').addClass('amia-active');
+                    }
+
+                    if(jQuery('a[href="'+arrMenu1[i][0]+'"]').length) {
+                        jQuery('a[href="'+arrMenu1[i][0]+'"]').addClass('amia-active');
+                    }
+                }
+
+                break;
+            }
+        }
+    });
+</script>
+
+<?php if(Mage::app()->getFrontController()->getRequest()->getControllerName() != 'product'): ?>
+    <script>
+        jQuery(document).ready(function() {
+            if(jQuery(window).width() > 991) {
+                var tops = jQuery('.qs-header-wrapper').height();
+
+                jQuery(window).scroll(function () {
+                    if(jQuery('.ms-submenu').length) {
+                        jQuery('.ms-submenu').css('top', 'auto');
+                    }
+
+                    if(jQuery(window).width() > 991) {
+                        if (jQuery(document).scrollTop() > (tops - 80)) {
+                            jQuery('.qs-header-wrapper').addClass('fixed');
+                            jQuery('.wrapper-body-container').css('padding-top', jQuery('.qs-header-wrapper').height() + 'px');
+                        } else {
+                            jQuery('.qs-header-wrapper').removeClass('fixed');
+                            jQuery('.wrapper-body-container').removeAttr('style');
+                        }
+                    } else {
+                        jQuery('.qs-header-wrapper').removeClass('fixed');
+                    }
+                });
+            } else {
+                jQuery('.wrapper-body-container').css('padding-top', 0);
+            }
+
+            jQuery(window).resize(function() {
+                var tops = jQuery('.qs-header-wrapper').height();
+
+                jQuery(window).scroll(function () {
+                    if(jQuery('.ms-submenu').length) {
+                        jQuery('.ms-submenu').css('top', 'auto');
+                    }
+
+                    if(jQuery(window).width() > 991) {
+                        if (jQuery(document).scrollTop() > (tops - 80)) {
+                            jQuery('.qs-header-wrapper').addClass('fixed');
+                            jQuery('.wrapper-body-container').css('padding-top', jQuery('.qs-header-wrapper').height() + 'px');
+                        } else {
+                            jQuery('.qs-header-wrapper').removeClass('fixed');
+                            jQuery('.wrapper-body-container').removeAttr('style');
+                        }
+                    } else {
+                        jQuery('.qs-header-wrapper').removeClass('fixed');
+                    }
+                });
+            });
+        });
+    </script>
+<?php else: ?>
+    <script>
+        jQuery(document).ready(function() {
+            if(jQuery(window).width() > 991) {
+                if(jQuery('.ms-submenu').length) {
+                    jQuery('.ms-submenu').css('top', 'auto');
+                }
+
+                jQuery('.qs-header-wrapper').addClass('fixed');
+                jQuery('.wrapper-body-container').css('padding-top', jQuery('.qs-header-wrapper').height() + 'px');
+            } else {
+                jQuery('.wrapper-body-container').css('padding-top', 0);
+                jQuery('.qs-header-wrapper').removeClass('fixed');
+            }
+
+            jQuery(window).resize(function() {
+                if(jQuery('.ms-submenu').length) {
+                    jQuery('.ms-submenu').css('top', 'auto');
+                }
+
+                if(jQuery(window).width() > 991) {
+                    jQuery('.qs-header-wrapper').addClass('fixed');
+                    jQuery('.wrapper-body-container').css('padding-top', '86px');
+                } else {
+                    jQuery('.qs-header-wrapper').removeClass('fixed');
+                }
+            });
+        });
+    </script>
+<?php endif; ?>
+
+<div class="wrapper-mobile-menu hidden-lg hidden-md" style="display: none">
+    <ul class="qs-list-link-mb">
+        <?php if(!Mage::getSingleton('customer/session')->isLoggedIn()): ?>
+            <li class="not-logged customer-link"><a href="<?php echo $this->getUrl('customer/account/login') ?>">Login</a></li>
+            <li class="not-logged customer-link"><a href="<?php echo $this->getUrl('customer/account/create') ?>">Register</a></li>
+        <?php else: ?>
+            <li class="logged customer-link"><a href="<?php echo $this->getUrl('customer/account') ?>">My Account</a></li>
+            <li class="logged customer-link"><a href="<?php echo $this->getUrl('customer/account/logout') ?>">Sign Out</a></li>
+        <?php endif; ?>
+    </ul>
+
+    <div class="mobile-navigation"></div>
+
+    <?php $catalogSearchHelper =  $this->helper('catalogsearch');?>
+    <div class="qs-search-form">
+        <form id="search_mini_form_mb" action="<?php echo $catalogSearchHelper->getResultUrl() ?>" method="get">
+            <input id="search_mb" type="search" name="<?php echo $catalogSearchHelper->getQueryParamName() ?>" value="<?php echo $catalogSearchHelper->getEscapedQueryText() ?>" class="required-entry" maxlength="<?php echo $catalogSearchHelper->getMaxQueryLength();?>" placeholder="<?php echo $this->quoteEscape($this->__('Search by keyword')) ?>" />
+            <button type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+
+            <div id="search_autocomplete_mb" class="search-autocomplete"></div>
+            <script type="text/javascript">
+                //<![CDATA[
+                var searchForm = new Varien.searchForm('search_mini_form_mb', 'search_mb', '');
+                searchForm.initAutocomplete('<?php echo $catalogSearchHelper->getSuggestUrl() ?>', 'search_autocomplete_mb');
+                //]]>
+            </script>
+        </form>
+    </div>
+    <!--        social-->
+    <div class="mobile-social-menu">
+        <?php echo $this->getLayout()->getBlock('social.links')->toHtml() ?>
+    </div>
+</div>
+<?php echo $this->getChildHtml('topSearch') ?>
+<div class="qs-header-bar">
+    <div class="container">
+        <div class="qs-logo">
+            <a class="logo" href="<?php echo $this->getUrl('') ?>">
+                <img class="qs-logo-noscroll" src="<?php echo str_replace('index.php/','', $this->getUrl() . 'media/uploaddir/' . Mage::getStoreConfig('design/header/logo_src')) ?>" alt="<?php echo $this->getLogoAlt() ?>" class="large" />
+                <img class="qs-logo-scroll"  src="<?php echo str_replace('index.php/','', $this->getUrl() . 'media/uploaddir/' . Mage::getStoreConfig('design/header/logo_sticky')) ?>" alt="<?php echo $this->getLogoAlt() ?>" class="small" />
+            </a>
+        </div>
+        <div class="mobile-icon-menu hidden-md hidden-lg">
+            <span class="row-mobile-1"></span>
+            <span class="row-mobile-2"></span>
+            <span class="row-mobile-3"></span>
+        </div>
+        <?php echo $this->getChildHtml('topMenu') ?>
+        <div class="qs-header-social hidden-sm hidden-xs">
+            <?php echo $this->getChildHtml('social.links') ?>
+        </div>
+        <div class="qs-quick-link">
+            <?php echo $this->getChildHtml('headerLinks')?>
+        </div>
+    </div>
+</div>
+
+<?php echo $this->getChildHtml('topContainer'); ?>

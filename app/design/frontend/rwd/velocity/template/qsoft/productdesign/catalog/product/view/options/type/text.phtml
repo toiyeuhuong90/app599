@@ -1,0 +1,45 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2016 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php $_option = $this->getOption(); ?>
+<div class="qs-your-engraving">
+    <div class="row">
+        <div class="col-md-6 qs-box-left">
+            <div class="qs-box-left-content">
+                <div class="qs-desc-16"><?php echo $this->__('And Your Engraving') ?></div>
+                <div class="qs-box-desc">
+                    <span id="giving-name-text-<?php echo $_option->getId()?>" class="qs-label-box"></span>
+                    <span style="display:none;" id="giving-name-price-<?php echo $_option->getId()?>" class="qs-price-box"><?php echo $this->getFormatedPrice() ?></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 qs-box-right">
+            <div class="qs-box-right-content">
+                <textarea onfocus="design.showGroupDesign(<?php echo $_option->getId()?>, '<?php echo $_option->getZoomIn()?>');" maxlength="<?php echo $_option->getMaxCharacters() ?>" id="options_<?php echo $_option->getId() ?>_text" onchange="applyGivingName(this, <?php echo $_option->getId() ?>);opConfig.reloadPrice(); design.buildDesign();" class="<?php echo $_option->getIsRequire() ? ' required-entry' : '' ?> <?php echo $_option->getMaxCharacters() ? ' validate-length maximum-length-'.$_option->getMaxCharacters() : '' ?> product-custom-option qs-option-text" name="options[<?php echo $_option->getId() ?>]" placeholder="no more than <?php echo $_option->getMaxCharacters()?> characters"><?php echo $this->escapeHtml($this->getDefaultValue()) ?></textarea>
+            </div>
+        </div>
+    </div>
+</div>

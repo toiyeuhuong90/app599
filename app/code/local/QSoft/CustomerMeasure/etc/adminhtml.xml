@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<config>
+	<menu>
+		<qsoft_customermeasure translate="title" module="qsoft_customermeasure">
+			<title>QSoft Extensions</title>
+			<sort_order>77</sort_order>
+			<children>
+				<customer_measure translate="title" module="qsoft_customermeasure">
+					<title>Customer Measurement</title>
+					<sort_order>10</sort_order>
+					<children>
+						<measure_type translate="title" module="qsoft_customermeasure">
+							<title>Manage Measurement Type</title>
+							<action>admin_customer_measure/adminhtml_measurement_type</action>
+						</measure_type>
+					</children>
+				</customer_measure>
+			</children>
+		</qsoft_customermeasure>
+	</menu>
+	<acl>
+		<resources>
+			<all>
+				<title>Allow Everything</title>
+			</all>
+			<admin>
+				<children>
+					<system>
+						<children>
+							<config>
+								<children>
+									<customer_measure translate="title" module="qsoft_customermeasure">
+										<title>Customer Measure Settings</title>
+									</customer_measure>
+								</children>
+							</config>
+						</children>
+					</system>
+				</children>
+			</admin>
+		</resources>
+	</acl>
+</config>

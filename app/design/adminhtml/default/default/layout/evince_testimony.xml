@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Evince_Testimony extension
+ * 
+ * NOTICE OF LICENSE
+ * 
+ * This source file is subject to the MIT License
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/mit-license.php
+ * 
+ * @category   	Evince
+ * @package		Evince_Testimony
+ * @copyright  	Copyright (c) 2014
+ * @license		http://opensource.org/licenses/mit-license.php MIT License
+ */
+--> 
+<layout>
+	<!-- Testimonial grid action -->
+	<adminhtml_testimony_testimonial_index>
+		<reference name="menu">
+			<action method="setActive">
+				<menupath>testimony/testimonial</menupath>
+			</action>
+		</reference>
+		<reference name="content">
+			<block type="testimony/adminhtml_testimonial" name="testimonial" />
+		</reference>
+	</adminhtml_testimony_testimonial_index>
+	<adminhtml_testimony_testimonial_grid>
+		<block type="core/text_list" name="root" output="toHtml">
+			<block type="testimony/adminhtml_testimonial_grid" name="testimonial_grid"/>
+		</block>
+	</adminhtml_testimony_testimonial_grid>
+	<!-- Testimonial add/edit action -->
+	<adminhtml_testimony_testimonial_edit>
+		<update handle="editor"/>
+		<reference name="menu">
+			<action method="setActive">
+				<menupath>testimony/testimonial</menupath>
+			</action>
+		</reference>
+		<reference name="content">
+			<block type="testimony/adminhtml_testimonial_edit" name="testimonial_edit"></block>
+		</reference>
+		<reference name="left">
+			<block type="testimony/adminhtml_testimonial_edit_tabs" name="testimonial_tabs"></block>
+		</reference> 
+	</adminhtml_testimony_testimonial_edit>
+</layout>

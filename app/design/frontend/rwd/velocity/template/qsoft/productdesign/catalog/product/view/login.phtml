@@ -1,0 +1,113 @@
+<div class="qs-login-page-warpper mbc-popup login-popup">
+    <div class="popup-container">
+        <div class="head-popup"><?php echo $this->__('Login') ?></div>
+        <div class="content-popup">
+            <form action="#" method="post" id="login-form" class="scaffold-form">
+                <?php echo $this->getBlockHtml('formkey'); ?>
+                <div class="field form-group">
+                    <label class="lb-field">Email</label>
+                    <input name="login[username]" value="<?php echo $this->htmlEscape($this->getUsername()) ?>" type="text" class="form-control required-entry validate-email"/>
+                </div>
+                <div class="field form-group">
+                    <label class="lb-field">Password</label>
+                    <input type="password" name="login[password]" class="input-text required-entry validate-password form-control"/>
+                </div>
+                <div class="forgot-pwd"><span onclick="return goToForgotPwdForm();"><?php echo $this->__('Forgot password') ?></span></div>
+                <div class="bx-btn">
+                    <button class="btn btn-blue btn-full btn-login" id="bnt-login" type="submit" onclick="return dataFormLogin.submit();">Login</button>
+                </div>
+                <div class="social-login">
+                    <div class="lb-social-login"><?php echo $this->__('Or login with') ?></div>
+                    <?php echo $this->getChildHtml('form.additional.info'); ?>
+                </div>
+            </form>
+        </div>
+        <div class="bottom-popup">
+            <span><?php echo $this->__('No account? ') ?></span>
+            <span class="sign-in" onclick="return goToRegisterForm();"><?php echo $this->__('Sign up') ?></span>
+            <span><?php echo $this->__(' for free') ?></span>
+        </div>
+    </div>
+</div>
+
+<div class="qs-forgot-pwd-page-warpper mbc-popup forgot-pwd-popup" style="display: none;">
+    <div class="popup-container">
+        <div class="head-popup"><?php echo $this->__('Forgot Password') ?></div>
+        <div class="content-popup">
+            <div class="note"><?php echo $this->__('Please enter your email address below. We will send you a link to reset your password.') ?></div>
+            <form action="#" method="post" id="login-form" class="scaffold-form">
+                <?php echo $this->getBlockHtml('formkey'); ?>
+                <div class="field form-group">
+                    <label class="lb-field">Email</label>
+                    <input name="login[username]" value="<?php echo $this->htmlEscape($this->getUsername()) ?>" type="text" class="form-control required-entry validate-email"/>
+                </div>
+                <div class="bx-btn bx-2btn">
+                    <button class="btn btn-blue btn-login" id="bnt-login" type="submit" onclick="return dataFormLogin.submit();"><?php echo $this->__('Submit') ?></button>
+                    <a class="btn btn-gray btn-back" onclick="goToLoginForm();" href="javascript:void(0);"><?php echo $this->__('Back') ?></a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="qs-create-page-warpper mbc-popup register-popup" style="display: none;">
+    <div class="popup-container">
+        <div class="head-popup">Create an Account</div>
+        <div class="content-popup">
+            <form action="" method="post" id="form-validate" class="scaffold-form">
+                <?php echo $this->getBlockHtml('formkey'); ?>
+                <div class="qs-name-create">
+                    <div class="field form-group">
+                        <label class="lb-field" for="firstname"><?php echo $this->__('First Name') ?></label>
+                        <input name="firstname" id="firstname" type="text" class="form-control required-entry"/>
+                    </div>
+                    <div class="field form-group">
+                        <label class="lb-field" for="lastname"><?php echo $this->__('Last Name') ?></label>
+                        <input type="text" id="lastname" name="lastname" class="form-control required-entry"/>
+                    </div>
+                </div>
+                <div class="qs-radio-group form-group">
+                    <div class="field radio-field">
+                        <label class="lb-field"><?php echo $this->__('Select a Gender') ?></label><br/>
+                        <input id="gender1" class="validate-one-required-by-name" type="radio" value="1" name="gender">
+                        <label for="gender1" class="radio-inline label-nomal">Male</label>
+                        <input id="gender2" class="validate-one-required-by-name" type="radio" value="2" name="gender">
+                        <label for="gender2" class="radio-inline label-nomal">Female</label>
+                    </div>
+                </div>
+                <div class="qs-pass-create">
+                    <div class="field form-group">
+                        <label class="lb-field" for="password"><?php echo $this->__('Password') ?></label>
+                        <input type="password" name="password" id="password" class="form-control required-entry validate-password"/>
+                    </div>
+                    <div class="field form-group">
+                        <label class="lb-field"><?php echo $this->__('Confirm Password') ?></label>
+                        <input type="password" name="confirmation" title="<?php echo $this->__('Confirm Password') ?>" id="confirmation" class="required-entry validate-cpassword form-control"/>
+                    </div>
+                </div>
+                <div class="qs-email">
+                    <div class="field form-group">
+                        <label class="lb-field"><?php echo $this->__('Email') ?></label>
+                        <input type="text" name="email" id="email_address" value="" class="form-control validate-email required-entry"/>
+                    </div>
+                </div>
+                <div class="qs-end">
+                    <div class="checkbox">
+                        <label class="label-nomal">
+                            <input type="checkbox" value="1" name="is_subscribed"><?php echo $this->__('Sign up for Newsletter') ?>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="bx-btn bx-2btn">
+                    <button class="btn btn-blue btn-register" id="bnt-register" type="submit" onclick="return dataFormRegister.submit();"><?php echo $this->__('Submit') ?></button>
+                    <a class="btn btn-gray btn-back" onclick="goToLoginForm();" href="javascript:void(0);"><?php echo $this->__('Back') ?></a>
+                </div>
+                <div class="social-login">
+                    <?php echo $this->getChildHtml('form.additional.info'); ?>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

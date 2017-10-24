@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Evince_Testimony extension
+ * 
+ * NOTICE OF LICENSE
+ * 
+ * This source file is subject to the MIT License
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/mit-license.php
+ * 
+ * @category   	Evince
+ * @package		Evince_Testimony
+ * @copyright  	Copyright (c) 2014
+ * @license		http://opensource.org/licenses/mit-license.php MIT License
+ */
+-->
+<config>
+	<acl>
+		<resources>
+			<admin>
+				<children>
+					<system>
+						<children>
+							<config>
+								<children>
+									<testimony translate="title" module="testimony">
+										<title>Testimony</title>
+									</testimony>
+								</children>
+							</config>
+						</children>
+					</system>
+					<qsoft_customermeasure>
+						<children>
+							<testimonial translate="title" module="testimony">
+								<title>Testimonial</title>
+							</testimonial>
+						</children>
+					</qsoft_customermeasure>
+				</children>
+			</admin>
+		</resources>
+	</acl>
+	<menu>
+		<qsoft_customermeasure>
+		 	<children>
+				<testimonial translate="title" module="testimony">
+					<title>Testimonial</title>
+					<action>adminhtml/testimony_testimonial</action>
+					<sort_order>0</sort_order>
+				</testimonial>
+			</children>
+		</qsoft_customermeasure>
+	</menu>
+</config>

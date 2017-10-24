@@ -1,0 +1,164 @@
+<script type="text/javascript">
+    var DesignProduct = Class.create();
+    DesignProduct.prototype = {
+        initialize: function (config, background) {
+            this.config = config;
+            this.bgs = background;
+        },
+        buildDesign: function () {
+
+            var cs = this;
+            for(var i=0; i< this.bgs.length; i++){
+                (function (i) {
+                    cs.applyDesign(cs.bgs[i]);
+                })(i);
+            }
+
+            setTimeout(function () {
+                cs.setImageDesignToCart();
+            }, 1500);
+
+        },
+        getOptionSelected: function () {
+            var options = [];
+            var d = 0;
+            $$('.option_image_design').each(function (elm) {
+
+                    options[d] = elm.value;
+                    d++;
+
+            });
+            return options;
+        },
+        applyDesign: function (bg) {
+            var options = this.getOptionSelected();
+            var w = bg.width;
+            var h = bg.height;
+            var bgImage = bg.image_resized;
+            var canvas = document.getElementById('bg-' + bg.id);
+            canvas.width = w;
+            canvas.height = h;
+            var context = canvas.getContext("2d");
+            var imgs = {bg: bgImage};
+            var k = 1;
+            for (var j = 0; j < options.length; j++) {
+                if (this.config[options[j]]['image_' + bg.key] != '') {
+                    imgs['bg' + k] = this.config[options[j]]['image_' + bg.key];
+                    k++;
+                }
+            }
+            var cs = this;
+            this.loadImages(imgs, function (images) {
+                for (var m in images) {
+                    if(images[m].src==cs.imageHover){
+                        context.globalAlpha = 0.7;
+                    }
+                    context.drawImage(images[m], 0, 0, w, h);
+                    context.globalAlpha = 1;
+
+                }
+            });
+
+        },
+        loadImages: function (sources, callback) {
+            var images = {};
+            var loadedImages = 0;
+            var numImages = 0;
+            // get num of sources
+            for (var src in sources) {
+                numImages++;
+            }
+            for (var src in sources) {
+                images[src] = new Image();
+                images[src].onload = function () {
+                    if (++loadedImages >= numImages) {
+                        callback(images);
+                    }
+                };
+                images[src].src = sources[src];
+            }
+        },
+        getOptionColor: function (optionId) {
+            var color = '000';
+            for (var i = 0; i < this.colorGroup.length; i++) {
+                var options = document.getElementsByName('options['+this.colorGroup[i]+']');
+                for(var j=0; j<options.length; j++){
+                    if(options[j].checked){
+                        return options[j].getAttribute('color_code');
+                    }
+                }
+            }
+            return color;
+        },
+
+        groupHasTextDesign: function (groupId) {
+            for (var i in this.textDesign) {
+                if (this.textDesign[i].groupId == groupId) {
+                    return this.textDesign[i];
+                }
+            }
+            return false;
+        },
+
+        setImageDesignToCart: function () {
+            var group = false;
+            var groups = document.getElementsByName('frontend_group_id');
+            for(var i=0; i<groups.length; i++){
+                if(groups[i].checked){
+                    group = groups[i].value;
+                    break;
+                }
+            }
+            
+            if(group){
+                var canvas = document.getElementById('bg-' + group);
+                var pngUrl = canvas.toDataURL();
+                $('avartar_image').value = pngUrl;
+
+            }            
+        },
+        showGroupDesign: function (id, groupIds) {
+            $$('.qs-option-design').each(function (elm) {
+                $(elm).hide();
+                $('qs-option-' + id).show();
+
+            });
+            var currentGroupActive = $$('.swiper-pagination-bullet-active')[0].getAttribute('group');
+            var groups = groupIds.split(',');
+            if (!in_array(currentGroupActive, groups)) {
+                $('qs-ds-' + groups[0]).click();
+            }
+
+        },
+
+        getCurrentGroupActive: function () {
+            var currentGroupActive = $$('.swiper-pagination-bullet-active')[0].getAttribute('group');
+            for (var i = 0; i < this.bgs.length; i++) {
+                if (this.bgs[i].id == currentGroupActive) {
+                    return this.bgs[i];
+                }
+            }
+        }
+
+    };
+
+    function in_array(needle, haystack) {
+        for (var key = 0; key < haystack.length; key++) {
+            if (needle == haystack[key]) {
+                return true;
+            }
+        }
+        return false;
+    }
+    var design = null;
+    var opConfigDesign = null;
+    var opGroupDesign = null;
+    
+    function ajaxCallBack(jsText){
+        eval(jsText);
+        design = new DesignProduct(opConfigDesign, opGroupDesign);
+        design.buildDesign();
+
+    }
+    
+</script>

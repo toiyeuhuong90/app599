@@ -1,0 +1,524 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2006-2016 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+
+/**
+ * Product view template
+ *
+ * @see Mage_Catalog_Block_Product_View
+ * @see Mage_Review_Block_Product_View
+ */
+?>
+<?php
+$product = $this->getProduct();
+$groupsDesign = $this->helper('productdesign')->getProductGroupDesign($product);
+$attrs = $product->getOptions();
+?>
+<?php $_helper = $this->helper('catalog/output'); ?>
+<?php $_product = $this->getProduct(); ?>
+<script type="text/javascript">
+    var optionsPrice = new Product.OptionsPrice(<?php echo $this->getJsonConfig() ?>);
+</script>
+
+
+<div class="product-view qs-page-container">
+    <div id="messages_product_view"><?php echo $this->getMessagesBlock()->toHtml() ?></div>
+    <div class="qs-custom-product">
+        <!-- Inspire Me -->
+        <?php echo $this->getChildHtml('product.inspireme'); ?>
+        <div class="wishlist-popup">
+            <div class="wlp-content">
+                <div class="close-wlp"><span><?php echo $this->__('Back') ?></span></div>
+                <h2 class="top-title"><?php echo $this->__('INSPIRE ME') ?></h2>
+                <div class="wlp-wlider-wrapper">
+                    <div class="wlp-slider swiper-container" id="wlp-slider">
+                        <div class="swiper-wrapper">
+                            <?php for($i=1;$i<=10;$i++): ?>
+                                <div class="swiper-slide">
+                                    <div class="bx-img">
+                                        <img src="<?php echo $this->getSkinUrl('images/inspireme_product.jpg') ?>" alt="wishlist-product" />
+                                    </div>
+                                </div>
+                            <?php endfor; ?>
+                        </div>
+                        <!-- Add Arrows -->
+                        <div class="swiper-next"></div>
+                        <div class="swiper-prev"></div>
+                    </div>
+                </div>
+                <div class="wlp-bottom">
+                    <h2 class="title-wishlist"><?php echo $this->__('MY WISHLIST') ?></h2>
+                    <div class="bx-link">
+                        <a href="" class="link"><?php echo $this->__('Please login first.') ?></a>
+                    </div>
+                    <div class="bx-btn">
+                        <button class="btn btn-add-to-wishlist">
+                            <span>
+                                <span><?php echo $this->__('ADD CURENT DESIGN TO WISHLIST') ?></span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Insprire Me -->
+        <form action="<?php echo $this->getSubmitUrl($_product, array('_secure' => $this->_isSecure())) ?>"
+              method="post"
+              id="product_addtocart_form"<?php if ($_product->getOptions()): ?> enctype="multipart/form-data"<?php endif; ?>>
+            <?php echo $this->getBlockHtml('formkey') ?>
+            <input type="hidden" name="product" value="<?php echo $_product->getId() ?>"/>
+            <input type="hidden" name="related_product" id="related-products-field" value=""/>
+
+            <div class="qs-design-custom">
+                <div class="name-btn-3d">
+                    <div class="product-name">
+                        <?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?>
+                    </div>
+                    <?php if($this->helper('productdesign')->hasVideos($product)): ?>
+                        <div class="btn-3d"><span class="btn-view-360"><img alt="<?php echo $this->__('View 360') ?>" src="<?php echo $this->getSkinUrl('qsoft/productdesign/images/button-360.png')?>"/></span></div>
+                    <?php endif; ?>
+                </div>
+                <!-- Edit Here -->
+                <div class="qs-desgin-wrapper-custom">
+                    <?php echo $this->getChildHtml('preview.design') ?>
+                </div>
+            </div>
+            <?php if ($_product->isSaleable() && $this->hasOptions()): ?>
+                <?php echo $this->getChildChildHtml('container1', '', true, true) ?>
+            <?php endif; ?>
+
+        </form>
+
+        <script type="text/javascript">
+            //<![CDATA[
+            var productAddToCartForm = new VarienForm('product_addtocart_form');
+            productAddToCartForm.submit = function (button, url) {
+                if (this.validator.validate()) {
+                    zoomControl.setImageCart();
+                    var form = this.form;
+                    var oldUrl = form.action;
+
+                    if (url) {
+                        form.action = url;
+                    }
+                    var e = null;
+                    try {
+                        var $this = this;
+                        setTimeout(function () {
+                            $this.form.submit();
+                        },100);
+
+                    } catch (e) {
+                    }
+                    this.form.action = oldUrl;
+                    if (e) {
+                        throw e;
+                    }
+
+                    if (button && button != 'undefined') {
+                        button.disabled = true;
+                    }
+                }
+            }.bind(productAddToCartForm);
+
+            productAddToCartForm.submitLight = function (button, url) {
+                if (this.validator) {
+                    var nv = Validation.methods;
+                    delete Validation.methods['required-entry'];
+                    delete Validation.methods['validate-one-required'];
+                    delete Validation.methods['validate-one-required-by-name'];
+                    // Remove custom datetime validators
+                    for (var methodName in Validation.methods) {
+                        if (methodName.match(/^validate-datetime-.*/i)) {
+                            delete Validation.methods[methodName];
+                        }
+                    }
+
+                    if (this.validator.validate()) {
+                        if (url) {
+                            this.form.action = url;
+                        }
+                        this.form.submit();
+                    }
+                    Object.extend(Validation.methods, nv);
+                }
+            }.bind(productAddToCartForm);
+            Validation.add('qs-validate-size','Please choose one size first.',function(v){
+                if(v == '1')
+                {
+                    return true;
+                }else{
+                    alert('Please choose one size first.');
+                }
+                return false;
+            });
+            //]]>
+        </script>
+
+    </div>
+    <?php if ($detailedInfoGroup = $this->getChildGroup('detailed_info', 'getChildHtml')): ?>
+        <!-- Details Product -->
+        <div class="qs-details-product">
+            <div class="container">
+                <div class="qs-title-details-product">
+                    <div class="qs-desc-50">Product Specifications</div>
+                </div>
+                <div class="qs-details-product-content">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" role="tablist">
+                        <?php $i = 0;
+                        foreach ($detailedInfoGroup as $alias => $html): ?>
+                            <?php
+                            $title = $this->escapeHtml($this->getChildData($alias, 'title'));
+                            $id = Mage::getSingleton('catalog/product_url')->formatUrlKey($title);
+                            ?>
+                            <li role="presentation" class="<?php echo $i == 0 ? 'active' : '' ?>"><a
+                                    href="#<?php echo $id ?>" aria-controls="<?php echo $id ?>" role="tab"
+                                    data-toggle="tab"><?php echo $title ?></a></li>
+                            <?php $i++; endforeach; ?>
+
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <?php $i = 0;
+                        foreach ($detailedInfoGroup as $alias => $html): ?>
+                            <?php
+                            $title = $this->escapeHtml($this->getChildData($alias, 'title'));
+                            $id = Mage::getSingleton('catalog/product_url')->formatUrlKey($title);
+                            ?>
+                            <div role="tabpanel" class="tab-pane <?php echo $i == 0 ? 'active' : '' ?>"
+                                 id="<?php echo $id ?>">
+                                <div class="qs-tab-pane-content">
+                                    <?php echo $html ?>
+                                </div>
+                            </div>
+                            <?php $i++; endforeach; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
+
+    <?php echo $this->getChildHtml('upsell_products') ?>
+    <?php
+    $customerInfo = $this->helper('productdesign')->getCustomerMeasureValues();
+    ?>
+    <div style="display: none">
+        <?php if (!Mage::getSingleton('customer/session')->isLoggedIn()): ?>
+
+            <a href="#loginBox" id="goToBoxLogin">login</a>
+            <a href="#measureBox" id="goToMeasure">measure</a>
+            <div id="loginBox">
+                <?php echo $this->getChildHtml('customer.login.form') ?>
+            </div>
+            <div id="measureBox" style="width: 600px; padding: 20px;">
+
+            </div>
+
+        <?php else: ?>
+            <a href="#measureBox" id="goToMeasure">measure</a>
+            <?php echo $this->getChildHtml('customer.measure.form') ?>
+        <?php endif; ?>
+    </div>
+</div>
+
+<?php $product_360 = Mage::getResourceModel('catalog/product')->getAttributeRawValue($_product->getId(), 'video_360', Mage::app()->getStore()->getStoreId()) ?>
+
+<?php if($this->helper('productdesign')->hasVideos($_product)): ?>
+<div class="product-360-container">
+    <div class="product-360-table">
+        <div class="product-360-cell">
+            <?php if($product_360): ?>
+            <div id="video-main" class="product-360-main">
+                <iframe width="100%" height="100%" src="https://sketchfab.com/models/<?php echo $product_360 ?>/embed" frameborder="0" allowvr allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" onmousewheel=""></iframe>
+                <div class="product-360-close"><i class="fa fa-times" aria-hidden="true"></i></div>
+            </div>
+            <?php endif;?>
+            <?php $options = $_product->getOptions();?>
+            <?php foreach ($options as $option):?>
+                <?php foreach ($option->getValues() as $value):?>
+                    <?php if($value->getVideo()):?>
+                    <div id="video-<?php echo $value->getId()?>" class="product-360-main" style="display: none">
+                        <iframe width="100%" height="100%" src="<?php echo $this->helper('productdesign')->getVideoUrl($value->getVideo()) ?>" frameborder="0" allowvr allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" onmousewheel=""></iframe>
+                        <div class="product-360-close"><i class="fa fa-times" aria-hidden="true"></i></div>
+                    </div>
+                    <?php endif;?>
+                <?php endforeach;?>
+            <?php endforeach;?>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        jQuery(document).on('click', '.btn-view-360', function() {
+            jQuery('body').addClass('show-popup');
+            var currentOptionActiveId = jQuery('.qs-choose-wrapper').find('span.active').attr('valueid');
+            if(currentOptionActiveId){
+                jQuery('.product-360-main').hide();
+                jQuery('#video-' + currentOptionActiveId).show();
+                jQuery('.product-360-container').fadeIn();
+                return false;
+            }
+            if(jQuery("#video-main")){
+                jQuery('.product-360-main').hide();
+                jQuery('#video-main').show();
+                jQuery('.product-360-container').fadeIn();
+                return false;
+            }
+        });
+
+//jQuery('.btn-view-360').trigger('click');
+
+        jQuery(document).on('click', '.product-360-container', function(event) {
+            if(jQuery(event.target).hasClass('product-360-cell')) {
+                jQuery('.product-360-container').fadeOut();
+                jQuery('body').removeClass('show-popup');
+            }
+        });
+
+        jQuery(document).on('click', '.product-360-close', function(event) {
+            jQuery('.product-360-container').fadeOut();
+            jQuery('body').removeClass('show-popup');
+        });
+		
+		jQuery(window).load(function() {
+			cloneVideo360();
+		});
+		
+		jQuery(window).resize(function() {
+			cloneVideo360();
+		});
+
+    });
+	
+	function cloneVideo360() {
+		if(jQuery(window).width() <= 991) {
+			var content = jQuery('.product-360-container').clone();
+			jQuery('.product-360-container').remove();
+			jQuery('body').append(content);
+		}
+	}
+</script>
+<?php endif; ?>
+
+<script type="text/javascript">
+    //<![CDATA[
+    var wishlistSubmitUrl = '<?php echo $this->helper('wishlist')->getAddUrl($_product); ?>';
+    var dataFormLogin = new VarienForm('login-form', true);
+    dataFormLogin.submit = function (type) {
+        console.log(type);
+        if (dataFormLogin.validator.validate()) {
+            var f = dataFormLogin.form;
+            jQuery.ajax({
+                url: '<?php echo $this->getUrl('customer/ajax/login')?>',
+                type: 'post',
+                data: f.serialize(),
+                dataType: 'json',
+                success: function (data) {
+                    if (data.status == 1) {
+                        if (data.measure) {
+                            jQuery('#measureBox').html(data.measure);
+                        }
+
+                        switch (type) {
+                            case 'measure' :
+                                if (data.info.hasMeasure == 0) {
+                                    calbackLogin(data);
+                                    jQuery('#goToMeasure').trigger('click');
+                                } else {
+                                    document.getElementById('measurement').checked = true;
+                                    jQuery.fancybox.close();
+                                    calbackLogin(data);
+                                }
+                                break;
+                            case 'wishlist':
+                                calbackLogin(data);
+                                productAddToCartForm.submitLight(this, wishlistSubmitUrl);
+                                break;
+                            case 'bodyscan':
+                                jQuery.fancybox.close();
+                                calbackBodyScan(data);
+                        }
+
+                    } else {
+                        alert('Invalid Email or Password!');
+                    }
+                }
+            });
+        }
+        return false;
+    };
+
+
+    var dataFormRegister = new VarienForm('form-validate', true);
+    dataFormRegister.submit = function (type) {
+        if (dataFormRegister.validator.validate()) {
+            var f = dataFormRegister.form;
+            jQuery.ajax({
+                url: '<?php echo $this->getUrl('customer/ajax/create')?>',
+                type: 'post',
+                data: f.serialize(),
+                dataType: 'json',
+                success: function (data) {
+                    if (data.status == 1) {
+                        jQuery('#measureBox').html(data.measure);
+                        switch (type) {
+                            case 'measure' :
+                                calbackRegister(data);
+                                jQuery('#goToMeasure').trigger('click');
+                                break;
+                            case 'wishlist':
+                                calbackRegister(data);
+                                jQuery.fancybox.close();
+                                alert(data.message);
+                                productAddToCartForm.submitLight(this, wishlistSubmitUrl);
+                                break;
+                            case 'bodyscan':
+                                jQuery.fancybox.close();
+                                calbackBodyScan(data);
+
+                        }
+                    } else {
+                        alert(data.message);
+                    }
+
+                }
+            });
+        }
+
+        return false;
+    };
+    var dataFormMeasure = false;
+    <?php if (Mage::getSingleton('customer/session')->isLoggedIn()): ?>
+    initMeasureForm();
+    <?php endif ?>
+    //]]>
+
+    function calbackLogin(data) {
+        isLogged = 1;
+        hasMeasure = data.info.hasMeasure;
+        if (hasMeasure == 1){
+            jQuery('.qs-validate-size').val(1);
+        }
+        hasBodyScan = data.info.hasBodyScan;
+        initMeasureForm();
+    }
+
+    function calbackBodyScan(data) {
+        isLogged = 1;
+        hasMeasure = data.info.hasMeasure;
+        hasBodyScan = data.info.hasBodyScan;
+        if (isLogged == 1 && hasBodyScan == 0) {
+            jQuery('#qs-notice-bodyscan').show();
+        }else{
+            jQuery('.qs-validate-size').val(1);
+        }
+    }
+
+    function calbackRegister(data) {
+        isLogged = 1;
+        initMeasureForm();
+        jQuery('.qs-validate-size').val(0);
+    }
+
+    function calbackMeasure() {
+        hasMeasure = 1;
+        document.getElementById('measurement').checked = true;
+        jQuery('.qs-validate-size').val(1);
+    }
+
+    function initMeasureForm() {
+        dataFormMeasure = new VarienForm('form-measure', true);
+        dataFormMeasure.submit = function () {
+            if (dataFormMeasure.validator.validate()) {
+                var f = dataFormMeasure.form;
+                jQuery.ajax({
+                    url: '<?php echo $this->getUrl('customermeasure/account/ajaxUpdate')?>',
+                    type: 'post',
+                    data: f.serialize(),
+                    dataType: 'json',
+                    success: function () {
+                        calbackMeasure();
+                        jQuery.fancybox.close();
+                    }
+                });
+            }
+
+            return false;
+        };
+    }
+
+
+    function productToWishlist(_goToWishlistPage) {
+        if (isLogged) {
+            if(_goToWishlistPage=='0'){
+                productAddToCartForm.submitLight(this, wishlistSubmitUrl);
+                return false;
+            } else {
+                window.location.href = '/wishlist';
+            }
+
+        }
+
+        jQuery('#bnt-login').attr('onclick', 'return dataFormLogin.submit(\'wishlist\');');
+        jQuery('#bnt-register').attr('onclick', 'return dataFormRegister.submit(\'wishlist\');');
+        jQuery('#goToBoxLogin').trigger('click');
+    }
+
+
+    var swiper_wlp = new Swiper('#wlp-slider', {
+        slidesPerView: 4,
+        paginationClickable: true,
+        nextButton: '.swiper-next',
+        prevButton: '.swiper-prev',
+        breakpoints: {
+            // when window width is <= 320px
+            500: {
+                slidesPerView: 1
+            },
+            // when window width is <= 480px
+            600: {
+                slidesPerView: 2
+            },
+            // when window width is <= 640px
+            768: {
+                slidesPerView: 3
+            }
+        }
+    });
+
+    jQuery(document).ready(function(){
+        jQuery('.link-to-wishlist a').click(function(){
+            jQuery('.wishlist-popup').addClass('active');
+            jQuery('body').addClass('show-popup');
+        });
+        jQuery('.wishlist-popup .close-wlp').click(function(){
+            jQuery(this).parents('.wishlist-popup').removeClass('active');
+            jQuery('body').removeClass('show-popup');
+        });
+    });
+
+</script>

@@ -1,0 +1,187 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <default>
+        <reference name="minicart_content">
+            <action method="addItemRender">
+                <type>productdesign</type>
+                <block>checkout/cart_item_renderer</block>
+                <template>qsoft/productdesign/checkout/cart/minicart/default.phtml</template>
+            </action>
+        </reference>
+    </default>
+    <checkout_onepage_review>
+        <reference name="root">
+            <action method="addItemRender">
+                <type>productdesign</type>
+                <block>checkout/cart_item_renderer</block>
+                <template>qsoft/productdesign/checkout/onepage/review/item.phtml</template>
+            </action>
+        </reference>
+    </checkout_onepage_review>
+    <PRODUCT_TYPE_productdesign translate="label" module="productdesign">
+        <reference name="head">
+            <reference name="head">
+                <action method="addJs" ifconfig="productdesign/general/include_jquery">
+                    <js>qsoft/productdesign/jquery-1.9.1.js</js>
+                </action>
+                <action method="addItem">
+                    <type>skin_js</type>
+                    <name>qsoft/productdesign/draggabilly.pkgd.js</name>
+                </action>
+                <action method="addItem">
+                    <type>skin_js</type>
+                    <name>qsoft/productdesign/swiper/js/swiper.min.js</name>
+                </action>
+
+                <action method="addItem">
+                    <type>skin_css</type>
+                    <name>qsoft/productdesign/swiper/css/swiper.min.css</name>
+                </action>
+                <action method="addItem">
+                    <type>skin_css</type>
+                    <name>qsoft/productdesign/swiper/css/swiper.min.css</name>
+                </action>
+                <action method="addItem">
+                    <type>skin_css</type>
+                    <name>qsoft/productdesign/owl-carousel/assets/owl.carousel.css</name>
+                </action>
+                <action method="addItem">
+                    <type>skin_js</type>
+                    <name>qsoft/productdesign/owl-carousel/owl.carousel.min.js</name>
+                </action>
+                <action method="addItem">
+                    <type>skin_js</type>
+                    <name>qsoft/productdesign/script.js</name>
+                </action>
+                <action method="addItem">
+                    <type>skin_css</type>
+                    <name>fancybox/jquery.fancybox.css</name>
+                </action>
+                <action method="addItem">
+                    <type>skin_js</type>
+                    <name>fancybox/jquery.fancybox.pack.js</name>
+                </action>
+                <action method="addItem">
+                    <type>skin_css</type>
+                    <name>css/rangeslider.css</name>
+                </action>
+                <action method="addItem">
+                    <type>skin_js</type>
+                    <name>js/rangeslider.min.js</name>
+                </action>
+            </reference>
+        </reference>
+        <reference name="root">
+            <action method="setTemplate">
+                <template>page/1column.phtml</template>
+            </action>
+        </reference>
+
+        <reference name="product.description">
+            <action method="setTemplate">
+                <template>qsoft/productdesign/catalog/product/view/description.phtml</template>
+            </action>
+        </reference>
+
+        <reference name="product.info.upsell">
+            <action method="setTemplate">
+                <template>qsoft/productdesign/catalog/product/list/upsell.phtml</template>
+            </action>
+        </reference>
+        <reference name="product.info">
+            <action method="setTemplate">
+                <template>qsoft/productdesign/catalog/product/view.phtml</template>
+            </action>
+            <remove name="product.info.media"/>
+            <remove name="product.attributes"/>
+            <!--<remove name="catalog.product.related"/>-->
+            <remove name="product.reviews"/>
+            <block type="catalog/product_view" template="qsoft/productdesign/catalog/product/view/media.phtml" name="preview.design"/>
+            <block type="catalog/product_view_description" name="product.features" as="features" template="qsoft/productdesign/catalog/product/view/features.phtml">
+                <action method="addToParentGroup">
+                    <group>detailed_info</group>
+                </action>
+                <action method="setTitle" translate="value">
+                    <value>Features</value>
+                </action>
+            </block>
+            <block type="catalog/product_view_description" name="product.fabric" as="fabric" template="qsoft/productdesign/catalog/product/view/fabric.phtml">
+                <action method="addToParentGroup">
+                    <group>detailed_info</group>
+                </action>
+                <action method="setTitle" translate="value">
+                    <value>Fabric</value>
+                </action>
+            </block>
+            <block type="catalog/product_view_description" name="product.sizechart" as="sizechart" template="qsoft/productdesign/catalog/product/view/sizechart.phtml">
+                <action method="addToParentGroup">
+                    <group>detailed_info</group>
+                </action>
+                <action method="setTitle" translate="value">
+                    <value>Size Chart</value>
+                </action>
+            </block>
+            <block type="productdesign/inspireme" name="product.inspireme" template="qsoft/productdesign/catalog/product/view/inspireme.phtml">
+            </block>
+            <block type="core/template" name="customer.login.form" template="qsoft/productdesign/catalog/product/view/login.phtml">
+                <block type="sociallogin/sociallogin" name="form.additional.info" template="magegiant/sociallogin/login.phtml">
+                    <action method="append" ifconfig="customerattributes/general/is_enabled">
+                        <block>customer_form_user_attributes</block>
+                    </action>
+                </block>
+            </block>
+            <block type="qsoft_customermeasure/account" name="customer.measure.form" template="qsoft/productdesign/catalog/product/view/measure.phtml"/>
+        </reference>
+        <reference name="product.info.options.wrapper">
+            <action method="setTemplate">
+                <template>qsoft/productdesign/catalog/product/view/options/wrapper.phtml</template>
+            </action>
+            <block type="catalog/product_view_options" name="product.info.options.design" as="product_options_design" template="qsoft/productdesign/catalog/product/view/options_design.phtml">
+
+            </block>
+        </reference>
+        <reference name="product.info.options">
+            <action method="setTemplate">
+                <template>qsoft/productdesign/catalog/product/view/options.phtml</template>
+            </action>
+            <action method="addOptionRenderer">
+                <type>select</type>
+                <block>catalog/product_view_options_type_select</block>
+                <template>qsoft/productdesign/catalog/product/view/options/type/select.phtml</template>
+            </action>
+            <action method="addOptionRenderer">
+                <type>text</type>
+                <block>catalog/product_view_options_type_text</block>
+                <template>qsoft/productdesign/catalog/product/view/options/type/text.phtml</template>
+            </action>
+            <action method="addOptionRenderer">
+                <type>imagedesign</type>
+                <block>productdesign/catalog_product_view_options_type_designimage</block>
+                <template>qsoft/productdesign/catalog/product/view/options/type/image.phtml</template>
+            </action>
+
+        </reference>
+
+        <reference name="product.info.container1">
+            <action method="unsetChild">
+                <name>product.info.options.wrapper.bottom</name>
+            </action>
+        </reference>
+    </PRODUCT_TYPE_productdesign>
+    <checkout_cart_index>
+        <reference name="checkout.cart">
+            <action method="addItemRender">
+                <type>productdesign</type>
+                <block>checkout/cart_item_renderer</block>
+                <template>qsoft/productdesign/checkout/cart/item/default.phtml</template>
+            </action>
+        </reference>
+    </checkout_cart_index>
+    <wishlist_index_index>
+        <reference name="customer.wishlist.item.image">
+            <action method="setTemplate">
+                <template>qsoft/productdesign/wishlist/item/column/image.phtml</template>
+            </action>
+        </reference>
+    </wishlist_index_index>
+</layout>

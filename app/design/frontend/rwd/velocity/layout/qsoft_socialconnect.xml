@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<layout>
+    <customer_account_login>
+        <reference name="customer_form_login">
+            <block type="cms/block" name="login_banner">
+                <action method="setBlockId">
+                    <block_id>login_banner</block_id>
+                </action>
+            </block>
+            <block type="qsoft_socialconnect/login" name="qsoft_socialconnect_login">
+                <block type="qsoft_socialconnect/google_button" name="qsoft_socialconnect_google_login_button"/>
+                <block type="qsoft_socialconnect/facebook_button" name="qsoft_socialconnect_facebook_login_button"/>
+                <block type="qsoft_socialconnect/twitter_button" name="qsoft_socialconnect_twitter_login_button"/>
+                <block type="qsoft_socialconnect/linkedin_button" name="qsoft_socialconnect_linkedin_login_button"/>
+                <block type="qsoft_socialconnect/vk_button" name="qsoft_socialconnect_vk_login_button"/>
+            </block>
+        </reference>
+    </customer_account_login>
+
+    <customer_account_create>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>qsoft_socialconnect/css/social-connect.css</name>
+            </action>
+        </reference>
+        <reference name="customer_form_register">
+            <block type="cms/block" name="register_banner">
+                <action method="setBlockId">
+                    <block_id>register_banner</block_id>
+                </action>
+            </block>
+            <action method="setTemplate">
+                <template>qsoft/socialconnect/customer/form/register.phtml</template>
+            </action>
+            <block type="qsoft_socialconnect/register" name="qsoft_socialconnect_register">
+                <block type="qsoft_socialconnect/google_button" name="qsoft_socialconnect_register_google_button"/>
+                <block type="qsoft_socialconnect/facebook_button" name="qsoft_socialconnect_register_facebook_button"/>
+                <block type="qsoft_socialconnect/twitter_button" name="qsoft_socialconnect_register_twitter_button"/>
+                <block type="qsoft_socialconnect/linkedin_button" name="qsoft_socialconnect_register_linkedin_button"/>
+                <block type="qsoft_socialconnect/vk_button" name="qsoft_socialconnect_register_vk_button"/>
+            </block>
+        </reference>
+    </customer_account_create>
+
+    <customer_account>
+        <reference name="customer_account_navigation">
+            <action method="addLink" translate="label" module="qsoft_socialconnect"
+                    ifconfig="customer/qsoft_socialconnect_google/enabled">
+                <name>qsoft_socialconnect_google</name>
+                <path>socialconnect/account/google</path>
+                <label>Google Connect</label>
+            </action>
+            <action method="addLink" translate="label" module="qsoft_socialconnect"
+                    ifconfig="customer/qsoft_socialconnect_facebook/enabled">
+                <name>qsoft_socialconnect_facebook</name>
+                <path>socialconnect/account/facebook</path>
+                <label>Facebook Connect</label>
+            </action>
+            <action method="addLink" translate="label" module="qsoft_socialconnect"
+                    ifconfig="customer/qsoft_socialconnect_twitter/enabled">
+                <name>qsoft_socialconnect_twitter</name>
+                <path>socialconnect/account/twitter</path>
+                <label>Twitter Connect</label>
+            </action>
+            <action method="addLink" translate="label" module="qsoft_socialconnect"
+                    ifconfig="customer/qsoft_socialconnect_linkedin/enabled">
+                <name>qsoft_socialconnect_linkedin</name>
+                <path>socialconnect/account/linkedin</path>
+                <label>LinkedIn Connect</label>
+            </action>
+            <action method="addLink" translate="label" module="qsoft_socialconnect"
+                    ifconfig="customer/qsoft_socialconnect_vk/enabled">
+                <name>qsoft_socialconnect_vk</name>
+                <path>socialconnect/account/vk</path>
+                <label>Vk Connect</label>
+            </action>
+        </reference>
+    </customer_account>
+
+    <qsoft_socialconnect_account_google translate="label">
+        <label>Customer My Account Google Connect</label>
+        <update handle="customer_account"/>
+        <reference name="head">
+            <action method="setTitle" translate="title" module="qsoft_socialconnect">
+                <title>Google Connect</title>
+            </action>
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>qsoft_socialconnect/css/social-connect.css</name>
+            </action>
+        </reference>
+        <reference name="my.account.wrapper">
+            <block type="qsoft_socialconnect/google_account" name="qsoft_socialconnect_google_account">
+                <block type="qsoft_socialconnect/google_button" name="qsoft_socialconnect_account_google_button"/>
+            </block>
+        </reference>
+        <reference name="customer_account_navigation">
+            <action method="setActive" module="qsoft_socialconnect">
+                <path>socialconnect/account/google</path>
+            </action>
+        </reference>
+    </qsoft_socialconnect_account_google>
+
+    <qsoft_socialconnect_account_facebook translate="label">
+        <label>Customer My Account Facebook Connect</label>
+        <update handle="customer_account"/>
+        <reference name="head">
+            <action method="setTitle" translate="title" module="qsoft_socialconnect">
+                <title>Facebook Connect</title>
+            </action>
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>qsoft_socialconnect/css/social-connect.css</name>
+            </action>
+        </reference>
+        <reference name="my.account.wrapper">
+            <block type="qsoft_socialconnect/facebook_account" name="qsoft_socialconnect_facebook_account">
+                <block type="qsoft_socialconnect/facebook_button" name="qsoft_socialconnect_account_facebook_button"/>
+            </block>
+        </reference>
+        <reference name="customer_account_navigation">
+            <action method="setActive" module="qsoft_socialconnect">
+                <path>socialconnect/account/facebook</path>
+            </action>
+        </reference>
+    </qsoft_socialconnect_account_facebook>
+
+    <qsoft_socialconnect_account_twitter translate="label">
+        <label>Customer My Account Twitter Connect</label>
+        <update handle="customer_account"/>
+        <reference name="head">
+            <action method="setTitle" translate="title" module="qsoft_socialconnect">
+                <title>Twitter Connect</title>
+            </action>
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>qsoft_socialconnect/css/social-connect.css</name>
+            </action>
+        </reference>
+        <reference name="my.account.wrapper">
+            <block type="qsoft_socialconnect/twitter_account" name="qsoft_socialconnect_twitter_account">
+                <block type="qsoft_socialconnect/twitter_button" name="qsoft_socialconnect_account_twitter_button"/>
+            </block>
+        </reference>
+        <reference name="customer_account_navigation">
+            <action method="setActive" module="qsoft_socialconnect">
+                <path>socialconnect/account/twitter</path>
+            </action>
+        </reference>
+    </qsoft_socialconnect_account_twitter>
+
+    <qsoft_socialconnect_account_linkedin translate="label">
+        <label>Customer My Account LinkedIn Connect</label>
+        <update handle="customer_account"/>
+        <reference name="head">
+            <action method="setTitle" translate="title" module="qsoft_socialconnect">
+                <title>LinkedIn Connect</title>
+            </action>
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>qsoft_socialconnect/css/social-connect.css</name>
+            </action>
+        </reference>
+        <reference name="my.account.wrapper">
+            <block type="qsoft_socialconnect/linkedin_account" name="qsoft_socialconnect_linkedin_account">
+                <block type="qsoft_socialconnect/linkedin_button" name="qsoft_socialconnect_account_linkedin_button"/>
+            </block>
+        </reference>
+        <reference name="customer_account_navigation">
+            <action method="setActive" module="qsoft_socialconnect">
+                <path>socialconnect/account/linkedin</path>
+            </action>
+        </reference>
+    </qsoft_socialconnect_account_linkedin>
+
+    <qsoft_socialconnect_account_vk translate="label">
+        <label>Customer My Account Vk Connect</label>
+        <update handle="customer_account"/>
+        <reference name="head">
+            <action method="setTitle" translate="title" module="qsoft_socialconnect">
+                <title>Vk Connect</title>
+            </action>
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>qsoft_socialconnect/css/social-connect.css</name>
+            </action>
+        </reference>
+        <reference name="my.account.wrapper">
+            <block type="qsoft_socialconnect/vk_account" name="qsoft_socialconnect_vk_account">
+                <block type="qsoft_socialconnect/vk_button" name="qsoft_socialconnect_account_vk_button"/>
+            </block>
+        </reference>
+        <reference name="customer_account_navigation">
+            <action method="setActive" module="qsoft_socialconnect">
+                <path>socialconnect/account/vk</path>
+            </action>
+        </reference>
+    </qsoft_socialconnect_account_vk>
+
+    <checkout_onepage_index>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>qsoft_socialconnect/css/social-connect.css</name>
+            </action>
+        </reference>
+        <reference name="checkout.onepage.login">
+            <action method="setTemplate">
+                <template>qsoft/socialconnect/checkout/onepage/login.phtml</template>
+            </action>
+            <block type="qsoft_socialconnect/checkout" name="qsoft_socialconnect_checkout">
+                <block type="qsoft_socialconnect/google_button" name="qsoft_socialconnect_checkout_google_button"/>
+                <block type="qsoft_socialconnect/facebook_button" name="qsoft_socialconnect_checkout_facebook_button"/>
+                <block type="qsoft_socialconnect/twitter_button" name="qsoft_socialconnect_checkout_twitter_button"/>
+                <block type="qsoft_socialconnect/linkedin_button" name="qsoft_socialconnect_checkout_linkedin_button"/>
+                <block type="qsoft_socialconnect/vk_button" name="qsoft_socialconnect_checkout_vk_button"/>
+            </block>
+        </reference>
+    </checkout_onepage_index>
+</layout>

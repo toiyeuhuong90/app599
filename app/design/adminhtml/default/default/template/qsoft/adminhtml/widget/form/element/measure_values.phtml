@@ -1,0 +1,54 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: tuyennn
+ * Date: 6/15/2016
+ * Time: 2:43 PM
+ */
+?>
+<?php $customer = $this->getCustomer(); ?>
+<?php $measures = $this->getMeasures(); ?>
+
+<div class="hor-scroll">
+    <table cellspacing="0" class="form-list">
+        <tbody>
+        <?php foreach ($measures as $measure): ?>
+            <tr>
+                <td class="label">
+                    <label for="measure-<?php echo $measure->getMeasureId() ?>">
+                        <?php echo $measure->getTitle() ?><?php echo $measure->getIsRequired() ? '<span class="required">*</span>' : '' ?>
+                    </label>
+                </td>
+
+                <?php if ($measure->getType() == 'value'): ?>
+                    <td class="value">
+                        <input id="measure-<?php echo $measure->getMeasureId() ?>"
+                               name="<?php echo $measure->getCsvCode() ?>"
+                               value="<?php echo $measure->getMeasureValue() ?>"
+                               class="input-text <?php echo $measure->getIsRequired() ? 'equired-entry' : '' ?>"
+                               type="text">
+                    </td>
+                <?php else: ?>
+
+                    <?php $toggles = Mage::helper('qsoft_customermeasure')->splitToggleOption($measure->getToggleValue()) ?>
+                    <td class="value">
+                        <?php foreach ($toggles as $toggle): ?>
+                            <label class="radio-inline">
+                                <input id="measure-<?php echo $measure->getMeasureId() ?>"
+                                       name="<?php echo $measure->getCsvCode() ?>"
+                                       value="<?php echo $toggle ?>"
+                                       class="<?php echo $measure->getIsRequired() ? 'equired-entry' : '' ?>"
+                                       type="radio" <?php echo ($measure->getMeasureValue() == $toggle) ? 'checked' : '' ?>>
+                                <?php echo $toggle ?>
+                            </label>
+                        <?php endforeach; ?>
+                    </td>
+                <?php endif; ?>
+            </tr>
+
+        <?php endforeach; ?>
+
+        </tbody>
+    </table>
+</div>
+

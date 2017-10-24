@@ -1,0 +1,8 @@
+<?php /* @var $this QSoft_ProductDesign_Block_Catalog_Product_View_Type_Designimage */ ?>
+<?php $_option = $this->getOption() ?>
+<dt><a onclick="design.showGroupDesign(<?php echo $_option->getId()?>, '<?php echo $_option->getZoomIn()?>');" href="javascript:void(0);"> <label<?php if ($_option->getIsRequire()) echo ' class="required"' ?>><?php if ($_option->getIsRequire()) echo '<em>*</em>' ?><?php echo  $this->escapeHtml($_option->getTitle()) ?></label></a></dt>
+<dd<?php if ($_option->decoratedIsLast){$decorateClass = "last";}?> class="qs-option-design <?php echo $decorateClass?>" id="qs-option-<?php echo $_option->getId();?>" style="display: none;">
+    <div class="input-box">
+        <?php echo $this->getValuesHtml() ?>
+    </div>
+</dd>

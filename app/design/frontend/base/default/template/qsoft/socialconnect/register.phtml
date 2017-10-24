@@ -1,0 +1,41 @@
+<div class="fieldset qsoft-socialconnect-register">
+    <div class="<?php echo $this->_getColSet(); ?>">
+        <?php if ($this->_googleEnabled() || $this->_facebookEnabled() || $this->_twitterEnabled() || $this->_linkedinEnabled() || $this->_vkEnabled()): ?>
+            <div class="<?php echo $this->_getColSet(); ?> qsoft-socialconnect-register">
+                <div class="fieldset">
+                    <h2 class="legend"><?php echo $this->__('Social Connect') ?></h2>
+
+                    <p><?php echo $this->__('You can register using your Social account.') ?></p>
+
+                    <div class="qsoft-socialconnect-register-button">
+                        <!--Social Google Button-->
+                        <?php if ($this->_googleEnabled()): ?>
+                            <?php echo $this->getChildHtml('qsoft_socialconnect_register_google_button') ?>
+                        <?php endif; ?>
+
+                        <!--Social Facebook Button-->
+                        <?php if ($this->_facebookEnabled()): ?>
+                            <?php echo $this->getChildHtml('qsoft_socialconnect_register_facebook_button') ?>
+                        <?php endif; ?>
+
+                        <!--Social Twitter Button-->
+                        <?php if ($this->_twitterEnabled()): ?>
+                            <?php echo $this->getChildHtml('qsoft_socialconnect_register_twitter_button') ?>
+                        <?php endif; ?>
+
+                        <!--Social Linkedin Button-->
+                        <?php if ($this->_linkedinEnabled()): ?>
+                            <?php echo $this->getChildHtml('qsoft_socialconnect_register_linkedin_button') ?>
+                        <?php endif; ?>
+
+                        <!--Social Vk Button-->
+                        <?php if ($this->_vkEnabled()): ?>
+                            <?php echo $this->getChildHtml('qsoft_socialconnect_register_vk_button') ?>
+                        <?php endif; ?>
+                    </div>
+
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>

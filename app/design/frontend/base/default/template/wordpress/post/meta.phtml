@@ -1,0 +1,25 @@
+<?php
+/**
+ * @category    Fishpig
+ * @package     Fishpig_Wordpress
+ * @license     http://fishpig.co.uk/license.txt
+ * @author      Ben Tideswell <help@fishpig.co.uk>
+ */
+?>
+<?php if ($post = $this->getPost()): ?>
+	<?php $tagString = $this->getTermsAsHtml($post, 'post_tag') ?>
+	<?php $categoryString = $this->getTermsAsHtml($post, 'category') ?>
+	<?php echo Mage::helper('wordpress/social')->getButtons($post) ?>
+
+	<div class="info-post-meta">
+		<span class="post_date_article_news"><?php echo stripslashes($this->__('Post on %s', $post->getPostDate())) ?></span>
+		<?php if ($categoryString): ?>
+			<span class="sysbom_info_article_news">//</span>
+			<span class="cate_article_news">
+				<?php echo stripslashes($this->__('Filed Under: %s', $categoryString)) ?>
+			</span>
+		<?php endif; ?>
+		<span class="pull-right total-comment-post"><?php echo $post['comment_count']; ?> comments</span>
+		<div class="clearfix"></div>
+	</div>
+<?php endif; ?>

@@ -1,0 +1,26 @@
+#map{width:540px; height:400px;overflow:hidden;}
+.store-list {width:300px; height: 250px; overflow: auto; border-top: 1px solid #C8C8C8;}
+.store-list  li{padding-top:5px; border-bottom:1px dotted #C8C8C8;}
+.store-search {width:350px; float:left;}
+.left-content table td{padding: 0 2px!important;}
+
+#select-store{ width:200px; float:left; margin:10px 0 0 0;}
+
+#select-store  select{ width:260px; float:left;}
+
+#storelocator-form{ margin: 0 0 0 40px;}
+
+#storelocator-form label{ display:block;}
+#storelocator-form  select{ width:180px; margin:0 20px 10px 0;}
+
+#store-location-content #list-location{ width:300px; float:left;}
+
+#store-location-content #store-location{float:left;width:300px;}
+
+#store-details{float:left; margin-top:10px}
+
+#store-details .title{display:block;font-weight:bold;}
+#store-details .info-left{float:left; width:200px}
+#store-details .info-right{float:right; width:140px}
+.shipment-methods #store-details{ float:left; width:480px;}
+.shipment-methods #store-details .store-gmap-image{float:left; margin-left:30px;}

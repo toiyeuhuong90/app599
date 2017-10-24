@@ -1,0 +1,43 @@
+<div class="qsoft-socialconnect-login">
+    <div class="account-login">
+        <div class="<?php echo $this->_getColSet(); ?> qsoft-socialconnect-login-upper">
+            <?php if ($this->_googleEnabled() || $this->_facebookEnabled() || $this->_twitterEnabled() || $this->_linkedinEnabled() || $this->_vkEnabled()): ?>
+                <div class="<?php echo $this->_getColSet(); ?> new-users qsoft-socialconnect-login-upper">
+                    <div class="content">
+                        <h2><?php echo $this->__('Or Social Connect'); ?></h2>
+
+                        <p class="form-instructions"><?php echo $this->__('You can login using your Social account.'); ?></p>
+                    </div>
+                </div>
+            <?php endif; ?>
+        </div>
+        <div class="<?php echo $this->_getColSet(); ?> qsoft-socialconnect-login-lower">
+            <?php if ($this->_googleEnabled() || $this->_facebookEnabled() || $this->_twitterEnabled() || $this->_linkedinEnabled() || $this->_vkEnabled()): ?>
+
+                <div class="qsoft-socialconnect-login-button">
+
+                    <?php if ($this->_googleEnabled()): ?>
+                        <?php echo $this->getChildHtml('qsoft_socialconnect_google_login_button'); ?>
+                    <?php endif; ?>
+
+                    <?php if ($this->_facebookEnabled()): ?>
+                        <?php echo $this->getChildHtml('qsoft_socialconnect_facebook_login_button'); ?>
+                    <?php endif; ?>
+
+                    <?php if ($this->_twitterEnabled()): ?>
+                        <?php echo $this->getChildHtml('qsoft_socialconnect_twitter_login_button'); ?>
+                    <?php endif; ?>
+
+                    <?php if ($this->_linkedinEnabled()): ?>
+                        <?php echo $this->getChildHtml('qsoft_socialconnect_linkedin_login_button'); ?>
+                    <?php endif; ?>
+
+                    <?php if ($this->_vkEnabled()): ?>
+                        <?php echo $this->getChildHtml('qsoft_socialconnect_vk_login_button'); ?>
+                    <?php endif; ?>
+
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<config>
+	<tabs>
+		<qsoft>
+			<label>Qsoft Extensions</label>
+			<sort_order>210</sort_order>
+		</qsoft>
+	</tabs>
+	<sections>
+		<productdesign translate="label" module="productdesign">
+			<label>Product Design</label>
+			<tab>qsoft</tab>
+			<frontend_type>text</frontend_type>
+			<sort_order>219</sort_order>
+			<show_in_default>1</show_in_default>
+			<show_in_website>1</show_in_website>
+			<show_in_store>1</show_in_store>
+			<groups>
+				<general translate="label">
+					<label>Global</label>
+					<sort_order>5</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>1</show_in_website>
+					<show_in_store>1</show_in_store>
+					<expanded>1</expanded>
+					<fields>
+						<image_width translate="label">
+							<label>Image max width(px)</label>
+							<frontend_type>text</frontend_type>
+							<isrequired>true</isrequired>
+							<sort_order>20</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</image_width>
+						<include_jquery translate="label">
+							<label>Include jQuery to Head</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>1</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</include_jquery>
+					</fields>
+				</general>
+				<group_type>
+					<label>Group Type</label>
+					<sort_order>6</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>1</show_in_website>
+					<show_in_store>1</show_in_store>
+					<expanded>1</expanded>
+					<fields>
+						<giving_name translate="label">
+							<label>Giving name</label>
+							<frontend_type>multiselect</frontend_type>
+							<source_model>productdesign/source_group</source_model>
+							<isrequired>true</isrequired>
+							<sort_order>20</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</giving_name>
+						<size translate="label">
+							<label>Size</label>
+							<frontend_type>multiselect</frontend_type>
+							<source_model>productdesign/source_group</source_model>
+							<isrequired>true</isrequired>
+							<sort_order>1</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</size>
+						<color translate="label">
+							<label>Colour</label>
+							<frontend_type>multiselect</frontend_type>
+							<source_model>productdesign/source_group</source_model>
+							<isrequired>true</isrequired>
+							<sort_order>10</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</color>
+					</fields>
+				</group_type>
+			</groups>
+		</productdesign>
+	</sections>
+</config>

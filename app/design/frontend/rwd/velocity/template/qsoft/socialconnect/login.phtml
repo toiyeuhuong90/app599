@@ -1,0 +1,27 @@
+<?php if ($this->_googleEnabled() || $this->_facebookEnabled() || $this->_twitterEnabled() || $this->_linkedinEnabled() || $this->_vkEnabled()): ?>
+<div class="qs-wolfsburg-25 qs-title-social-login">Or Socical Connect</div>
+<div class="qs-desc-normal-14">Registration is free and easy?</div>
+<ul class="qs-login-social">
+
+    <?php if ($this->_twitterEnabled()): ?>
+        <?php echo $this->getChildHtml('qsoft_socialconnect_twitter_login_button'); ?>
+    <?php endif; ?>
+
+    <?php if ($this->_facebookEnabled()): ?>
+        <?php echo $this->getChildHtml('qsoft_socialconnect_facebook_login_button'); ?>
+    <?php endif; ?>
+
+    <?php if ($this->_linkedinEnabled()): ?>
+        <?php echo $this->getChildHtml('qsoft_socialconnect_linkedin_login_button'); ?>
+    <?php endif; ?>
+
+    <?php if ($this->_googleEnabled()): ?>
+        <?php echo $this->getChildHtml('qsoft_socialconnect_google_login_button'); ?>
+    <?php endif; ?>
+    
+    <?php if ($this->_vkEnabled()): ?>
+        <?php echo $this->getChildHtml('qsoft_socialconnect_vk_login_button'); ?>
+    <?php endif; ?>
+</ul>
+<?php endif;?>
+

@@ -1,0 +1,23 @@
+<!--@subject Register Schedule Body Scan Form@-->
+
+
+{{template config_path="design/email/header"}}
+{{inlinecss file="email-inline.css"}}
+
+<table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+        <td class="action-content">
+            <ul>
+                <li>FirstName: {{var data.firstname}}</li>
+                <li>LastName: {{var data.lastname}}</li>
+                <li>Email: {{var data.email}}</li>
+                <li>Address: {{var data.address}}</li>
+                <li>Message: {{var data.note}}</li>
+                <li>Book Time: {{var data.book_time}}</li>
+                <li>Book Time: {{var data.interested_in}}</li>
+            </ul>
+        </td>
+    </tr>
+</table>
+
+{{template config_path="design/email/footer"}}

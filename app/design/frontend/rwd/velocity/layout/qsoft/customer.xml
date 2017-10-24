@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<layout>
+    <customer_schedule_index>
+        <reference name="head">
+            <action method="setTitle">
+                <tile>Book Scan</tile>
+            </action>
+            <action method="addItem"><type>skin_css</type><name>css/bootstrap-datetimepicker.css</name></action>
+            <action method="addItem"><type>skin_js</type><name>js/moment.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>js/bootstrap-datetimepicker.js</name></action>
+        </reference>
+        <reference name="root">
+            <action method="setTemplate">
+                <teplate>page/1column.phtml</teplate>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="core/template" name="schedule_fitting" template="qsoft/customer/schedule_fitting.phtml" before="-">
+                <block type="cms/block" name="schedule_banner">
+                    <action method="setBlockId">
+                        <block_id>schedule_banner</block_id>
+                    </action>
+                </block>
+                <block type="cms/block" name="schedule_info">
+                    <action method="setBlockId">
+                        <block_id>schedule_info</block_id>
+                    </action>
+                </block>
+            </block>
+        </reference>
+    </customer_schedule_index>
+</layout>

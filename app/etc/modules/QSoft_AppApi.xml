@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <QSoft_AppApi>
+            <active>true</active>
+            <codePool>local</codePool>
+        </QSoft_AppApi>
+    </modules>
+</config>
